@@ -26,8 +26,10 @@ public class ExcelExportUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExcelExportUtil.class);
 
+    private static final int DEFAULT_TEMPLATE_ROW = 30;
+
     /**
-     * 导出excel模板（模板也可以预先放在服务器上）
+     * 导出excel模板（实时生成，也可以预先放在服务器上）
      *
      * @param headers
      * @param out
@@ -40,15 +42,26 @@ public class ExcelExportUtil {
             // 默认用xlsx的方式导出
             Workbook workbook = new XSSFWorkbook();
             Sheet sheet = workbook.createSheet("sheet");
-            // 设置单元格为文本格式
+            sheet.setDefaultColumnWidth(30);
+            // 设置单元格为文本格式（@==TEXT）
             CellStyle style = workbook.createCellStyle();
             DataFormat format = workbook.createDataFormat();
-            // @==TEXT
             style.setDataFormat(format.getFormat("@"));
             style.setAlignment(CellStyle.ALIGN_LEFT);
-            sheet.setDefaultColumnWidth(30);
+            // 先设置头行
             setHeader(sheet, headers, style);
-            setCellString(sheet, headers, style);
+            // 在头行之后的行设置单元格为文本（默认填充30行，在导入时需要对每行做空检查，因为此时的行是有数据的，即空字符串）
+            int headerSize = headers.size();
+            for (int column = 1; column <= DEFAULT_TEMPLATE_ROW; column++) {
+                //从第二行开始
+                Row row = sheet.createRow(column);
+                for (int i = 0; i < headerSize; i++) {
+                    Cell cell = row.createCell(i);
+                    cell.setCellStyle(style);
+                    // 此句貌似无效
+//                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                }
+            }
             try {
                 workbook.write(out);
                 out.flush();
@@ -65,38 +78,20 @@ public class ExcelExportUtil {
     }
 
     /**
-     * 设置单元格位文本
-     *
-     * 默认填充29行，在导入时需要对每行做空检查，因为此时的30行是有数据的，即空字符串
-     *
-     **/
-    public static void setCellString(Sheet sheet, List<String> headers, CellStyle style) {
-        int headerSize = headers.size();
-        for (int column = 1; column < 30; column++) {
-            Row row = sheet.createRow(column);
-            for (int i = 0; i < headerSize; i++) {
-                Cell cell = row.createCell(i);
-                cell.setCellStyle(style);
-                // 此句貌似无效
-                cell.setCellType(Cell.CELL_TYPE_STRING);
-            }
-        }
-    }
-
-    /**
      * 大数据导出,不能使用普通的导出,会OOM
+     *
      * https://blog.csdn.net/daiyutage/article/details/53010491
      * http://poi.apache.org/spreadsheet/how-to.html#sxssf
      *
      * @param headers
      * @param keys
-     * @param datas
+     * @param dataList
      * @param out
      * @return
      * @author kunbu
      * @time 2019/8/22 11:08
      **/
-    public static boolean exportExcelSimpleBigData(List<String> headers, List<String> keys, List<Map<String, Object>> datas, OutputStream out) {
+    public static boolean exportExcelSimpleBigData(List<String> headers, List<String> keys, List<Map<String, Object>> dataList, OutputStream out) {
         try {
             // keep 100 rows in memory, exceeding rows will be flushed to disk
             SXSSFWorkbook workbook = new SXSSFWorkbook(100);
@@ -106,11 +101,11 @@ public class ExcelExportUtil {
             CellStyle style = workbook.createCellStyle();
             style.setAlignment(CellStyle.ALIGN_LEFT);
             //设置默认width
-            sheet.setDefaultColumnWidth(20);
+            sheet.setDefaultColumnWidth(30);
             //设置头行
             setHeader(sheet, headers, style);
             //填充数据
-            setData(sheet, 1, style, keys, datas);
+            setData(sheet, 1, style, keys, dataList);
             try {
                 workbook.write(out);
                 out.flush();
@@ -132,29 +127,29 @@ public class ExcelExportUtil {
     /**
      * 简单导出excel 2003
      *
-     * @param headers 标头行
-     * @param keys    标头key
-     * @param datas   数据：Map<标头key, 数据value>
-     * @param out     输出流
+     * @param headers   标头行
+     * @param keys      标头key
+     * @param dataList   数据：Map<标头key, 数据value>
+     * @param out       输出流
      * @return
      */
-    public static boolean exportExcelSimple2003(List<String> headers, List<String> keys, List<Map<String, Object>> datas, OutputStream out) {
+    public static boolean exportExcelSimple2003(List<String> headers, List<String> keys, List<Map<String, Object>> dataList, OutputStream out) {
         Workbook workbook = new HSSFWorkbook();
-        return exportExcelSimple(workbook, headers, keys, datas, out);
+        return exportExcelSimple(workbook, headers, keys, dataList, out);
     }
 
     /**
      * 简单导出excel 2007+
      *
-     * @param headers 标头行
-     * @param keys    标头key
-     * @param datas   数据：Map<标头key, 数据value>
+     * @param headers   标头行
+     * @param keys      标头key
+     * @param dataList   数据：Map<标头key, 数据value>
      * @param out     输出流
      * @return
      */
-    public static boolean exportExcelSimple2007(List<String> headers, List<String> keys, List<Map<String, Object>> datas, OutputStream out) {
+    public static boolean exportExcelSimple2007(List<String> headers, List<String> keys, List<Map<String, Object>> dataList, OutputStream out) {
         Workbook workbook = new XSSFWorkbook();
-        return exportExcelSimple(workbook, headers, keys, datas, out);
+        return exportExcelSimple(workbook, headers, keys, dataList, out);
     }
 
     /**
@@ -162,11 +157,11 @@ public class ExcelExportUtil {
      *
      * @param workbook
      * @param headers
-     * @param datas
+     * @param dataList
      * @param out
      * @return
      */
-    private static boolean exportExcelSimple(Workbook workbook, List<String> headers, List<String> keys, List<Map<String, Object>> datas, OutputStream out) {
+    private static boolean exportExcelSimple(Workbook workbook, List<String> headers, List<String> keys, List<Map<String, Object>> dataList, OutputStream out) {
         try {
             //单工作簿
             Sheet sheet = workbook.createSheet("sheet");
@@ -178,7 +173,7 @@ public class ExcelExportUtil {
             //设置头行
             setHeader(sheet, headers, style);
             //填充数据
-            setData(sheet, 1, style, keys, datas);
+            setData(sheet, 1, style, keys, dataList);
             try {
                 workbook.write(out);
                 out.flush();
@@ -220,11 +215,11 @@ public class ExcelExportUtil {
      * @param rowNum 数据起始行
      * @param style
      * @param keys
-     * @param datas
+     * @param dataList
      */
-    private static void setData(Sheet sheet, int rowNum, CellStyle style, List<String> keys, List<Map<String, Object>> datas) {
+    private static void setData(Sheet sheet, int rowNum, CellStyle style, List<String> keys, List<Map<String, Object>> dataList) {
         int headerSize = keys.size();
-        for (Map<String, Object> dataMap : datas) {
+        for (Map<String, Object> dataMap : dataList) {
             Row data = sheet.createRow(rowNum);
             for (int colume = 0; colume < headerSize; colume++) {
                 Cell dataCell = data.createCell(colume);
@@ -241,14 +236,14 @@ public class ExcelExportUtil {
     /**
      * 设置value
      *
+     * @param cell
      * @param obj
-     * @return
-     */
+     **/
     private static void setCellValue(Cell cell, Object obj) {
         if (obj != null) {
             cell.setCellValue(obj.toString());
         } else {
-            cell.setCellValue("-");
+            cell.setCellValue("");
         }
     }
 

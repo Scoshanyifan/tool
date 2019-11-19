@@ -22,7 +22,7 @@ import java.util.List;
  * 读取excel
  *
  * @author kunbu
- * @time 2019/8/22 14:42
+ * @date 2019/8/22 14:42
  **/
 public class ExcelReadUtil {
 
@@ -33,18 +33,17 @@ public class ExcelReadUtil {
      * https://my.oschina.net/OutOfMemory/blog/1068972
      * http://poi.apache.org/components/spreadsheet/how-to.html#xssf_sax_api
      *
-     * @param
      * @author kunbu
-     * @time 2019/8/22 11:14
+     * @date 2019/8/22 11:14
      **/
     public static void readExcelbigData() {
         // TODO
     }
 
     /**
-     * 简单读取excel(单sheet)
+     * 简单读取excel（字节数组）
      *
-     * @param data             MultiPartFile中的data
+     * @param data 可以是MultiPartFile中的data
      * @param originalFileName 文件名
      */
     public static List<List<String>> readExcelSimple(byte[] data, String originalFileName) {
@@ -58,7 +57,7 @@ public class ExcelReadUtil {
     }
 
     /**
-     * 简单读取excel(单sheet)
+     * 简单读取excel（文件路径）
      *
      * @param filePath 文件路径
      */
@@ -82,26 +81,25 @@ public class ExcelReadUtil {
     }
 
     /**
-     * 简单读取excel(单sheet)
+     * 简单读取excel（输入流）
      *
      * @param in               输入流
      * @param originalFileName 文件原始名
      * @author kunbu
-     * @time 2019/8/22 14:41
+     * @date 2019/8/22 14:41
      **/
     public static List<List<String>> readExcelSimple(InputStream in, String originalFileName) {
         return readExcelSimpleWithHeader(in, originalFileName, null);
     }
 
     /**
-     * 带头行的简单读取，如果headers为null，会顺带返回头行
+     * 简单读取excel（单sheet）
      *
-     * @param in
-     * @param originalFileName
-     * @param headers
+     * @param in 输入流
+     * @param originalFileName 文件原始名
+     * @param headers 若不为空，则会跳过头行返回数据；若headers为null，会顺带返回首行
      * @author kunbu
-     * @time 2019/11/8 10:30
-     * @return
+     * @date 2019/11/8 10:30
      **/
     public static List<List<String>> readExcelSimpleWithHeader(InputStream in, String originalFileName, List<String> headers) {
         try {
@@ -125,8 +123,8 @@ public class ExcelReadUtil {
      * 读取只有一个sheet的excel
      *
      * @param wb      工作簿
-     * @param headers 首行
-     * @return row:cell
+     * @param headers 首行（如果首行为空，则直接从第一行取数据）
+     * @return row : cell
      */
     private static List<List<String>> getExcelWithOneSheet(Workbook wb, List<String> headers) {
         int sheetCount = wb.getNumberOfSheets();
@@ -154,11 +152,11 @@ public class ExcelReadUtil {
     }
 
     /**
-     * 读取包含多个sheet的excel(首行其实位置按照header判断,若有header则从2开始算)
+     * 读取包含多个sheet的excel（首行位置按照header判断,若有header则从2开始算）
      *
      * @param wb        工作簿
-     * @param headerArr 头行key,必须和sheet一一对应
-     * @return sheet:row:cell
+     * @param headerArr 首行key，必须和sheet一一对应
+     * @return sheet : row : cell
      */
     private static List<List<List<String>>> getExcelWithSheets(Workbook wb, List<List<String>> headerArr) {
         int sheetCount = wb.getNumberOfSheets();
@@ -189,13 +187,13 @@ public class ExcelReadUtil {
      * @param wb         工作簿
      * @param dataRow    数据起始行（1 表示第一行）
      * @param headerSize 首行size（-1 表示无）
-     * @param sheetIdx   表格下标
-     * @return row:cell
+     * @param sheetIdx   表格下标 （0起）
+     * @return row_1 -> [ cell_1, cell_2, cell_n ]
      */
     private static List<List<String>> getSheet(Workbook wb, int dataRow, int headerSize, int sheetIdx) {
         List<List<String>> rowArr = Lists.newArrayList();
         Sheet sheet = wb.getSheetAt(sheetIdx);
-        //行row
+        //行row（0起）
         int rftn = sheet.getFirstRowNum();
         int rltn = sheet.getLastRowNum();
         // 遍历
@@ -208,6 +206,7 @@ public class ExcelReadUtil {
             //列cell
             int cftn = row.getFirstCellNum();
             int cltn = row.getLastCellNum();
+            // 如果有首行，则按照首行的size取列
             if (headerSize > 0) {
                 cltn = headerSize;
             }
@@ -229,7 +228,7 @@ public class ExcelReadUtil {
      */
     private static String getValue(Cell cell) {
         if (cell == null) {
-            return "";
+            return null;
         }
         if (cell.getCellType() == Cell.CELL_TYPE_BOOLEAN) {
             return Boolean.toString(cell.getBooleanCellValue());
