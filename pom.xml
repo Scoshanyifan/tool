@@ -19,6 +19,7 @@
 
         <poi.version>3.9</poi.version>
         <poi.ooxml.version>3.9</poi.ooxml.version>
+        <javax.mail.version>1.4.7</javax.mail.version>
 
         <commons-io.version>2.6</commons-io.version>
         <commons-lang3.version>3.7</commons-lang3.version>
@@ -46,6 +47,16 @@
             </exclusions>
         </dependency>
 
+        <!-- mail -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>${javax.mail.version}</version>
+        </dependency>
         <!-- excel -->
         <dependency>
             <groupId>org.apache.poi</groupId>
@@ -57,7 +68,6 @@
             <artifactId>poi-ooxml</artifactId>
             <version>${poi.ooxml.version}</version>
         </dependency>
-
         <!--    basic   -->
         <dependency>
             <groupId>commons-io</groupId>

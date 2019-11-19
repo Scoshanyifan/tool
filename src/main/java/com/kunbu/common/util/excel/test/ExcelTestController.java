@@ -44,7 +44,7 @@ public class ExcelTestController {
     private static List<String> exportHeaders =
             Lists.newArrayList("序号", "小区名称", "审核状态", "用户类型", "用户名称", "性别", "身份证号", "手机号", "备注");
     private static List<String> exportKeys =
-            Lists.newArrayList("number", "orgName", "auditState", "userType", "userName", "idCardNum", "sex", "userPhone", "userRemark");
+            Lists.newArrayList("number", "orgName", "auditState", "userType", "userName", "sex", "idCardNum", "userPhone", "userRemark");
     /** 导入（模板） */
     private static List<String> importHeaders =
             Lists.newArrayList("用户类型(业主，租户)", "用户姓名", "性别(男，女)", "身份证号", "手机号", "备注");
@@ -65,43 +65,47 @@ public class ExcelTestController {
     @GetMapping("/export/data")
     @ResponseBody
     public void exportExcelData(HttpServletRequest request, HttpServletResponse response) {
-        // 模拟业务的实体类
-        List<ExcelTestEntity> beanList = getExcelDataList();
-        // 将实体类转换成数据集合
-        List<Map<String, Object>> dataList = Lists.newArrayList();
-        // 手动增加序号
-        int number = 1;
-        for (ExcelTestEntity eb : beanList) {
-            Map<String, Object> dataMap = Maps.newHashMap();
-            dataMap.put(exportKeys.get(0), number++);
-            dataMap.put(exportKeys.get(1), eb.getOrgName());
-            dataMap.put(exportKeys.get(2), eb.getAuditState());
-            dataMap.put(exportKeys.get(3), eb.getUserType());
-            dataMap.put(exportKeys.get(4), eb.getUserName());
-            dataMap.put(exportKeys.get(5), eb.getIdCardNum());
-            dataMap.put(exportKeys.get(6), eb.getSex());
-            dataMap.put(exportKeys.get(7), eb.getUserPhone());
-            dataMap.put(exportKeys.get(8), eb.getUserRemark());
-            dataList.add(dataMap);
-        }
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        // 导出2007格式
-        ExcelExportUtil.exportExcelSimple2007(exportHeaders, exportKeys, dataList, baos);
-        // 测试大数据下导出
-///        ExcelExportUtil.exportExcelSimpleBigData(exportHeaders, exportKeys, dataList, baos);
+        try {
+            // 模拟业务的实体类
+            List<ExcelEntity> beanList = getExcelDataList();
+            // 将实体类转换成数据集合
+            List<Map<String, Object>> dataList = Lists.newArrayList();
+            // 手动增加序号
+            int number = 1;
+            for (ExcelEntity eb : beanList) {
+                Map<String, Object> dataMap = Maps.newHashMap();
+                dataMap.put(exportKeys.get(0), number++);
+                dataMap.put(exportKeys.get(1), eb.getOrgName());
+                dataMap.put(exportKeys.get(2), eb.getAuditState());
+                dataMap.put(exportKeys.get(3), eb.getUserType());
+                dataMap.put(exportKeys.get(4), eb.getUserName());
+                dataMap.put(exportKeys.get(5), eb.getSex());
+                dataMap.put(exportKeys.get(6), eb.getIdCardNum());
+                dataMap.put(exportKeys.get(7), eb.getUserPhone());
+                dataMap.put(exportKeys.get(8), eb.getUserRemark());
+                dataList.add(dataMap);
+            }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            // 导出2007格式
+//            ExcelExportUtil.exportExcelSimple2007(exportHeaders, exportKeys, dataList, baos);
+            // 测试大数据下导出（速度更快）
+            ExcelExportUtil.exportExcelSimpleBigData(exportHeaders, exportKeys, dataList, baos);
 
-        byte[] content = baos.toByteArray();
-        String fileName = "数据列表-" + System.currentTimeMillis();
-        responseExportExcel(fileName, content, request, response);
+            byte[] content = baos.toByteArray();
+            String fileName = "数据列表-" + System.currentTimeMillis();
+            responseExportExcel(fileName, content, request, response);
+        } catch (Exception e) {
+            LOGGER.error(">>> exportExcelData error", e);
+        }
     }
 
-    private static List<ExcelTestEntity> getExcelDataList() {
-        List<ExcelTestEntity> beanList = Lists.newArrayList();
+    private static List<ExcelEntity> getExcelDataList() {
+        List<ExcelEntity> beanList = Lists.newArrayList();
         Random random = new Random();
         // 测试大数据下OOM
         for (int i = 1; i < 1000_0; i++) {
-            ExcelTestEntity eb = new ExcelTestEntity(
-                    random.nextInt() + "小区",
+            ExcelEntity eb = new ExcelEntity(
+                    random.nextInt(10000) + "小区",
                     random.nextBoolean() ? "待审核" : "审核通过",
                     random.nextBoolean() ? "业主" : "租户",
                     random.nextInt(10000) + "号用户",
@@ -114,16 +118,24 @@ public class ExcelTestController {
         return beanList;
     }
 
+    /**
+     * http响应导出excel通用方法
+     *
+     * @param fileName
+     * @param content
+     * @param request
+     * @param response
+     */
     private void responseExportExcel(String fileName, byte[] content, HttpServletRequest request, HttpServletResponse response) {
         OutputStream outputStream = null;
         try {
             response.reset();
             response.addHeader("Cache-Control", "no-cache");
             response.addHeader("Pragma", "no-cache");
-            response.setStatus(200);
             response.setDateHeader("Expires", 0L);
+            response.setStatus(200);
             String fn;
-            // 如果是苹果浏览器，特殊处理
+            // 如果是苹果浏览器，特殊处理文件名的编码
             String userAgent = request.getHeader("User-Agent").toLowerCase();
             if (userAgent.contains("safari")) {
                 byte[] bytes = fileName.getBytes("UTF-8");
@@ -131,7 +143,7 @@ public class ExcelTestController {
             } else {
                 fn = URLEncoder.encode(fileName,"UTF-8");
             }
-            //.xlsx
+            //xlsx
             response.addHeader("Content-Disposition", "attachment;filename="+ fn + ".xlsx");
             response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             outputStream = response.getOutputStream();
@@ -144,33 +156,40 @@ public class ExcelTestController {
         }
     }
 
-
+    /**
+     * 导入excel（按照模板）
+     *
+     * @param file
+     * @param request
+     * @return
+     */
     @RequestMapping("/import/data")
     @ResponseBody
-    public ResultMap importExcelData(@RequestParam MultipartFile excel, HttpServletRequest request, HttpServletResponse response) {
+    public ResultMap importExcelData(@RequestParam MultipartFile file, HttpServletRequest request) {
         // 业务判断，比如导入者必须是小区管理员，只能导入该小区下用户，因为小区id从session或token中拿到
-        String orgId = null;
+        String orgId = request.getHeader("orgId");
         if (StringUtils.isBlank(orgId)) {
             LOGGER.error(">>> importExcelData orgId null");
             return ResultMap.error("请用物业管理员，或小区管理员的身份进行用户导入");
         }
         InputStream input = null;
         try {
-            input = excel.getInputStream();
-            List<List<String>> dataList = ExcelReadUtil.readExcelSimpleWithHeader(input, excel.getOriginalFilename(), importHeaders);
+            input = file.getInputStream();
+            List<List<String>> dataList = ExcelReadUtil.readExcelSimpleWithHeader(input, file.getOriginalFilename(), importHeaders);
             if (dataList != null && dataList.size() > 0) {
-                List<ExcelTestEntity> importDataList = Lists.newArrayList();
+                List<ExcelEntity> importDataList = Lists.newArrayList();
                 LOGGER.info(">>> importExcelData, dataList size:{}", dataList.size());
-                // 这里因为以模板导入，所以有首行，所以带上了importHeaders，以便除去
-                for (int i = 0; i < dataList.size(); i++) {
-                    List<String> values = dataList.get(i);
+                // 如果是按模板导入，因为有首行，所以带上importHeaders，以便除去首行，以下还是按第一行算起
+                int idx = 1;
+                for (List<String> values : dataList) {
                     //"userType", "userName", "sex", "idCardNum", "userPhone", "userRemark"
-                    LOGGER.info(">>> row value :{}", values);
+                    LOGGER.info(">>> row {} value :{}", idx++, values);
                     if (values.size() < importHeaders.size()) {
                         throw new RuntimeException("参数缺失");
                     }
-                    //因为模板种设置了空白行位文本，所以实际上传进来的是空字符串，需要过滤
-                    if (StringUtils.isAnyBlank(values.get(0), values.get(1), values.get(2), values.get(3))) {
+                    // 如果按模板传入（因为模板种设置了空白行位文本），或者存在空白row，传进来的是实际是空字符串，需要过滤
+                    if (StringUtils.isAnyBlank(values.get(0), values.get(1), values.get(2), values.get(3), values.get(4))) {
+                        // 除了备注其他为必填
                         continue;
                     }
                     // 检查导入value，只有全部通过后，才进行批量插入DB
@@ -179,11 +198,11 @@ public class ExcelTestController {
                         return result;
                     } else {
                         LOGGER.info(">>> 住户：{} check成功", values.get(3));
-                        importDataList.add((ExcelTestEntity) result.getData());
+                        importDataList.add((ExcelEntity) result.getData());
                     }
                     //
-                    for (ExcelTestEntity entity : importDataList) {
-                        // 插入DB
+                    for (ExcelEntity entity : importDataList) {
+                        // todo 插入DB
                     }
                 }
             } else {
@@ -191,16 +210,25 @@ public class ExcelTestController {
             }
         } catch (Exception e) {
             LOGGER.error(">>> 导入excel异常", e);
-            return ResultMap.error("导入电梯excel失败，" + e.getMessage());
+            return ResultMap.error("导入电梯excel失败，请重新尝试");
         } finally {
             IOUtils.close(input);
         }
         return ResultMap.success();
     }
 
+    /**
+     * 1.检查导入的value
+     * 2.转换成业务数据
+     * 3.生成实体类
+     *
+     * @param values
+     */
     private ResultMap checkImportData(List<String> values) {
-        ExcelTestEntity entity = new ExcelTestEntity();
-        // 检查各项value，并作转换（用户类型-业主转换成owner）
+        ExcelEntity entity = new ExcelEntity();
+
+        // todo
+
         entity.setUserType(values.get(0));
         entity.setUserName(values.get(1));
         entity.setSex(values.get(2));

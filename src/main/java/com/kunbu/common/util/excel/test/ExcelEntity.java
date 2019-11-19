@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExcelTestEntity {
+public class ExcelEntity {
 
     private String orgName;
     private String auditState;

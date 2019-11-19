@@ -17,7 +17,7 @@ import java.util.Map;
  *
  * @author scosyf
  * @time 2019年5月9日
- * <p>
+ *
  * 2019.8.22 新增
  *
  * 2019.11.18 新增模板导出
@@ -57,9 +57,9 @@ public class ExcelExportUtil {
                 Row row = sheet.createRow(column);
                 for (int i = 0; i < headerSize; i++) {
                     Cell cell = row.createCell(i);
+                    //style和type需要同时设置才能生效
                     cell.setCellStyle(style);
-                    // 此句貌似无效
-//                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
                 }
             }
             try {
@@ -78,7 +78,7 @@ public class ExcelExportUtil {
     }
 
     /**
-     * 大数据导出,不能使用普通的导出,会OOM
+     * 大数据导出,不能使用普通的导出,会OOM（使用SXSSF速度更快）
      *
      * https://blog.csdn.net/daiyutage/article/details/53010491
      * http://poi.apache.org/spreadsheet/how-to.html#sxssf
