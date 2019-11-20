@@ -1,8 +1,31 @@
 server:
   port: 9999
 
-# mail
-mail:
+spring:
+  mail:
+    # SMTP服务器地址
+    host: smtp.163.com
+    username: 18806719815@163.com
+    password: syf930628
+    protocol: stmp
+    port: 465
+    default-encoding: utf-8
+    properties:
+      # mail.debug: true
+      mail.smtp.auth: true
+      mail.smtp.timeout: 25000
+      mail.smtp.ssl.enable: true
+      mail.smtp.starttls.enable: false
+      mail.smtp.socketFactory.fallback: false
+      mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+
+exception:
+  mail:
+    to:
+      - 1274462659@qq.com
+
+
+# mail 原生配置，需要手动读取并配置 JavaMailSenderImpl
   #  host: smtp.qq.com
   host: smtp.163.com
   username: 18806719815@163.com
@@ -11,8 +34,8 @@ mail:
   properties:
     # mail.debug: true
     mail.smtp.auth: true
+    mail.smtp.timeout: 25000
     mail.smtp.ssl.enable: true
     mail.smtp.starttls.enable: false
-    mail.smtp.timeout: 25000
     mail.smtp.socketFactory.fallback: false
     mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory

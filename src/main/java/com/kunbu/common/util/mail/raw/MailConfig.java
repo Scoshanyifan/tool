@@ -1,4 +1,4 @@
-package com.kunbu.common.util.mail;
+package com.kunbu.common.util.mail.raw;
 
 import java.util.Map;
 
