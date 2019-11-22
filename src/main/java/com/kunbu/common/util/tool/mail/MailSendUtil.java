@@ -1,4 +1,4 @@
-package com.kunbu.common.util.mail;
+package com.kunbu.common.util.tool.mail;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -81,17 +81,31 @@ public class MailSendUtil {
         if (mail.getBccs() != null) {
             messageHelper.setBcc(mail.getBccs());
         }
-        if (mail.getMultipartFiles() != null) {
-            for (MultipartFile file : mail.getMultipartFiles()) {
+        // 附件
+        if (mail.getAttachments1() != null) {
+            for (MultipartFile file : mail.getAttachments1()) {
                 messageHelper.addAttachment(file.getOriginalFilename(), file);
             }
         }
-        if (mail.getMimeFiles() != null) {
-            for (CommonMail.MimeFile file : mail.getMimeFiles()) {
+        if (mail.getAttachments2() != null) {
+            for (CommonMail.MimeFile file : mail.getAttachments2()) {
                 ByteArrayDataSource attachResource = new ByteArrayDataSource(file.getResource(), file.getType());
                 messageHelper.addAttachment(file.getName(), attachResource);
             }
         }
+        // 内嵌
+        if (mail.getInlines1() != null) {
+            for (MultipartFile file : mail.getInlines1()) {
+                messageHelper.addInline(file.getOriginalFilename(), file, file.getContentType());
+            }
+        }
+        if (mail.getInlines2() != null) {
+            for (CommonMail.MimeFile file : mail.getInlines2()) {
+                ByteArrayDataSource inlineResource = new ByteArrayDataSource(file.getResource(), file.getType());
+                messageHelper.addInline(inlineResource.getName(), inlineResource);
+            }
+        }
+
         if (mail.getSendTime() != null) {
             messageHelper.setSentDate(mail.getSendTime());
         }

@@ -1,4 +1,4 @@
-package com.kunbu.common.util.mail.raw;
+package com.kunbu.common.util.tool.mail.raw;
 
 import java.io.InputStream;
 

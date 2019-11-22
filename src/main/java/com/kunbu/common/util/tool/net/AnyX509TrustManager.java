@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2016, MicroAnts. All rights reserved.
  */
-package com.kunbu.common.util.net;
+package com.kunbu.common.util.tool.net;
 
 import javax.net.ssl.X509TrustManager;
 import java.security.cert.CertificateException;

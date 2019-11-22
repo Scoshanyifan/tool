@@ -17,9 +17,9 @@ import java.util.Properties;
  * @create: 2019-08-28 13:29
  **/
 @Component  //加上bean注释后，会在启动时加载，否则需要等到使用时第一次加载
-public class PropertiesUtil {
+public class PropertieUtil {
 
-    private static final Logger logger = LoggerFactory.getLogger(PropertiesUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(PropertieUtil.class);
 
     // todo
     public static final String PROPERTIES_CONFIG = "prop.properties";
@@ -29,16 +29,18 @@ public class PropertiesUtil {
     static {
         InputStreamReader reader = null;
         try {
-            InputStream in = PropertiesUtil.class.getClassLoader().getResourceAsStream(PROPERTIES_CONFIG);
-            reader = new InputStreamReader(in);
+            InputStream in = PropertieUtil.class.getClassLoader().getResourceAsStream(PROPERTIES_CONFIG);
+            if (in != null) {
+                reader = new InputStreamReader(in);
 
-            Properties prop = new Properties();
-            prop.load(reader);
+                Properties prop = new Properties();
+                prop.load(reader);
 
-            for (String key : prop.stringPropertyNames()) {
-                kvMap.put(key, prop.getProperty(key, key));
+                for (String key : prop.stringPropertyNames()) {
+                    kvMap.put(key, prop.getProperty(key, key));
+                }
+                logger.info(">>> 配置文件加载完成：{}", kvMap);
             }
-            logger.info(">>> 配置文件加载完成：{}", kvMap);
         } catch (Exception e) {
             logger.error(">>> PropertiesUtil load properties error.", e);
         } finally {

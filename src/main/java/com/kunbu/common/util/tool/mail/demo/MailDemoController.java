@@ -1,9 +1,10 @@
-package com.kunbu.common.util.mail.test;
+package com.kunbu.common.util.tool.mail.demo;
 
 import com.google.common.base.Splitter;
 import com.kunbu.common.util.ResultMap;
-import com.kunbu.common.util.mail.CommonMail;
-import com.kunbu.common.util.mail.MailSendUtil;
+import com.kunbu.common.util.tool.mail.CommonMail;
+import com.kunbu.common.util.tool.mail.ExceptionMailUtil;
+import com.kunbu.common.util.tool.mail.MailSendUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +24,15 @@ import java.util.List;
  **/
 @RestController
 @RequestMapping("/mail")
-public class MailTestController {
+public class MailDemoController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MailTestController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MailDemoController.class);
 
     @Autowired
     private MailSendUtil mailSendUtil;
+
+    @Autowired
+    private ExceptionMailUtil exceptionMailUtil;
 
     @PostMapping("/send")
     public ResultMap sendMail(@RequestParam String subject,
@@ -36,28 +40,42 @@ public class MailTestController {
                               @RequestParam String tos,
                               @RequestParam(required = false) String ccs,
                               @RequestParam(required = false) String bccs,
-                              @RequestParam(required = false) MultipartFile[] attachments) {
+                              @RequestParam(required = false) MultipartFile[] attachments,
+                              @RequestParam(required = false) MultipartFile[] inlines) {
 
         List<String> toList = Splitter.on(",").omitEmptyStrings().trimResults().splitToList(tos);
-        CommonMail mail = new CommonMail((String[])toList.toArray(), subject, text);
+        CommonMail mail = new CommonMail(
+                toList.toArray(new String[toList.size()]),
+                subject,
+                "<html><body><p>" + text + "</p><img src=\"cid:cat.png\" ></body></html>");
+        mail.setHtml(true);
+        mail.setInlines1(inlines);
+
         if (StringUtils.isNotBlank(ccs)) {
             List<String> ccList = Splitter.on(",").omitEmptyStrings().trimResults().splitToList(ccs);
-            mail.setCcs((String[]) ccList.toArray());
+            mail.setCcs(ccList.toArray(new String[ccList.size()]));
         }
         if (StringUtils.isNotBlank(bccs)) {
             List<String> bccList = Splitter.on(",").omitEmptyStrings().trimResults().splitToList(bccs);
-            mail.setBccs((String[]) bccList.toArray());
+            mail.setBccs(bccList.toArray(new String[bccList.size()]));
         }
         if (attachments != null && attachments.length > 0) {
-            mail.setMultipartFiles(attachments);
+            mail.setAttachments1(attachments);
         }
         try {
             mailSendUtil.sendMail(mail, true);
-            return ResultMap.success();
         } catch (Exception e) {
             LOGGER.error(">>> sendMail error", e);
             return ResultMap.error("发送邮件失败，请重试");
         }
+
+        try {
+            Integer i = null;
+            i.toString();
+        } catch (Exception e) {
+            exceptionMailUtil.sendExceptionMail(e, "测试报错", "异常内容：");
+        }
+        return ResultMap.success();
     }
 
 }

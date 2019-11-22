@@ -1,4 +1,4 @@
-package com.kunbu.common.util.mail.raw;
+package com.kunbu.common.util.tool.mail.raw;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

@@ -110,11 +110,14 @@ public class MatchUtil {
     /**
      * 检查字符串长度(中文,空格算2个)
      *
+     * 字符编码不同，长度不同
+     *
      * @param in
      * @param limitDown
      * @param limitUp
      * @return
      */
+    @Deprecated
     public static boolean checkStringCount(String in, int limitDown, int limitUp) {
         if (in == null || in.isEmpty()) {
             return false;
@@ -138,16 +141,8 @@ public class MatchUtil {
         return false;
     }
 
-    public static boolean checkShopName(String name) {
-        String str = "[a-zA-Z\\d\\u4e00-\\u9fa5\\s]+";
-        Pattern p = Pattern.compile(str);
-        Matcher m = p.matcher(name);
-        return m.matches();
-    }
-
     public static void main(String[] args) {
         String name = " 一二三四五六七八九十 一十二十三十四  ".trim();
-        System.out.println(name + " - " + checkShopName(name) + " - " + name.length());
         if (!checkStringCount(name, 8, 36)) {
             System.out.println("chaochu;");
         }

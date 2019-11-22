@@ -1,11 +1,11 @@
-package com.kunbu.common.util.excel.test;
+package com.kunbu.common.util.tool.excel.demo;
 
 import com.alibaba.fastjson.util.IOUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.kunbu.common.util.ResultMap;
-import com.kunbu.common.util.excel.ExcelExportUtil;
-import com.kunbu.common.util.excel.ExcelReadUtil;
+import com.kunbu.common.util.tool.excel.ExcelExportUtil;
+import com.kunbu.common.util.tool.excel.ExcelReadUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +36,9 @@ import java.util.Random;
  **/
 @RestController
 @RequestMapping("/excel")
-public class ExcelTestController {
+public class ExcelDemoController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelTestController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelDemoController.class);
 
     /** 导出 */
     private static List<String> exportHeaders =
@@ -138,6 +138,7 @@ public class ExcelTestController {
             // 如果是苹果浏览器，特殊处理文件名的编码
             String userAgent = request.getHeader("User-Agent").toLowerCase();
             if (userAgent.contains("safari")) {
+                // 先转成utf8的字节数组，然后再转成iso进行传输，最后浏览器会进行iso转码
                 byte[] bytes = fileName.getBytes("UTF-8");
                 fn = new String(bytes, "ISO-8859-1");
             } else {

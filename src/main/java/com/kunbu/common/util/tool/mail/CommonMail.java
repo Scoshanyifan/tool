@@ -1,4 +1,4 @@
-package com.kunbu.common.util.mail;
+package com.kunbu.common.util.tool.mail;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,10 +40,15 @@ public class CommonMail {
     private boolean isHtml;
     /** 发送时间 */
     private Date sendTime;
+    /** 内嵌资源（MultipartFile） */
+    private MultipartFile[] inlines1;
+    /** 内嵌资源（文件流，需要手动设置mimeType） */
+    private MimeFile[] inlines2;
     /** 附件（MultipartFile） */
-    private MultipartFile[] multipartFiles;
+    private MultipartFile[] attachments1;
     /** 附件（文件流，需要手动设置mimeType） */
-    private MimeFile[] mimeFiles;
+    private MimeFile[] attachments2;
+
     /** 指定编码（比如图片名称如果是中文需要GBK） */
     private String encoding;
 
@@ -64,8 +69,10 @@ public class CommonMail {
                 ", text='" + text + '\'' +
                 ", isHtml=" + isHtml +
                 ", sendTime=" + sendTime +
-                ", multipartFiles=" + (multipartFiles != null ? multipartFiles.length : null) +
-                ", mimeFiles=" + (mimeFiles != null ? mimeFiles.length : null) +
+                ", inlines1=" + (inlines1 != null ? inlines1.length : null) +
+                ", inlines2=" + (inlines2 != null ? inlines2.length : null) +
+                ", attachments1=" + (attachments1 != null ? attachments1.length : null) +
+                ", attachments2=" + (attachments2 != null ? attachments2.length : null) +
                 ", encoding='" + encoding + '\'' +
                 '}';
     }

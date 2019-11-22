@@ -1,4 +1,4 @@
-package com.kunbu.common.util.net;
+package com.kunbu.common.util.tool.net;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,16 +23,13 @@ public class NetUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(NetUtil.class);
 
-    public static final String HTTP_METHOD_GET = "GET";
-    public static final String HTTP_METHOD_POST = "POST";
-
-    public static final int DEFAULT_CONNECT_TIMEOUT = 3000;
-    public static final int DEFAULT_READ_TIMEOUT = 3000;
 
     /**
+     * http请求
+     *
      * @param requestUrl     请求域名
      * @param params         参数内容
-     * @param httpMethod     请求方式 {@link #HTTP_METHOD_GET} {@link #HTTP_METHOD_POST}
+     * @param httpMethod     请求方式
      * @param connectTimeout 连接超时时间
      * @param readTimeout    读取超时时间
      * @return
@@ -43,9 +40,11 @@ public class NetUtil {
     }
 
     /**
+     * 开放的https请求
+     *
      * @param requestUrl     请求域名
      * @param params         参数内容
-     * @param httpMethod     请求方式 {@link #HTTP_METHOD_GET} {@link #HTTP_METHOD_POST}
+     * @param httpMethod     请求方式
      * @param connectTimeout 连接超时时间
      * @param readTimeout    读取超时时间
      * @return
@@ -70,8 +69,8 @@ public class NetUtil {
     /**
      * @param requestUrl     请求域名
      * @param params         参数内容
-     * @param header         请求头
-     * @param httpMethod     请求方式 {@link #HTTP_METHOD_GET} {@link #HTTP_METHOD_POST}
+     * @param headers         请求头
+     * @param httpMethod     请求方式
      * @param connectTimeout 连接超时时间
      * @param readTimeout    读取超时时间
      * @param ssf            ssl工厂类
@@ -80,11 +79,12 @@ public class NetUtil {
     public static Map<String, Object> doRequest(
             String requestUrl,
             Map<String, Object> params,
-            Map<String, String> header,
+            Map<String, String> headers,
             String httpMethod,
             Integer connectTimeout,
             Integer readTimeout,
             SSLSocketFactory ssf) {
+
         logger.info(">>> http request, url:{}, method:{}, connTimeout:{}, readTimeout:{}, ssf:{}, params:{}",
                 new Object[]{requestUrl, httpMethod, connectTimeout, readTimeout, ssf, params});
 
@@ -95,28 +95,28 @@ public class NetUtil {
         BufferedReader bufferedReader = null;
 
         try {
-            //构建参数内容
+            // 1.构建参数内容
             String queryString = null;
             if (params != null && !params.isEmpty()) {
                 StringBuilder queryBody = new StringBuilder();
-                for (Map.Entry<String, Object> entry : params.entrySet()) {
-                    queryBody.append(entry.getKey())
+                for (Map.Entry<String, Object> param : params.entrySet()) {
+                    queryBody.append(param.getKey())
                             .append("=")
                             //内容需要url encode
-                            .append(URLEncoder.encode(entry.getValue().toString(), "UTF-8"))
+                            .append(param.getValue() != null ? URLEncoder.encode(param.getValue().toString(), "UTF-8") : null)
                             .append("&");
                 }
                 queryString = queryBody.deleteCharAt(queryBody.length() - 1).toString();
             }
 
-            // GET请求url和请求参数进行拼接
-            if (HTTP_METHOD_GET.equalsIgnoreCase(httpMethod)) {
+            // GET下url和请求参数进行拼接
+            if (NetConstant.HTTP_METHOD_GET.equalsIgnoreCase(httpMethod)) {
                 if (queryString != null && queryString.length() > 0) {
                     requestUrl = requestUrl + "?" + queryString;
                 }
             }
 
-            // 生成http连接对象，并设置http请求属性
+            // 2.生成http连接对象，并设置http请求属性
             URL url = new URL(requestUrl);
             HttpURLConnection httpUrlConnection = (HttpURLConnection) url.openConnection();
             // 设置为https加密
@@ -132,21 +132,22 @@ public class NetUtil {
             // 设定请求方式
             httpUrlConnection.setRequestMethod(httpMethod);
             // 超时时间设置
-            httpUrlConnection.setConnectTimeout(connectTimeout != null ? connectTimeout : DEFAULT_CONNECT_TIMEOUT);
-            httpUrlConnection.setReadTimeout(readTimeout != null ? readTimeout : DEFAULT_READ_TIMEOUT);
+            httpUrlConnection.setConnectTimeout(connectTimeout != null ? connectTimeout : NetConstant.DEFAULT_CONNECT_TIMEOUT);
+            httpUrlConnection.setReadTimeout(readTimeout != null ? readTimeout : NetConstant.DEFAULT_READ_TIMEOUT);
 
-            //设置header
-            if (header != null) {
-                for (Map.Entry<String, String> entry : header.entrySet()) {
-                    httpUrlConnection.setRequestProperty(entry.getKey(), entry.getValue());
+            // 设置header
+            if (headers != null) {
+                for (Map.Entry<String, String> header : headers.entrySet()) {
+                    httpUrlConnection.setRequestProperty(header.getKey(), header.getValue());
                 }
             }
 
-            if (HTTP_METHOD_GET.equalsIgnoreCase(httpMethod)) {
+            // 3. 连接
+            if (NetConstant.HTTP_METHOD_GET.equalsIgnoreCase(httpMethod)) {
                 // GET方式访问
                 httpUrlConnection.connect();
-            } else {
-                // POST方式需要建立流，向指向的URL传入参数
+            } else if (NetConstant.HTTP_METHOD_POST.equalsIgnoreCase(httpMethod)) {
+                // POST方式需要建立流，向目标URL传入参数
                 if (queryString.length() > 0) {
                     out = httpUrlConnection.getOutputStream();
                     // 设置编码格式，防止中文乱码
@@ -154,9 +155,11 @@ public class NetUtil {
                     out.flush();
                     out.close();
                 }
+            } else {
+                // 其他请求方式
             }
 
-            // 处理响应
+            // 4.处理响应
             int responseCode = httpUrlConnection.getResponseCode();
             if (HttpURLConnection.HTTP_OK == responseCode) {
                 // 将返回的输入流转换成字符串
@@ -170,19 +173,19 @@ public class NetUtil {
                     bodyBuilder.append(str);
                 }
 
-                result.put("success", true);
-                result.put("data", bodyBuilder.toString());
-                result.put("code", 200);
-                result.put("msg", "请求成功");
+                result.put(NetConstant.NET_RESULT_SUCCESS, true);
+                result.put(NetConstant.NET_RESULT_DATA, bodyBuilder.toString());
+                result.put(NetConstant.NET_RESULT_CODE, 200);
+                result.put(NetConstant.NET_RESULT_MSG, "请求成功");
             } else {
-                result.put("success", false);
-                result.put("code", responseCode);
-                result.put("msg", "请求异常");
+                result.put(NetConstant.NET_RESULT_SUCCESS, false);
+                result.put(NetConstant.NET_RESULT_CODE, responseCode);
+                result.put(NetConstant.NET_RESULT_MSG, "请求失败");
             }
         } catch (Exception e) {
-            result.put("success", false);
-            result.put("code", 500);
-            result.put("msg", "请求异常，异常信息：" + e.getClass() + "->" + e.getMessage());
+            result.put(NetConstant.NET_RESULT_SUCCESS, false);
+            result.put(NetConstant.NET_RESULT_CODE, 500);
+            result.put(NetConstant.NET_RESULT_MSG, "请求异常，异常信息：" + e.getClass() + "->" + e.getMessage());
             throw new RuntimeException(e);
         } finally {
             closeResource(result, in);
@@ -197,9 +200,9 @@ public class NetUtil {
             try {
                 resource.close();
             } catch (IOException e) {
-                result.put("success", false);
-                result.put("code", 500);
-                result.put("msg", "请求异常，异常信息：" + e.getClass() + "->" + e.getMessage());
+                result.put(NetConstant.NET_RESULT_SUCCESS, false);
+                result.put(NetConstant.NET_RESULT_CODE, 999);
+                result.put(NetConstant.NET_RESULT_MSG, "关闭资源异常：" + e.getClass() + "->" + e.getMessage());
             }
         }
     }

@@ -7,7 +7,7 @@ spring:
     host: smtp.163.com
     username: 18806719815@163.com
     password: syf930628
-    protocol: stmp
+#    protocol: stmp 不能加上此句，否则报 javax.mail.NoSuchProviderException: No provider for SMTP
     port: 465
     default-encoding: utf-8
     properties:
@@ -21,11 +21,11 @@ spring:
 
 exception:
   mail:
-    to:
-      - 1274462659@qq.com
+    to: 1274462659@qq.com,syf1274462659@163.com
 
 
 # mail 原生配置，需要手动读取并配置 JavaMailSenderImpl
+mail:
   #  host: smtp.qq.com
   host: smtp.163.com
   username: 18806719815@163.com

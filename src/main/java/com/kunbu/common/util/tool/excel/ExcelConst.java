@@ -1,4 +1,4 @@
-package com.kunbu.common.util.excel;
+package com.kunbu.common.util.tool.excel;
 
 /**
  * @author: KunBu

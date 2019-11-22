@@ -1,6 +1,5 @@
-package com.kunbu.common.util.mail;
+package com.kunbu.common.util.tool.mail;
 
-import com.alibaba.fastjson.JSONObject;
 import com.kunbu.common.util.basic.DateFormatUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,25 +29,24 @@ public class ExceptionMailUtil {
     private MailSendUtil mailSendUtil;
 
     @Value("${exception.mail.to}")
-    private String[] to;
+    private String to;
 
 
-    public void sendExceptionMail(Throwable error, Object title, Object description) {
+    public void sendExceptionMail(Throwable error, String title, String content) {
         try {
             //subject
-            String timeStr = DateFormatUtil.format(new Date(), DateFormatUtil.DATE_PATTERN_7);
-            String subject = title.toString() + timeStr;
+            String subject = title + DateFormatUtil.format(new Date(), DateFormatUtil.DATE_PATTERN_7);
             //tos
             String[] tos;
             if (to != null) {
-                tos = to;
+                tos = to.split(",");
             } else {
                 tos = new String[]{"1274462659@qq.com"};
             }
             //content
             ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
             error.printStackTrace(new PrintStream(baos));
-            Object[] arr = {JSONObject.toJSONString(description.toString()), baos.toString()};
+            Object[] arr = {content, baos.toString()};
             String exceptionMsg = EXCEPTION_MSG_FORMAT.format(arr);
 
             mailSendUtil.sendSimpleMail(tos, subject, exceptionMsg);

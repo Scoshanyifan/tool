@@ -1,4 +1,4 @@
-package com.kunbu.common.util.mail.raw;
+package com.kunbu.common.util.tool.mail.raw;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
