@@ -14,6 +14,7 @@ import java.util.Base64;
 
 /**
  * AES对称加密工具类
+ *
  * @author: kunbu
  * @create: 2019-11-22 17:28
  **/
@@ -49,7 +50,7 @@ public class AESUtil {
     }
 
     /**
-     * 自定义盐加密
+     * 自定义种子加密
      *
      * @param content
      * @param seed
@@ -105,7 +106,7 @@ public class AESUtil {
     }
 
     /**
-     * 使用自定义盐解密
+     * 自定义解密
      *
      * @param content
      * @param seed
@@ -132,6 +133,13 @@ public class AESUtil {
         }
     }
 
+    /**
+     * 自定义解密
+     *
+     * @param content
+     * @param key
+     * @return
+     */
     public static String decrypt(String content, Key key) {
         if (StringUtils.isBlank(content)) {
             return null;

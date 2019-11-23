@@ -143,7 +143,7 @@ public class TokenUtil {
      **/
     public static boolean checkAdmin(String token) {
         if (token != null && token.length() > 0) {
-            if (token.indexOf(TOKEN_PERSON_TYPE_ADMIN) > 0) {
+            if (token.indexOf(TOKEN_PERSON_TYPE_ADMIN) >= 0) {
                 return true;
             }
         }

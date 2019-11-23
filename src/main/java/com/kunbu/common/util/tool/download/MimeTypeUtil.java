@@ -1,4 +1,4 @@
-package com.kunbu.common.util.basic;
+package com.kunbu.common.util.tool.download;
 
 import org.springframework.util.StringUtils;
 
@@ -9,11 +9,11 @@ import org.springframework.util.StringUtils;
  */
 public class MimeTypeUtil {
 
-    public static String getExtention(String filename) {
+    public static String getExt(String originalFileName) {
         String ext = null;
-        int index = filename.lastIndexOf(".");
+        int index = originalFileName.lastIndexOf(".");
         if (index > 0) {
-            ext = filename.substring(index + 1);
+            ext = originalFileName.substring(index + 1);
         }
         return ext;
     }

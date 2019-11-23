@@ -4,6 +4,8 @@ import com.alibaba.fastjson.util.IOUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.kunbu.common.util.ResultMap;
+import com.kunbu.common.util.tool.download.DownloadUtil;
+import com.kunbu.common.util.tool.excel.ExcelConst;
 import com.kunbu.common.util.tool.excel.ExcelExportUtil;
 import com.kunbu.common.util.tool.excel.ExcelReadUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -16,8 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -59,7 +59,7 @@ public class ExcelDemoController {
         ExcelExportUtil.exportExcelTemplate(importHeaders, baos);
 
         byte[] content = baos.toByteArray();
-        responseExportExcel(EXCEL_TEMPLATE_FILENAME, content, request, response);
+        responseExportExcel(EXCEL_TEMPLATE_FILENAME, content, ExcelConst.EXCEL_XLSX_2007, request, response);
     }
 
     @GetMapping("/export/data")
@@ -93,7 +93,7 @@ public class ExcelDemoController {
 
             byte[] content = baos.toByteArray();
             String fileName = "数据列表-" + System.currentTimeMillis();
-            responseExportExcel(fileName, content, request, response);
+            responseExportExcel(fileName, content, ExcelConst.EXCEL_XLSX_2007, request, response);
         } catch (Exception e) {
             LOGGER.error(">>> exportExcelData error", e);
         }
@@ -126,35 +126,36 @@ public class ExcelDemoController {
      * @param request
      * @param response
      */
-    private void responseExportExcel(String fileName, byte[] content, HttpServletRequest request, HttpServletResponse response) {
-        OutputStream outputStream = null;
-        try {
-            response.reset();
-            response.addHeader("Cache-Control", "no-cache");
-            response.addHeader("Pragma", "no-cache");
-            response.setDateHeader("Expires", 0L);
-            response.setStatus(200);
-            String fn;
-            // 如果是苹果浏览器，特殊处理文件名的编码
-            String userAgent = request.getHeader("User-Agent").toLowerCase();
-            if (userAgent.contains("safari")) {
-                // 先转成utf8的字节数组，然后再转成iso进行传输，最后浏览器会进行iso转码
-                byte[] bytes = fileName.getBytes("UTF-8");
-                fn = new String(bytes, "ISO-8859-1");
-            } else {
-                fn = URLEncoder.encode(fileName,"UTF-8");
-            }
-            //xlsx
-            response.addHeader("Content-Disposition", "attachment;filename="+ fn + ".xlsx");
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            outputStream = response.getOutputStream();
-            outputStream.write(content);
-            outputStream.flush();
-        } catch (Exception e) {
-            LOGGER.error(">>> 导出excel异常", e);
-        } finally {
-            IOUtils.close(outputStream);
-        }
+    private void responseExportExcel(String fileName, byte[] content, String ext, HttpServletRequest request, HttpServletResponse response) {
+//        OutputStream outputStream = null;
+//        try {
+//            response.reset();
+//            response.addHeader("Cache-Control", "no-cache");
+//            response.addHeader("Pragma", "no-cache");
+//            response.setDateHeader("Expires", 0L);
+//            response.setStatus(200);
+//            String fn;
+//            // 如果是苹果浏览器，特殊处理文件名的编码
+//            String userAgent = request.getHeader("User-Agent").toLowerCase();
+//            if (userAgent.contains("safari")) {
+//                // 先转成utf8的字节数组，然后再转成iso进行传输，最后浏览器会进行iso转码
+//                byte[] bytes = fileName.getBytes("UTF-8");
+//                fn = new String(bytes, "ISO-8859-1");
+//            } else {
+//                fn = URLEncoder.encode(fileName,"UTF-8");
+//            }
+//            //xlsx
+//            response.addHeader("Content-Disposition", "attachment;filename="+ fn + ".xlsx");
+//            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+//            outputStream = response.getOutputStream();
+//            outputStream.write(content);
+//            outputStream.flush();
+//        } catch (Exception e) {
+//            LOGGER.error(">>> 导出excel异常", e);
+//        } finally {
+//            IOUtils.close(outputStream);
+//        }
+        DownloadUtil.downloadExcel(request, response, content, fileName, ext);
     }
 
     /**
