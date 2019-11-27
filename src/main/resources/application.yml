@@ -2,14 +2,14 @@ server:
   port: 9999
 
 spring:
+  # email
   mail:
-    # SMTP服务器地址
-    host: smtp.163.com
+    host: smtp.163.com     # SMTP 服务器地址(smtp.qq.com)
     username: 18806719815@163.com
     password: syf930628
-#    protocol: stmp 不能加上此句，否则报 javax.mail.NoSuchProviderException: No provider for SMTP
     port: 465
     default-encoding: utf-8
+    # protocol: smtp
     properties:
       # mail.debug: true
       mail.smtp.auth: true
@@ -18,6 +18,20 @@ spring:
       mail.smtp.starttls.enable: false
       mail.smtp.socketFactory.fallback: false
       mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+
+  # mongodb
+  data:
+    mongodb:
+      uri: mongodb://localhost/bucks
+      port: 27017
+      username: kunbu
+      password: 123456
+
+
+
+
+
+
 
 exception:
   mail:
