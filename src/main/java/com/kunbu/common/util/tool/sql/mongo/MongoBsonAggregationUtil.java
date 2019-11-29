@@ -4,7 +4,9 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 
 /**
- * @project: bucks
+ * 基于Bson文档形式的聚合写法，和查询有差别
+ *
+ *
  * @author: kunbu
  * @create: 2019-09-21 11:33
  **/

@@ -13,7 +13,7 @@ import java.util.Date;
  * @author: kunbu
  * @create: 2019-08-27 17:19
  **/
-public class MongoUtil {
+public class MongoCriteriaUtil {
 
     /**
      * mongodb保存的是0时区时间，查询取值有可能需要转换
@@ -21,11 +21,24 @@ public class MongoUtil {
     public static final long HOURS_8 = 28800000L;
 
     /**
+     * 返回指定字段
+     *
+     * @param query
+     * @param fields
+     **/
+    public static void returnFields(Query query, String... fields) {
+        if (query != null && fields != null) {
+            for (String field : fields) {
+                query.fields().include(field);
+            }
+        }
+    }
+
+    /**
      * 追加条件(and)
      *
      * @param query
      * @param criteria
-     * @return
      **/
     public static void addCriteria(Query query, Criteria criteria) {
         if (query != null && criteria != null) {

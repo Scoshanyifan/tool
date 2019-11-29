@@ -7,7 +7,7 @@ import org.bson.conversions.Bson;
 import java.util.List;
 
 /**
- * 基于spring-data-mongo，bson原生写法（非api）
+ * 基于spring-data-mongo，Bson原生写法
  * <p>
  * http://www.mongoing.com/docs/reference/operator/query.html
  * <p>
@@ -21,25 +21,6 @@ public class MongoBsonQueryUtil {
 
     private static final BasicDBObject EMPTY_DB_OBJECT = new BasicDBObject();
 
-    public static void main(String[] args) {
-        BasicDBObject is = is("sex", "man");
-        BasicDBObject eq = eq("age", 18);
-        BasicDBObject ne = ne("age", 21);
-        BasicDBObject gt = gt("age", 23, true);
-        BasicDBObject lte = le("age", 45, false);
-        BasicDBObject in = in("name", "Tom", "Jack");
-        BasicDBObject nin = nin("address", "room", "school");
-
-        List<Bson> bsonList = Lists.newArrayList(is, eq, ne, gt, lte, in, nin);
-        bsonList.stream().forEach(System.out::println);
-
-        System.out.println(and(eq, is));
-        System.out.println(or(gt, is));
-        System.out.println(nor(gt, is));
-        System.out.println(not("price", is));
-        System.out.println(exists("price", true));
-
-    }
 
     public static BasicDBObject is(String field, Object value) {
         BasicDBObject is = new BasicDBObject();
@@ -48,6 +29,25 @@ public class MongoBsonQueryUtil {
         }
         return is;
     }
+
+    //------------------------------ projection Operators --------------------------
+
+    public static BasicDBObject project(boolean appendId, String... returnFields) {
+        BasicDBObject project = new BasicDBObject();
+        if (!appendId) {
+            project.put("_id", 0);
+        }
+        if (returnFields != null) {
+            for (String field : returnFields) {
+                project.put(field, 1);
+            }
+        }
+        return project;
+    }
+
+    // eleMatch / slice / meta
+
+
 
     //------------------------------ Comparison Query Operators --------------------------
 
@@ -266,4 +266,28 @@ public class MongoBsonQueryUtil {
     // -------------------------- Array Operator  ----------------------
 
     // $all, $elemMatch, $size
+
+
+
+
+
+    public static void main(String[] args) {
+        BasicDBObject is = is("sex", "man");
+        BasicDBObject eq = eq("age", 18);
+        BasicDBObject ne = ne("age", 21);
+        BasicDBObject gt = gt("age", 23, true);
+        BasicDBObject lte = le("age", 45, false);
+        BasicDBObject in = in("name", "Tom", "Jack");
+        BasicDBObject nin = nin("address", "room", "school");
+
+        List<Bson> bsonList = Lists.newArrayList(is, eq, ne, gt, lte, in, nin);
+        bsonList.stream().forEach(System.out::println);
+
+        System.out.println(and(eq, is));
+        System.out.println(or(gt, is));
+        System.out.println(nor(gt, is));
+        System.out.println(not("price", is));
+        System.out.println(exists("price", true));
+
+    }
 }
