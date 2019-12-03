@@ -119,7 +119,7 @@ public class MongoBsonQueryUtil {
      * @param appendEqual
      * @return
      **/
-    public static BasicDBObject le(String field, Object value, boolean appendEqual) {
+    public static BasicDBObject lt(String field, Object value, boolean appendEqual) {
         BasicDBObject le = new BasicDBObject();
         if (field != null && value != null) {
             if (appendEqual) {
@@ -276,7 +276,7 @@ public class MongoBsonQueryUtil {
         BasicDBObject eq = eq("age", 18);
         BasicDBObject ne = ne("age", 21);
         BasicDBObject gt = gt("age", 23, true);
-        BasicDBObject lte = le("age", 45, false);
+        BasicDBObject lte = lt("age", 45, false);
         BasicDBObject in = in("name", "Tom", "Jack");
         BasicDBObject nin = nin("address", "room", "school");
 

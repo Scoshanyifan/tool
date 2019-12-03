@@ -5,11 +5,10 @@ import com.kunbu.common.util.basic.DateFormatUtil;
 import com.kunbu.common.util.tool.sql.mongo.MongoBsonAggregationUtil;
 import com.kunbu.common.util.tool.sql.mongo.MongoBsonQueryUtil;
 import com.kunbu.common.util.tool.sql.mongo.MongoCriteriaUtil;
-import com.kunbu.common.util.tool.sql.mongo.demo.RequestLog;
+import com.kunbu.common.util.tool.sql.mongo.demo.GoodMongo;
+import com.kunbu.common.util.tool.sql.mongo.demo.OrderMongo;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.AggregateIterable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.bson.Document;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +28,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * @project: bucks
@@ -44,6 +44,23 @@ public class MongoTest {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    @Test
+    public void initData() {
+        List<OrderMongo> orderList = Lists.newArrayList();
+        long time = new Date().getTime();
+        for (int i = 1; i <= 8; i++) {
+            OrderMongo order = new OrderMongo();
+            order.setClientName(new Random().nextBoolean() ? "kunbu" : "scosyf");
+            order.setCreateTime(new Date(time - new Random().nextInt(100) * 1000 * 3600 * i));
+            order.setOrderNum("201912020" + i);
+            order.setItems(Lists.newArrayList(
+                    new GoodMongo("GD1" + new Random().nextInt(10), 1 + i, 0.5 * i + 2),
+                    new GoodMongo("GD2" + new Random().nextInt(10), 2 + i, 0.5 * i + 3)));
+            orderList.add(order);
+        }
+        mongoTemplate.insert(orderList, OrderMongo.class);
+    }
+
     /**
      * https://www.cnblogs.com/woshimrf/p/mongodb-pagenation-performance.html
      **/
@@ -51,24 +68,31 @@ public class MongoTest {
     public void testPage() {
         int pageNum = 1;
         int pageSize = 5;
+
         // 1. 常规分页
-        Query query = new Query(Criteria.where("methodName").exists(true));
-        query.fields().include("createTime");
-        query.with(Sort.by(Sort.Direction.DESC, "createTime"))
+        Query query = new Query(Criteria.where("clientName").is("kunbu"))
+                .with(Sort.by(Sort.Direction.DESC, "createTime"))
                 .skip((pageNum - 1) * pageSize)
                 .limit(pageSize);
-        List<Map> result = mongoTemplate.find(query, Map.class, "requestlog");
-        result.stream().forEach(log -> logger.info(">>> query1: {}", log));
+        query.fields().include("createTime");
+        logger.info(">>> {}", query.toString());
+        List<Map> result = mongoTemplate.find(query, Map.class, "order");
+        result.stream().forEach(log -> logger.info(">>> page_1: {}", log));
+
 
         // 2. 按id或时间排序后取id或时间戳的最后一条记录，大于或小于这个值进行limit（第一次默认返回第一页）
 //        String id = (String) result.get(9).get("_id");
+
+        // 这里按时间最新的排序，即前一页的最后一条记录的时间戳作为查询条件，小于该时间的接下去10条
         Date time = (Date) result.get(result.size() - 1).get("createTime");
-        Query query2 = new Query(Criteria.where("methodName").exists(true).and("createTime").lt(time));
-        query2.fields().include("createTime");
-        query2.with(Sort.by(Sort.Direction.DESC, "createTime"))
+        // 这里用了lte而不是lt，因为如果同一时间点有多条数据，那lt存在少取的可能，为了保险，用lte，虽然会存在前后页重复数据，但是确保都展示 TODO
+        Query query2 = new Query(Criteria.where("clientName").is("kunbu").and("createTime").lte(time))
+                .with(Sort.by(Sort.Direction.DESC, "createTime"))
                 .limit(pageSize);
+        query2.fields().include("createTime");
         logger.info(">>> {}", query2.toString());
-        result.stream().forEach(log -> logger.info(">>> query2: {}", log));
+        result = mongoTemplate.find(query2, Map.class, "order");
+        result.stream().forEach(log -> logger.info(">>> page_2: {}", log));
     }
 
     /**
@@ -86,28 +110,30 @@ public class MongoTest {
         Query query = new Query(criteria);
         logger.info(">>> query:{}", query);
 
-        // 2. BasicQuery
-        BasicDBObject find = MongoBsonQueryUtil.or(
-                MongoBsonQueryUtil.is("httpStatus", "200"), MongoBsonQueryUtil.is("httpStatus", "500"));
-        BasicDBObject find2 = MongoBsonQueryUtil.and(
-                MongoBsonQueryUtil.is("httpStatus", "200"), MongoBsonQueryUtil.is("httpMethod", "GET"));
-        BasicDBObject project = MongoBsonQueryUtil.project(
-                true, "methodName", "httpMethod", "httpStatus");
 
-        Query basicQuery = new BasicQuery(find2.toString(), project.toString());
-        List<Map> results = mongoTemplate.find(basicQuery, Map.class, "requestlog");
+        // 2. BasicQuery
+        BasicDBObject find = MongoBsonQueryUtil.and(
+                MongoBsonQueryUtil.is("clientName", "kunbu"), MongoBsonQueryUtil.is("orderNum", "2019120201"));
+        BasicDBObject project = MongoBsonQueryUtil.project(
+                true, "clientName", "orderNum", "createTime");
+
+        Query basicQuery = new BasicQuery(find.toString(), project.toString());
+        List<Map> results = mongoTemplate.find(basicQuery, Map.class, "order");
         results.stream().forEach(log -> logger.info(">>> {}", log));
     }
 
+
     /**
-     * 1. 使用API聚合
+     * 聚合查询
+     *
+     * 1. 使用API聚合（不能实现复杂逻辑）
      * Aggregation agg = newAggregation(
      *      pipelineOP1(),
      *      pipelineOP2(),
      *      pipelineOPn()
      * );
      *
-     * 2. Bson写法
+     * 2. Bson原生写法
      * https://blog.csdn.net/congcong68/article/details/52821159
      *
      *
@@ -116,129 +142,109 @@ public class MongoTest {
      **/
     @Test
     public void testAggregation() {
-        // 1. Aggregation
-        Criteria httpMethodCriteria = MongoCriteriaUtil.strIs("httpMethod", "GET");
-        Criteria timeCriteria = MongoCriteriaUtil.dateCompare("createTime",
-                DateFormatUtil.parse("2019-09-09 16:00:00", DateFormatUtil.DEFAULT_DATE_PATTERN),
-                DateFormatUtil.parse("2019-09-19 18:04:00", DateFormatUtil.DEFAULT_DATE_PATTERN),
-                false);
+        Date start = DateFormatUtil.parse("2019-11-01 16:00:00", DateFormatUtil.DEFAULT_DATE_PATTERN);
+        Date end = DateFormatUtil.parse("2019-12-30 18:00:00", DateFormatUtil.DEFAULT_DATE_PATTERN);
 
-        //统计时间段内，各个方法调用次数
+        // 1. Aggregation（api不支持group复杂写法）
+        Criteria clientNameCriteria = MongoCriteriaUtil.strIs("clientName", "kunbu");
+        Criteria timeCriteria = MongoCriteriaUtil.dateCompare("createTime", start, end, false);
+
         Aggregation aggregation = Aggregation.newAggregation(
 //                Aggregation.project(),
-                Aggregation.match(new Criteria().andOperator(timeCriteria, httpMethodCriteria)),
-                Aggregation.group("methodName", "url").count().as("count")
+                Aggregation.match(clientNameCriteria),
+                Aggregation.match(timeCriteria),
+                Aggregation.unwind("items"),
+                // api的group只能用现有字段，而原生bson可以进行函数处理
+                Aggregation.group("createTime", "items.goodCode")
+                        .sum("items.quantity").as("count")
         );
         logger.info(">>> aggregation:{}", aggregation);
-        // 查询
-        AggregationResults<Document> aggregationResults = mongoTemplate.aggregate(aggregation, RequestLog.class, Document.class);
+
+        AggregationResults<Document> aggregationResults = mongoTemplate.aggregate(aggregation, OrderMongo.class, Document.class);
         logger.info(">>> rawResults:{}", aggregationResults.getRawResults());
-        logger.info(">>> mappedResults:{}", aggregationResults.getMappedResults());
-        //结果 document
         List<Document> mappedResults = aggregationResults.getMappedResults();
-        List<CountVO> vos = Lists.newArrayList();
-        for (Document doc : mappedResults) {
-            vos.add(new CountVO((String) doc.get("_id"), (Integer) doc.get("count")));
-        }
-        logger.info(">>> size:{}, vos:{}", vos.size(), vos);
-
-        //---------------------- api不支持group复杂写法
-        Aggregation customerAgg = Aggregation.newAggregation(
-                Aggregation
-                        .project("buyerNick", "payment", "orders", "num")
-                        .andExpression("sendTime")
-                        .plus(MongoCriteriaUtil.HOURS_8)
-                        .extractMonth()
-                        .as("month"),
-                Aggregation.match(httpMethodCriteria),
-                Aggregation.unwind("orders"),
-                Aggregation
-                        .group("buyerNick")
-                        .first("buyerNick").as("buyerNick")
-                        .sum("payment").as("totalPayment")
-                        .sum("num").as("itemNum")
-                        .count().as("orderNum"),
-                Aggregation.sort(Sort.Direction.DESC, "totalPayment"),
-                Aggregation.skip(100L),
-                Aggregation.limit(10)
-        );
-        logger.info(">>> aggregation:{}", customerAgg);
+        mappedResults.stream().forEach(x -> logger.info(">>> result:{}", x));
 
 
-        // 2. Bson写法
-
-//        Set<String> onumberSet=new HashSet<>();
-//        onumberSet.add("abcd113");
-//        onumberSet.add("adxc332");
-//        //过滤条件
-//        BasicDBObject queryObject=new BasicDBObject("onumber", new BasicDBObject("$in",onumberSet));
-//        BasicDBObject queryMatch=new BasicDBObject("$match",queryObject);
-//        logger.info(">>> match:{}", queryMatch);
-//        //展开数组
-//        BasicDBObject queryUnwind=new BasicDBObject("$unwind","$items");
-//        //分组统计
-//        BasicDBObject groupObject=new BasicDBObject("_id",new BasicDBObject("ino","$items.ino"));
-//        groupObject.put("total", new BasicDBObject("$sum","$items.quantity"));
-//        BasicDBObject  queryGroup=new BasicDBObject("$group",groupObject);
-//        //过滤条件
-//        BasicDBObject finalizeMatch=new BasicDBObject("$match",new BasicDBObject("total",new BasicDBObject("$gt",1)));
-//
-//        List<BasicDBObject> piplelines = Lists.newArrayList(queryMatch,queryUnwind,queryGroup,finalizeMatch);
-//        AggregateIterable<Document> results = mongoTemplate.getCollection("orders").aggregate(piplelines);
-//        for (Document doc : results) {
-//            logger.info(">>> doc:{}", doc);
-//        }
-
+        // 2. Bson
         /**
-         * db.requestlog.aggregate([
-         *         {$match:{
+         * 带统计的复杂聚合：时间段内，按月维度统计items中每种good的数量，并且最终每种good数量小于10
+         * db.order.aggregate([
+         *     {$match:{
          *             createTime:{
-         *                 $gt:ISODate("2019-09-09T16:00:00.000Z"),
-         *                 $lt:ISODate("2019-09-30T18:00:00.000Z")}
+         *                 $gt:ISODate("2019-11-01T16:00:00.000Z"),
+         *                 $lt:ISODate("2019-12-30T18:00:00.000Z")
+         *                 },
+         *             clientName:'kunbu'
          *             }
-         *         },
-         *         {$group:{
+         *     },
+         *     {$unwind:'$items'},
+         *     {$group:{
          *             _id:{
-         *                 methodName:'$methodName'
          *                 month:{$month:{$add:['$createTime',8]}},
-         *                 day:{$dayOfMonth:{$add:['$createTime',8]}}},
-         *             count:{$sum:1}
-         *             }
+         *                 goodCode:'$items.goodCode'
+         *             },
+         *             count:{$sum:'$items.quantity'}
          *         }
-         * ]);
+         *     },
+         *     {$match:{
+         *         count:{$lt:10}}
+         *     }
+         * ])
+         *
+         * 结果：
+         * {
+         *     "_id" : {
+         *         "month" : 12,
+         *         "goodCode" : "GD10"
+         *     },
+         *     "count" : 9
+         * }
+         * {
+         *     "_id" : {
+         *         "month" : 11,
+         *         "goodCode" : "GD11"
+         *     },
+         *     "count" : 8
+         * }
+         * ... ...
+         *
          **/
+        // match
+        BasicDBObject match = MongoBsonQueryUtil.and(
+                // new BasicDBObject("createTime", new BasicDBObject("$gt", start))
+                MongoBsonQueryUtil.gt("createTime", start, false),
+                MongoBsonQueryUtil.lt("createTime", end, false),
+                MongoBsonQueryUtil.is("clientName", "kunbu"));
 
-        Date start = DateFormatUtil.parse("2019-09-25 16:00:00", DateFormatUtil.DEFAULT_DATE_PATTERN);
-        Date end = DateFormatUtil.parse("2019-09-30 18:00:00", DateFormatUtil.DEFAULT_DATE_PATTERN);
+        // unwind
+        BasicDBObject unwind = new BasicDBObject("$unwind", "$items");
 
-        BasicDBObject match = MongoBsonQueryUtil
-                .and(MongoBsonQueryUtil.gt("createTime", start, false),
-                        // new BasicDBObject("createTime", new BasicDBObject("$gt", start))
-                        MongoBsonQueryUtil.le("createTime", end, false))
-                .append("httpStatus", "200");
-        logger.info(">>> match:{}", match);
-
-        BasicDBObject group = new BasicDBObject();
+        // group
         BasicDBObject _id = new BasicDBObject();
-        _id.put("methodName", "$methodName");
+        // _id.put("month", new BasicDBObject("$month", new BasicDBObject("$add", new Object[]{"$createTime", 8})));
         _id.put("month", new BasicDBObject("$month", MongoBsonAggregationUtil.add("createTime", 8)));
-        // _id.put("day", new BasicDBObject("$dayOfMonth", new BasicDBObject("$add", new Object[]{"$createTime", 8})));
-        _id.put("day", new BasicDBObject("$dayOfMonth", MongoBsonAggregationUtil.add("createTime", 8)));
-
+        _id.put("goodCode", "$items.goodCode");
+        BasicDBObject group = new BasicDBObject();
         group.put("_id", _id);
-        group.put("count", new BasicDBObject("$sum", 1));
-        logger.info(">>> group:{}", group);
+        group.put("count", new BasicDBObject("$sum", "$items.quantity"));
 
+        // match
+        BasicDBObject match2 = MongoBsonQueryUtil.lt("count", 10, false);
+
+        //按管道的顺序执行
         List<BasicDBObject> pipelines = Lists.newArrayList(
                 new BasicDBObject("$match", match),
-                new BasicDBObject("$group", group)
+                unwind,
+                new BasicDBObject("$group", group),
+                new BasicDBObject("$match", match2)
         );
+        pipelines.stream().forEach(p -> logger.info("pipeline:{}", p));
 
-        AggregateIterable<Document> docs = mongoTemplate.getCollection("requestlog").aggregate(pipelines);
+        AggregateIterable<Document> docs = mongoTemplate.getCollection("order").aggregate(pipelines);
         for (Document doc : docs) {
             logger.info(">>> doc:{}", doc);
         }
-
     }
 
     /**
@@ -272,14 +278,6 @@ public class MongoTest {
         logger.info(">>> retval:{}", retval);
         List<Object> _batch = (List<Object>) retval.get("_batch");
         logger.info(">>> _batch:{}", _batch);
-
-    }
-
-    @Data
-    @AllArgsConstructor
-    class CountVO {
-        private String methodName;
-        private Integer count;
 
     }
 
