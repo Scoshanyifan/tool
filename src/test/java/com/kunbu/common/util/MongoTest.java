@@ -80,10 +80,10 @@ public class MongoTest {
         result.stream().forEach(log -> logger.info(">>> page_1: {}", log));
 
 
-        // 2. 按id或时间排序后取id或时间戳的最后一条记录，大于或小于这个值进行limit（第一次默认返回第一页）
-//        String id = (String) result.get(9).get("_id");
-
-        // 这里按时间最新的排序，即前一页的最后一条记录的时间戳作为查询条件，小于该时间的接下去10条
+        // 2. 性能分页：
+        // 按id或时间排序后，取前一页最后一条记录的id或时间戳作为条件，大于或小于这个值进行limit（第一次默认返回第一页）
+//        String id = (String) result.get(result.size() - 1).get("_id");
+        // 这里按时间最新的排序，即的最后一条记录的时间戳作为查询条件，小于该时间的接下去10条
         Date time = (Date) result.get(result.size() - 1).get("createTime");
         // 这里用了lte而不是lt，因为如果同一时间点有多条数据，那lt存在少取的可能，为了保险，用lte，虽然会存在前后页重复数据，但是确保都展示 TODO
         Query query2 = new Query(Criteria.where("clientName").is("kunbu").and("createTime").lte(time))
@@ -156,7 +156,8 @@ public class MongoTest {
                 Aggregation.unwind("items"),
                 // api的group只能用现有字段，而原生bson可以进行函数处理
                 Aggregation.group("createTime", "items.goodCode")
-                        .sum("items.quantity").as("count")
+                        .sum("items.quantity").as("count"),
+                Aggregation.project("count")
         );
         logger.info(">>> aggregation:{}", aggregation);
 
@@ -171,11 +172,11 @@ public class MongoTest {
          * 带统计的复杂聚合：时间段内，按月维度统计items中每种good的数量，并且最终每种good数量小于10
          * db.order.aggregate([
          *     {$match:{
+         *             clientName:'kunbu',
          *             createTime:{
          *                 $gt:ISODate("2019-11-01T16:00:00.000Z"),
          *                 $lt:ISODate("2019-12-30T18:00:00.000Z")
-         *                 },
-         *             clientName:'kunbu'
+         *                 }
          *             }
          *     },
          *     {$unwind:'$items'},
@@ -247,39 +248,27 @@ public class MongoTest {
         }
     }
 
-    /**
-     * 底层聚合写法
-     **/
     @Test
-    public void testRawAggregation() {
-
-        BasicDBObject bson = new BasicDBObject();
-        bson.put("$eval", "db.requestlog.aggregate([\n" +
-                "    {$match:{\n" +
-                "        'createTime':{$gt:ISODate(\"2019-09-09T08:00:00.000Z\"),\n" +  // 查询条件需要 -8h 变为0时区
-                "                $lt:ISODate(\"2019-09-19T08:59:59.000Z\")},\n" +
-//                "        'createTime':{$gt:ISODate(\"2019-05-01T00:00:00.000Z\"),\n" +
-//                "                $lt:ISODate(\"2019-12-30T23:59:59.000Z\")},\n" +
-                "        }\n" +
-                "    },\n" +
-                "    {$group:{\n" +
-                "            _id:{\n" +
-                "                time:'$createTime',\n" + // 返回结果是正确的时区
-//                "                time:{$month:{$add:['$createTime',8]}},\n" +
-                "                count:'$methodName'},\n" +
-                "            count:{$sum:1}\n" +
-                "           }\n" +
-                "    }\n" +
-                "])");
-
-        Document document = mongoTemplate.getDb().runCommand(bson);
-        logger.info(">>> {}", document);
-        Map<String, Object> retval = (Map<String, Object>) document.get("retval");
-        logger.info(">>> retval:{}", retval);
-        List<Object> _batch = (List<Object>) retval.get("_batch");
-        logger.info(">>> _batch:{}", _batch);
-
+    public void testBucket() {
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.unwind("items"),
+                Aggregation
+                        // 分组字段
+                        .bucket("items.price")
+                        // 分组范围（结果中的id表示范围：0-3，3-6，6-正无穷）
+                        .withBoundaries(0, 3, 6)
+                        // 类似switch最后的default
+                        .withDefaultBucket("default")
+                        // 输出内容，good种类数（含重复，因为是每个分组下）
+                        .andOutput("items.goodCode").count().as("goodCount")
+                        // 产品总量
+                        .andOutput("items.quantity").sum().as("sum")
+                        // push() 展开goodCode
+                        .andOutput("items.goodCode").push().as("goodCodes")
+        );
+        AggregationResults<Document> aggregationResults = mongoTemplate.aggregate(aggregation, OrderMongo.class, Document.class);
+        // Document{{_id=0, goodCount=1, sum=2, goodCodes=[GD10]}}
+        aggregationResults.getMappedResults().stream().forEach(x -> logger.info(">>> result:{}", x));
     }
-
 }
 
