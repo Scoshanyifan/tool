@@ -31,8 +31,6 @@ spring:
 
 
 
-
-
 exception:
   mail:
     to: 1274462659@qq.com,syf1274462659@163.com

@@ -207,11 +207,11 @@ public class MongoBsonQueryUtil {
 
     /**
      * 不推荐使用（会有歧义）：{ field: { $not: expression } }
-     * http://www.mongoing.com/docs/reference/operator/aggregation/not.html
-     * <p>
+     * http://www.mongoing.com/docs/reference/operator/query/not.html
+     *
      * eg：{ "price": { $not: { $gt: 1.99 } } } 含义如下
-     * 1. the price field value is less than or equal to 1.99 or
-     * 2. the price field does not exist
+     * 1. the price field value is less than or equal to 1.99 or  #不大于1.99
+     * 2. the price field does not exist                          #price字段不存在
      * <p>
      * ps：像$lt, $ne等属于比较运算，而$not属于范围运算
      * <p>
@@ -221,6 +221,7 @@ public class MongoBsonQueryUtil {
      *
      * @param expressionWithoutField 没有字段形式的表达式，eg：{ $gt: 1.99 }
      **/
+    @Deprecated
     public static BasicDBObject not(String field, BasicDBObject expressionWithoutField) {
         if (field != null && expressionWithoutField != null) {
             return new BasicDBObject(field, new BasicDBObject("$not", expressionWithoutField));
@@ -235,7 +236,7 @@ public class MongoBsonQueryUtil {
      * { field: { $exists: boolean } } >>> { "name": { $exists: false } }
      * <p>
      * 查询字段是否存在
-     * { "_id" : 900, "name" : null }, { "_id" : 901 } 结果是：{ "_id" : 901 }
+     * { "_id" : 900, "name" : null }, { "_id" : 901, "name" : "kunbu" }, { "_id" : 902 }  结果是：{ "_id" : 902 }
      *
      * @param field
      * @param exists

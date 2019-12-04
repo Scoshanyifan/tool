@@ -6,6 +6,13 @@ import com.mongodb.BasicDBObject;
 /**
  * 基于Bson文档形式的聚合写法，和查询有差别
  *
+ * Pipeline Aggregation Operators                  project, skip, limit, unwind, group, sort, geoNear
+ *
+ * Group Aggregation Operators                    addToSet, first, last, max, min, avg, push, sum, (*count)
+ *
+ * Arithmetic Aggregation Operators               add (*via plus), subtract (*via minus), multiply, divide, mod
+ *
+ * Comparison Aggregation Operators            eq (*via: is), gt, gte, lt, lte, ne
  *
  * @author: kunbu
  * @create: 2019-09-21 11:33
@@ -42,6 +49,8 @@ public class MongoBsonAggregationUtil {
     }
 
     /**
+     * http://www.mongoing.com/docs/reference/operator/aggregation/not.html
+     *
      * { $not: [ expression ] } >>> { $not: [ { $gt: [ "$price", 2.33 ] } ] }
      * <p>
      * ps: 注意和Query下的区别：{ "price": { $not: { $gt: 1.99 } } }

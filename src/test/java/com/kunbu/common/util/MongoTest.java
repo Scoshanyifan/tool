@@ -153,6 +153,7 @@ public class MongoTest {
 //                Aggregation.project(),
                 Aggregation.match(clientNameCriteria),
                 Aggregation.match(timeCriteria),
+                // 把元素展开
                 Aggregation.unwind("items"),
                 // api的group只能用现有字段，而原生bson可以进行函数处理
                 Aggregation.group("createTime", "items.goodCode")
@@ -170,6 +171,27 @@ public class MongoTest {
         // 2. Bson
         /**
          * 带统计的复杂聚合：时间段内，按月维度统计items中每种good的数量，并且最终每种good数量小于10
+         *
+         * 数据：
+         * {
+         *     "_id" : ObjectId("5de5c393595c87400482f434"),
+         *     "createTime" : ISODate("2019-11-30T14:08:19.416Z"),
+         *     "orderNum" : "2019120201",
+         *     "clientName" : "kunbu",
+         *     "items" : [
+         *         {
+         *             "goodCode" : "GD10",
+         *             "quantity" : 2,
+         *             "price" : 2.5
+         *         },
+         *         {
+         *             "goodCode" : "GD22",
+         *             "quantity" : 3,
+         *             "price" : 3.5
+         *         }
+         *     ],
+         * }
+         * 聚合：
          * db.order.aggregate([
          *     {$match:{
          *             clientName:'kunbu',
@@ -192,7 +214,6 @@ public class MongoTest {
          *         count:{$lt:10}}
          *     }
          * ])
-         *
          * 结果：
          * {
          *     "_id" : {
