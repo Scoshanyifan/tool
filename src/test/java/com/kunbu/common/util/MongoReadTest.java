@@ -37,9 +37,9 @@ import java.util.Random;
  **/
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class MongoTest {
+public class MongoReadTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(MongoTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(MongoReadTest.class);
 
     @Autowired
     private MongoTemplate mongoTemplate;

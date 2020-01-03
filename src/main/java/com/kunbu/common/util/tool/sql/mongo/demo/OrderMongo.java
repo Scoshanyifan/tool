@@ -16,11 +16,18 @@ import java.util.List;
 @Document(collection = "order")
 public class OrderMongo {
 
+    public static final Integer ORDER_STATUS_INIT = 1;
+    public static final Integer ORDER_STATUS_FORBID = 2;
+    public static final Integer ORDER_STATUS_TAKE = 3;
+    public static final Integer ORDER_STATUS_DELIVER = 4;
+    public static final Integer ORDER_STATUS_FINISHED = 5;
+
     @Id
     private String id;
     private Date createTime;
     private String orderNum;
     private String clientName;
+    private Integer status;
     private List<GoodMongo> items;
 
 }
