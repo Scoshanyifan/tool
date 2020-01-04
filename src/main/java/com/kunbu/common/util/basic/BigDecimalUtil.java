@@ -3,6 +3,10 @@ package com.kunbu.common.util.basic;
 import java.math.BigDecimal;
 
 /**
+ * 精度丢失原因
+ * https://www.cnblogs.com/backwords/p/9826773.html
+ * https://blog.csdn.net/xjk201/article/details/87863115
+ *
  * 精确浮点数计算工具类
  * http://blog.csdn.net/stevene/article/details/586089
  *
@@ -204,6 +208,9 @@ public class BigDecimalUtil {
         }
         return false;
     }
+
+
+
 
     public static void main(String[] args) {
 
