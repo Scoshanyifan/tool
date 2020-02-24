@@ -17,4 +17,7 @@ public interface ExcelConst {
     String EXCEL_XLSX_2007 = "xlsx";
 
     String FILE_TYPE_HTTP = "http";
+
+
+    String EXCEL_TEMPLATE_FILE_NAME = "订单导入模板.xlsx";
 }

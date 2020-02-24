@@ -23,6 +23,7 @@ public class LoggerUtil {
      * @time 2019/8/19 10:01
      **/
     public static Logger getExecutorLogger() {
+
         return LoggerFactory.getLogger(LOG_TYPE_EXECUTOR);
     }
 
@@ -35,6 +36,7 @@ public class LoggerUtil {
      * @time 2019/8/19 10:01
      **/
     public static Logger getMethodConsumeLogger() {
+
         return LoggerFactory.getLogger(LOG_TYPE_METHOD_CONSUME);
     }
 }

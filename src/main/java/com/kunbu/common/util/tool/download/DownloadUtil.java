@@ -1,14 +1,13 @@
 package com.kunbu.common.util.tool.download;
 
+import com.alibaba.fastjson.util.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
 
 /**
@@ -24,7 +23,42 @@ public class DownloadUtil {
     private static final String DEFAULT_MIME_TYPE = "application/octet-stream";
 
     /**
-     * 下载普通文件
+     * 通过文件路径下载
+     *
+     * @param request
+     * @param response
+     * @param path
+     * @param originalFileName
+     **/
+    public static void downloadFile(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            String path,
+            String originalFileName) {
+
+        InputStream is = null;
+        try {
+            is = new FileInputStream(path);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            byte[] buf = new byte[1024];
+            int bytesRead;
+            while((bytesRead = is.read(buf)) != -1) {
+                baos.write(buf, 0, bytesRead);
+            }
+            byte[] data = baos.toByteArray();
+            downloadFile(request, response, data, originalFileName);
+        } catch (FileNotFoundException e) {
+            System.err.println(">>> 文件不存在 " + e);
+        } catch (IOException e) {
+            System.err.println(">>> 文件写入异常 " + e);
+        } finally {
+            IOUtils.close(is);
+        }
+    }
+
+    /**
+     * 通过字节数组下载文件
      *
      * @param request
      * @param response
@@ -41,10 +75,9 @@ public class DownloadUtil {
         if (data == null || StringUtils.isBlank(originalFileName)) {
             return;
         }
-
+        // 检查文件后缀
         String fileName;
         String fileExt = null;
-
         int dotIdx = originalFileName.lastIndexOf(".");
         if (dotIdx > 0) {
             fileName = originalFileName.substring(0, dotIdx);
@@ -53,38 +86,9 @@ public class DownloadUtil {
             fileName = originalFileName;
         }
         response.setContentType(MimeTypeUtil.getContentType(fileExt));
-        download(request, response, data, fileName, fileExt);
-    }
-
-    /**
-     * 下载excel
-     *
-     * @param request
-     * @param response
-     * @param data
-     * @param fileName
-     * @param fileExt
-     */
-    public static void downloadExcel(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            byte[] data,
-            String fileName,
-            String fileExt) {
-
-        if (data == null || StringUtils.isAnyBlank(fileName, fileExt)) {
-            return;
-        }
-        response.reset();
-        if (fileExt.indexOf("xlsx") >= 0) {
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            fileExt = ".xlsx";
-        } else if (fileExt.indexOf("xls") >= 0) {
-            response.setContentType("application/vnd.ms-excel");
-            fileExt = ".xls";
-        } else {
-            return;
-        }
+        // excel特殊处理
+        checkExcel(fileExt, response);
+        // 下载
         download(request, response, data, fileName, fileExt);
     }
 
@@ -106,11 +110,12 @@ public class DownloadUtil {
 
         OutputStream out = null;
         try {
-            //文件名转码
+            // 文件名编码
             String encodeFileName = encodeFileName(request, fileName);
             response.addHeader("Content-Disposition", "attachment;filename=" + encodeFileName + fileExt);
+            // 关闭缓存 Http 1.1 header
+            response.setHeader("Cache-Control", "no-cache, no-store, max-age=0");
             response.setHeader("Connection", "close");
-            response.addHeader("Cache-Control", "no-cache");
 
             out = response.getOutputStream();
             out.write(data);
@@ -127,6 +132,18 @@ public class DownloadUtil {
             } catch (IOException e) {
                 LOGGER.error(">>> 下载文件，资源释放异常", e);
             }
+        }
+    }
+
+    private static void checkExcel(String fileExt, HttpServletResponse response) {
+        if (fileExt.indexOf("xlsx") >= 0) {
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            fileExt = ".xlsx";
+        } else if (fileExt.indexOf("xls") >= 0) {
+            response.setContentType("application/vnd.ms-excel");
+            fileExt = ".xls";
+        } else {
+            return;
         }
     }
 

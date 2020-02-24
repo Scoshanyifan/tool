@@ -43,6 +43,7 @@ public class MongoDemoController {
      *      原理：通过前一页最后一条记录作为条件，但是不能跳页，需要带上lastId或lastCreateTime条件
      *
      * ps：分页基于游标
+     * https://www.cnblogs.com/woshimrf/p/mongodb-pagenation-performance.html
      *
      **/
     @GetMapping("/query")

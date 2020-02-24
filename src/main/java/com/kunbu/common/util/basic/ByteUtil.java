@@ -60,6 +60,7 @@ public class ByteUtil {
      * @return
      */
     public static String getBitStringSimple(byte origin) {
+
         return Integer.toString(origin, 2);
     }
 

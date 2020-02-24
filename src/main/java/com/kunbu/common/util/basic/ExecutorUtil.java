@@ -38,8 +38,13 @@ public class ExecutorUtil {
      * 任务Runnable推荐编写toString，以便线程池拒绝时打印
      *
      **/
-    public static void addTask(Runnable runnable) {
+    public static void commitTask(Runnable runnable) {
+
         pool.execute(runnable);
     }
 
+    public static Future submitTask(Runnable runnable) {
+
+        return pool.submit(runnable);
+    }
 }

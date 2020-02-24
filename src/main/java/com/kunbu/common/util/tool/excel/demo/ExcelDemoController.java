@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,15 @@ public class ExcelDemoController {
 
         byte[] content = baos.toByteArray();
         responseExportExcel(EXCEL_TEMPLATE_FILENAME, content, ExcelConst.EXCEL_XLSX_2007, request, response);
+    }
+
+    @GetMapping("/export/template/file")
+    @ResponseBody
+    public void exportExcelTemplateFile(HttpServletRequest request, HttpServletResponse response) {
+        String tempFileName = ExcelConst.EXCEL_TEMPLATE_FILE_NAME;
+        String path = request.getSession().getServletContext().getRealPath("/")+"files"+ File.separator + tempFileName;
+
+        // todo
     }
 
     @GetMapping("/export/data")
