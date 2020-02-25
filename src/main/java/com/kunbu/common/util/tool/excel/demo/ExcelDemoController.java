@@ -91,6 +91,8 @@ public class ExcelDemoController {
             // 获取静态资源文件路径
             String tempPath =  ResourceUtils.getURL(ResourceUtils.CLASSPATH_URL_PREFIX).getPath() + "static" + File.separator + tempFileName;
 //        String tempPath = request.getSession().getServletContext().getRealPath("/") + "static" + File.separator + tempFileName;
+
+            // /D:/kunbu/tool/target/classes/static\订单导入模板.xlsx
             LOGGER.info(">>> path: " + tempPath);
             DownloadUtil.downloadFile(request, response, tempPath);
         } catch (FileNotFoundException e) {

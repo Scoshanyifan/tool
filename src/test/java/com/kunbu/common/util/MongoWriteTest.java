@@ -32,7 +32,6 @@ public class MongoWriteTest {
     @Test
     public void testFindAndModify() {
         // findAndModify的原子性
-
         OrderMongo order = mongoTemplate.findAndModify(
                 new Query(Criteria.where("orderNum").is("2019120201").and("status").is(OrderMongo.ORDER_STATUS_INIT)),
                 new Update().set("status", OrderMongo.ORDER_STATUS_TAKE).set("createTime", new Date()),
@@ -40,6 +39,13 @@ public class MongoWriteTest {
         );
 
         logger.info(">>> find and modify:{}", order);
+    }
+
+    @Test
+    public void testUpdate() {
+        // update one
+
+        // update multi
     }
 
 }

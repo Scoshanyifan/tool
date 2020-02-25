@@ -18,4 +18,6 @@ public interface NetConstant {
     String NET_RESULT_CODE                  = "code";
     String NET_RESULT_DATA                  = "data";
     String NET_RESULT_MSG                   = "msg";
+
+    String CHARSET_UTF8                     = "UTF-8";
 }

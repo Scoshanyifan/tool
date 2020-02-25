@@ -89,14 +89,10 @@ public class DownloadUtil {
             return;
         }
         // 检查文件后缀
-        String fileName;
         String fileExt = "";
         int dotIdx = originalFileName.lastIndexOf(".");
         if (dotIdx > 0) {
-            fileName = originalFileName.substring(0, dotIdx);
             fileExt = originalFileName.substring(dotIdx + 1);
-        } else {
-            fileName = originalFileName;
         }
         response.setContentType(MimeTypeUtil.getContentType(fileExt));
         // excel特殊处理

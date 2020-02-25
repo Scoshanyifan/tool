@@ -28,12 +28,14 @@ spring:
       password: 123456
 
 
-
-
-
 exception:
   mail:
     to: 1274462659@qq.com,syf1274462659@163.com
+
+
+
+
+
 
 
 # mail 原生配置，需要手动读取并配置 JavaMailSenderImpl

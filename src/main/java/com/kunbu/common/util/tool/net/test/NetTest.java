@@ -15,9 +15,15 @@ public class NetTest {
 
     public static void main(String[] args) {
 
-        System.out.println(NetUtil.doRequestWithDefaultSSL("https://www.baidu.com", null, "GET", 0, 0));
+        System.out.println(NetUtil.doRequestWithDefaultSSL(
+                "https://www.baidu.com",
+                null,
+                "GET",
+                0,
+                0));
 
         String url = "http://xiao-demo.yunext.com/cloud-lift-base/community/list";
+
         Map<String, Object> params = new HashMap<>();
         params.put("province", "");
         params.put("orgId", "");

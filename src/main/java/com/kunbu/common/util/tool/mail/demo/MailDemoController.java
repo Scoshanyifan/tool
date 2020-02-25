@@ -49,7 +49,6 @@ public class MailDemoController {
                 subject,
                 "<html><body><p>" + text + "</p><img src=\"cid:cat.png\" ></body></html>");
         mail.setHtml(true);
-        mail.setInlines1(inlines);
 
         if (StringUtils.isNotBlank(ccs)) {
             List<String> ccList = Splitter.on(",").omitEmptyStrings().trimResults().splitToList(ccs);
@@ -61,6 +60,9 @@ public class MailDemoController {
         }
         if (attachments != null && attachments.length > 0) {
             mail.setAttachments1(attachments);
+        }
+        if (inlines != null && inlines.length > 0) {
+            mail.setInlines1(inlines);
         }
         try {
             mailSendUtil.sendMail(mail, true);

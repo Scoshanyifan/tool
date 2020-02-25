@@ -35,23 +35,23 @@ public class MailSendUtil {
         sendMail(mail, false);
     }
 
-    public void sendMail(CommonMail mail, boolean ifSave) throws Exception {
+    public void sendMail(CommonMail mail, boolean saveDB) throws Exception {
         LOGGER.info(">>> send mail:{}", mail);
-        //check
+        // check
         if (mail.getTos() == null) {
             return;
         }
         if (StringUtils.isAnyBlank(mail.getSubject(), mail.getText())) {
             return;
         }
-        //send
+        // send
         if (StringUtils.isBlank(mail.getEncoding())) {
             sendMimeMail(mail, CommonMail.ENCODING_UTF8);
         } else {
             sendMimeMail(mail, mail.getEncoding());
         }
-        //save
-        if (ifSave) {
+        // TODO 保存数据库
+        if (saveDB) {
 
         }
         LOGGER.info(">>> send mail finish");
@@ -115,6 +115,8 @@ public class MailSendUtil {
     }
 
     private String getMailFrom() {
+
         return javaMailSender.getUsername();
+
     }
 }

@@ -88,7 +88,7 @@ public class NetUtil {
         logger.info(">>> http request, url:{}, method:{}, connTimeout:{}, readTimeout:{}, ssf:{}, params:{}",
                 new Object[]{requestUrl, httpMethod, connectTimeout, readTimeout, ssf, params});
 
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
 
         OutputStream out = null;
         InputStream in = null;
@@ -103,7 +103,7 @@ public class NetUtil {
                     queryBody.append(param.getKey())
                             .append("=")
                             //内容需要url encode
-                            .append(param.getValue() != null ? URLEncoder.encode(param.getValue().toString(), "UTF-8") : null)
+                            .append(param.getValue() != null ? URLEncoder.encode(param.getValue().toString(), NetConstant.CHARSET_UTF8) : null)
                             .append("&");
                 }
                 queryString = queryBody.deleteCharAt(queryBody.length() - 1).toString();
@@ -151,7 +151,7 @@ public class NetUtil {
                 if (queryString.length() > 0) {
                     out = httpUrlConnection.getOutputStream();
                     // 设置编码格式，防止中文乱码
-                    out.write(queryString.getBytes("UTF-8"));
+                    out.write(queryString.getBytes(NetConstant.CHARSET_UTF8));
                     out.flush();
                     out.close();
                 }
@@ -164,7 +164,7 @@ public class NetUtil {
             if (HttpURLConnection.HTTP_OK == responseCode) {
                 // 将返回的输入流转换成字符串
                 in = httpUrlConnection.getInputStream();
-                bufferedReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+                bufferedReader = new BufferedReader(new InputStreamReader(in, NetConstant.CHARSET_UTF8));
 
                 // 应答body内容
                 StringBuilder bodyBuilder = new StringBuilder();

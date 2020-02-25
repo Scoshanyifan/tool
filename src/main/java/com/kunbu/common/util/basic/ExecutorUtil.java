@@ -24,6 +24,7 @@ public class ExecutorUtil {
             TimeUnit.MILLISECONDS,
             new LinkedBlockingDeque<>(1024),
             new ThreadFactoryBuilder().setNameFormat("kunbu-pool-%d").build(),
+            // 拒绝策略，这里是丢弃
             new ThreadPoolExecutor.AbortPolicy()) {
 
         @Override
