@@ -41,6 +41,21 @@ public class ResultMap {
         return result;
     }
 
+    public static ResultMap error(Object data) {
+        ResultMap result = new ResultMap();
+        result.setCode(CODE_ERROR);
+        result.setData(data);
+        return result;
+    }
+
+    public boolean isSuccess() {
+        if (this.code == null) {
+            return false;
+        } else {
+            return this.code.compareTo(ResultMap.CODE_ERROR) == 0;
+        }
+    }
+
     public String getMsg() {
         return msg;
     }

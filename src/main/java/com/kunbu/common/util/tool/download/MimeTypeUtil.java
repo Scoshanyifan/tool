@@ -3,9 +3,8 @@ package com.kunbu.common.util.tool.download;
 import org.springframework.util.StringUtils;
 
 /**
- * @program:web-parent
- * @description:
- * @create:2019-08-26 11:00
+ *
+ * @author kunbu
  */
 public class MimeTypeUtil {
 

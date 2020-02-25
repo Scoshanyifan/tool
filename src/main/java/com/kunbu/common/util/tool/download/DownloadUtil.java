@@ -1,6 +1,6 @@
 package com.kunbu.common.util.tool.download;
 
-import com.alibaba.fastjson.util.IOUtils;
+import com.kunbu.common.util.tool.excel.ExcelConst;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,40 +20,53 @@ public class DownloadUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DownloadUtil.class);
 
-    private static final String DEFAULT_MIME_TYPE = "application/octet-stream";
+    private static final String MIME_TYPE_DEFAULT       = "application/octet-stream";
+
+    private static final String BROWSER_SAFARI          = "safari";
+    private static final String BROWSER_CHROME          = "chrome";
+
+    private static final String CHARSET_UTF8            = "UTF-8";
+    private static final String CHARSET_ISO_8859_1      = "ISO-8859-1";
 
     /**
      * 通过文件路径下载
      *
      * @param request
      * @param response
-     * @param path
-     * @param originalFileName
+     * @param filePath
      **/
     public static void downloadFile(
             HttpServletRequest request,
             HttpServletResponse response,
-            String path,
-            String originalFileName) {
+            String filePath) {
 
         InputStream is = null;
         try {
-            is = new FileInputStream(path);
+            // 实体文件先转换成字节数组
+            is = new FileInputStream(filePath);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
             byte[] buf = new byte[1024];
             int bytesRead;
             while((bytesRead = is.read(buf)) != -1) {
                 baos.write(buf, 0, bytesRead);
             }
             byte[] data = baos.toByteArray();
+            // 截取文件名
+            String originalFileName = filePath.substring(filePath.lastIndexOf(File.separator) + 1);
+
             downloadFile(request, response, data, originalFileName);
         } catch (FileNotFoundException e) {
-            System.err.println(">>> 文件不存在 " + e);
+            LOGGER.error(">>> downloadFile 文件不存在 ", e);
         } catch (IOException e) {
-            System.err.println(">>> 文件写入异常 " + e);
+            LOGGER.error(">>> downloadFile 文件写入异常 ", e);
         } finally {
-            IOUtils.close(is);
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                LOGGER.error(">>> downloadFile 资源释放异常", e);
+            }
         }
     }
 
@@ -77,7 +90,7 @@ public class DownloadUtil {
         }
         // 检查文件后缀
         String fileName;
-        String fileExt = null;
+        String fileExt = "";
         int dotIdx = originalFileName.lastIndexOf(".");
         if (dotIdx > 0) {
             fileName = originalFileName.substring(0, dotIdx);
@@ -87,9 +100,9 @@ public class DownloadUtil {
         }
         response.setContentType(MimeTypeUtil.getContentType(fileExt));
         // excel特殊处理
-        checkExcel(fileExt, response);
+        handleExcel(fileExt, response);
         // 下载
-        download(request, response, data, fileName, fileExt);
+        download(request, response, data, originalFileName);
     }
 
     /**
@@ -98,21 +111,19 @@ public class DownloadUtil {
      * @param request
      * @param response
      * @param data
-     * @param fileName
-     * @param fileExt
+     * @param originalFileName
      */
     private static void download(
             HttpServletRequest request,
             HttpServletResponse response,
             byte[] data,
-            String fileName,
-            String fileExt) {
+            String originalFileName) {
 
         OutputStream out = null;
         try {
             // 文件名编码
-            String encodeFileName = encodeFileName(request, fileName);
-            response.addHeader("Content-Disposition", "attachment;filename=" + encodeFileName + fileExt);
+            String encodeFileName = encodeFileName(request, originalFileName);
+            response.addHeader("Content-Disposition", "attachment;filename=" + encodeFileName);
             // 关闭缓存 Http 1.1 header
             response.setHeader("Cache-Control", "no-cache, no-store, max-age=0");
             response.setHeader("Connection", "close");
@@ -121,27 +132,34 @@ public class DownloadUtil {
             out.write(data);
             out.flush();
         } catch (UnsupportedEncodingException e) {
-            LOGGER.error(">>> 下载文件，编码异常", e);
+            LOGGER.error(">>> download 编码异常", e);
         } catch (IOException e) {
-            LOGGER.error(">>> 下载文件，流操作异常", e);
+            LOGGER.error(">>> download 流操作异常", e);
         } finally {
             try {
                 if (out != null) {
                     out.close();
                 }
             } catch (IOException e) {
-                LOGGER.error(">>> 下载文件，资源释放异常", e);
+                LOGGER.error(">>> download 资源释放异常", e);
             }
         }
     }
 
-    private static void checkExcel(String fileExt, HttpServletResponse response) {
-        if (fileExt.indexOf("xlsx") >= 0) {
+    /**
+     * 处理excel的contentType
+     *
+     * @param fileExt
+     * @param response
+     * @author kunbu
+     * @time 2020/2/25 9:23
+     * @return
+     **/
+    private static void handleExcel(String fileExt, HttpServletResponse response) {
+        if (fileExt.indexOf(ExcelConst.EXCEL_XLSX_2007) >= 0) {
             response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            fileExt = ".xlsx";
-        } else if (fileExt.indexOf("xls") >= 0) {
+        } else if (fileExt.indexOf(ExcelConst.EXCEL_XLS_2003) >= 0) {
             response.setContentType("application/vnd.ms-excel");
-            fileExt = ".xls";
         } else {
             return;
         }
@@ -157,12 +175,12 @@ public class DownloadUtil {
      */
     private static String encodeFileName(HttpServletRequest request, String fileName) throws UnsupportedEncodingException {
         String userAgent = request.getHeader("User-Agent").toLowerCase();
-        if (userAgent != null && userAgent.contains("safari") && !userAgent.contains("chrome")) {
+        if (userAgent != null && userAgent.contains(BROWSER_SAFARI) && !userAgent.contains(BROWSER_CHROME)) {
             // 先转成utf8的字节数组，然后再转成iso进行传输，最后浏览器会进行iso转码
-            byte[] bytes = fileName.getBytes("UTF-8");
-            return new String(bytes, "ISO-8859-1");
+            byte[] bytes = fileName.getBytes(CHARSET_UTF8);
+            return new String(bytes, CHARSET_ISO_8859_1);
         } else {
-            return URLEncoder.encode(fileName, "UTF-8");
+            return URLEncoder.encode(fileName, CHARSET_UTF8);
         }
     }
 

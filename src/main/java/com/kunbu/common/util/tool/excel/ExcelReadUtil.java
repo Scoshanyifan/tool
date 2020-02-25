@@ -221,7 +221,7 @@ public class ExcelReadUtil {
     }
 
     /**
-     * 获取每格的值
+     * 获取每个单元格的格式和值 TODO
      *
      * @param cell 单元格
      * @return value的字符串形式

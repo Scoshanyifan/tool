@@ -20,4 +20,10 @@ public interface ExcelConst {
 
 
     String EXCEL_TEMPLATE_FILE_NAME = "订单导入模板.xlsx";
+
+    /** 实时生成模板的文本单元格行数 */
+    int DEFAULT_TEMPLATE_STRING_CELL_ROW = 30;
+
+
+    String EXCEL_EXPORT_FILE_NAME_PREFIX = "数据导出列表";
 }

@@ -15,21 +15,28 @@ import java.util.Map;
 /**
  * 基于 Apache poi 的excel工具类
  *
+ * 2019.8.22 新增
+ * 2019.11.18 新增模板导出
+ *
  * @author scosyf
  * @time 2019年5月9日
- *
- * 2019.8.22 新增
- *
- * 2019.11.18 新增模板导出
  */
 public class ExcelExportUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExcelExportUtil.class);
 
-    private static final int DEFAULT_TEMPLATE_ROW = 30;
+
 
     /**
-     * 导出excel模板（实时生成，也可以预先放在服务器上）todo
+     * 导出excel模板（实时生成，也可以预先放在服务器上）TODO
+     * 
+     * 设置单元格位文本
+     *      1.
+     *      CellStyle style = workbook.createCellStyle();
+     *      DataFormat format = workbook.createDataFormat();
+     *      style.setDataFormat(format.getFormat("@"));
+     *      2.
+     *      cell.setCellType(Cell.CELL_TYPE_STRING);
      *
      * @param headers
      * @param out
@@ -48,11 +55,11 @@ public class ExcelExportUtil {
             DataFormat format = workbook.createDataFormat();
             style.setDataFormat(format.getFormat("@"));
             style.setAlignment(CellStyle.ALIGN_LEFT);
-            // 先设置头行
+            // 先设置首行
             setHeader(sheet, headers, style);
-            // 在头行之后的行设置单元格为文本（默认填充30行，在导入时需要对每行做空检查，因为此时的行是有数据的，即空字符串）
+            // 在首行后面的行设置单元格为文本（默认填充30行，在导入时需要对每行做空检查，因为此时的行是有数据的，即空字符串）
             int headerSize = headers.size();
-            for (int column = 1; column <= DEFAULT_TEMPLATE_ROW; column++) {
+            for (int column = 1; column <= ExcelConst.DEFAULT_TEMPLATE_STRING_CELL_ROW; column++) {
                 //从第二行开始
                 Row row = sheet.createRow(column);
                 for (int i = 0; i < headerSize; i++) {
@@ -102,7 +109,7 @@ public class ExcelExportUtil {
             style.setAlignment(CellStyle.ALIGN_LEFT);
             //设置默认width
             sheet.setDefaultColumnWidth(30);
-            //设置头行
+            //设置首行
             setHeader(sheet, headers, style);
             //填充数据
             setData(sheet, 1, style, keys, dataList);
@@ -127,7 +134,7 @@ public class ExcelExportUtil {
     /**
      * 简单导出excel 2003
      *
-     * @param headers   标头行
+     * @param headers   标首行
      * @param keys      标头key
      * @param dataList   数据：Map<标头key, 数据value>
      * @param out       输出流
@@ -141,7 +148,7 @@ public class ExcelExportUtil {
     /**
      * 简单导出excel 2007+
      *
-     * @param headers   标头行
+     * @param headers   标首行
      * @param keys      标头key
      * @param dataList   数据：Map<标头key, 数据value>
      * @param out     输出流
@@ -170,7 +177,7 @@ public class ExcelExportUtil {
             style.setAlignment(CellStyle.ALIGN_LEFT);
             //设置默认width
             sheet.setDefaultColumnWidth(20);
-            //设置头行
+            //设置首行
             setHeader(sheet, headers, style);
             //填充数据
             setData(sheet, 1, style, keys, dataList);
@@ -190,7 +197,7 @@ public class ExcelExportUtil {
     }
 
     /**
-     * 设置头行
+     * 设置首行
      *
      * @param sheet
      * @param headers
