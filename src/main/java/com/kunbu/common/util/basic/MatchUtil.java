@@ -10,30 +10,16 @@ import java.util.regex.Pattern;
  **/
 public class MatchUtil {
 
-    /**
-     * 车牌号
-     */
-    public static final String REGEX_CARNO = "^[A-Z][A-HJ-NP-Z\\d]{5}$";
-
-    /**
-     * 新能源车牌号
-     */
-    public static final String REGEX_NEWCAR = "^[A-Z][D,F][\\d]{5}$";
-
-    /**
-     * 身份证
-     */
-    public static final String REGEX_IDCARD = "^\\d{15}|^\\d{17}([0-9]|X|x)$";
-
-    /**
-     * 手机号
-     */
-    public static final String REGEX_PHONE = "^1(3|4|5|7|8)\\d{9}$";
-
-    /**
-     * 回车空格制表换行
-     */
-    public static final String REGEX_WHITE_BLANK = "\"\\\\s*|\\t|\\r|\\n\"";
+    /** 车牌号 */
+    public static final Pattern REGEX_CARNO = Pattern.compile("^[A-Z][A-HJ-NP-Z\\d]{5}$");
+    /** 身份证 */
+    private static final Pattern REGEX_IDCARD = Pattern.compile("(\\d{14}[0-9a-zA-Z])|(\\d{17}[0-9a-zA-Z])");
+    /** 新能源车牌号 */
+    public static final Pattern REGEX_NEWCAR = Pattern.compile("^[A-Z][D,F][\\d]{5}$");
+    /** 手机号 */
+    public static final Pattern REGEX_PHONE = Pattern.compile("^1(3|4|5|7|8)\\d{9}$");
+    /**  回车空格制表换行 */
+    public static final Pattern REGEX_WHITE_BLANK = Pattern.compile("\"\\\\s*|\\t|\\r|\\n\"");
 
     /**
      * 0-9 a-z A-Z
@@ -51,7 +37,6 @@ public class MatchUtil {
     private static final int CHAR_CN_START = 19968;
     private static final int CHAR_CN_END = 40869;
 
-
     /**
      * 替换空白符
      * \n 回车(\u000a) \s 空格(\u0008) \r 换行(\u000d) \t 水平制表符(\u0009)
@@ -60,8 +45,7 @@ public class MatchUtil {
      */
     public static String replaceBlank(String str) {
         if (str != null) {
-            Pattern p = Pattern.compile(REGEX_WHITE_BLANK);
-            Matcher m = p.matcher(str);
+            Matcher m = REGEX_WHITE_BLANK.matcher(str);
             return m.replaceAll("");
         }
         return "";
@@ -73,9 +57,8 @@ public class MatchUtil {
      * @param str
      * @param regex
      */
-    public static boolean checkRegex(String str, String regex) {
-        Pattern p = Pattern.compile(regex);
-        Matcher m = p.matcher(str);
+    public static boolean checkRegex(String str, Pattern regex) {
+        Matcher m = regex.matcher(str);
         if (m.matches()) {
             return true;
         }
@@ -148,7 +131,7 @@ public class MatchUtil {
         }
 
         String dotRegex = ",";
-        System.out.println("check: " + checkRegex("B1,1", dotRegex));
+        System.out.println("check: " + checkRegex("B1,1", Pattern.compile(dotRegex)));
     }
 
 }

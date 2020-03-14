@@ -1,6 +1,5 @@
 package com.kunbu.common.util.basic;
 
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,13 +8,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
+ * 时间准换工具类，如果使用默认格式，推荐使用threadLocal模式
+ *
  * @project: bucks
  * @author: kunbu
  * @create: 2019-09-04 10:01
  **/
 public class DateFormatUtil {
 
-    private static final Logger logger = LoggerFactory.getLogger(DateFormatUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(DateFormatUtil.class);
 
     public static final String DEFAULT_DATE_PATTERN         = "yyyy-MM-dd HH:mm:ss";
     public static final String DATE_PATTERN_1               = "yyyy-MM-dd";

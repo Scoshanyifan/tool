@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * @author: kunbu
  * @create: 2019-11-21 13:52
  **/
-public class StringUtilTest {
+public class StringTest {
 
     private static final List<String> AREA_LIST = Lists.newArrayList("广州", "上海", "杭州", "宁波");
 
@@ -88,7 +88,7 @@ public class StringUtilTest {
 
     }
 
-    public static void testGuvaSplitter(String str) {
+    public static void testGuavaSplitter(String str) {
         //guava.Splitter
         List<String> tempStrList = Splitter.on("/").splitToList(str);
         System.out.println("Splitter: " + tempStrList);
@@ -145,6 +145,16 @@ public class StringUtilTest {
     }
 
 
+    /**
+     * 测试交集并集等
+     *
+     **/
+    public static void testGroup() {
+//        Set<String> result1 = Sets.union(set1, set2);//合集，并集
+//        Set<String> result2 = Sets.intersection(set1, set2);//交集
+//        Set<String> result3 = Sets.difference(set1, set2);//差集 1中有而2中没有的
+//        Set<String> result4 = Sets.symmetricDifference(set1, set2);//相对差集 1中有2中没有  2中有1中没有的 取出来做结果
+    }
 
 
 
@@ -157,8 +167,8 @@ public class StringUtilTest {
 
         testSplit("////");
         testSplit("2/-5///");
-        testGuvaSplitter("////");
-        testGuvaSplitter("2/-5///");
+        testGuavaSplitter("////");
+        testGuavaSplitter("2/-5///");
 
         System.out.println();
         testStringFormat();
