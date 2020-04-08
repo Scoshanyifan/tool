@@ -132,6 +132,14 @@ public class MatchUtil {
 
         String dotRegex = ",";
         System.out.println("check: " + checkRegex("B1,1", Pattern.compile(dotRegex)));
+
+        /** 此正则识别,到:之间的所有ascii值，而需求是只匹配,/:/-三中符号 */
+        Pattern p = Pattern.compile("[0-9a-zA-Z,-:]+");
+        Pattern p2 = Pattern.compile("[0-9a-zA-Z,:\\-]+");
+        boolean b = p.matcher("1.1:2.1").matches();
+        boolean b2 = p.matcher("-1:2").matches();
+        System.out.println(b);
+        System.out.println(b2);
     }
 
 }

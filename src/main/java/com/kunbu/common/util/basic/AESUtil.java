@@ -29,7 +29,7 @@ public class AESUtil {
     /** 加密算法 */
     private static final String CIPHER_ALGORITHM = "AES/ECB/PKCS5Padding";
     /** key生成种子算法 */
-    private static final String SECURE_RANDOM_ALOGRITHM = "SHA1PRNG";
+    private static final String SECURE_RANDOM_ALGORITHM = "SHA1PRNG";
 
     /** 秘钥（类似于叮咚，需要128位字符的随机种子） */
     private static final String DEFAULT_SECRET_SEED = "kunbu";
@@ -39,7 +39,7 @@ public class AESUtil {
     static {
         try {
             KeyGenerator kg = KeyGenerator.getInstance(KEY_ALGORITHM);
-            SecureRandom sr = SecureRandom.getInstance(SECURE_RANDOM_ALOGRITHM);
+            SecureRandom sr = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
             sr.setSeed(DEFAULT_SECRET_SEED.getBytes(DEFAULT_CHARSET));
             kg.init(128, sr);
             SecretKey secretKey = kg.generateKey();
@@ -166,7 +166,7 @@ public class AESUtil {
      */
     public static Key getSecretKey(String seed) throws Exception {
         KeyGenerator kg = KeyGenerator.getInstance(KEY_ALGORITHM);
-        SecureRandom sr = SecureRandom.getInstance(SECURE_RANDOM_ALOGRITHM);
+        SecureRandom sr = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
         sr.setSeed(seed.getBytes());
         kg.init(128, sr);
         SecretKey secretKey = kg.generateKey();

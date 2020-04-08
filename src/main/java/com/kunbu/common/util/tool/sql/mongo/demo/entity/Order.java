@@ -1,4 +1,4 @@
-package com.kunbu.common.util.tool.sql.mongo.demo;
+package com.kunbu.common.util.tool.sql.mongo.demo.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -14,7 +14,7 @@ import java.util.List;
  **/
 @Data
 @Document(collection = "order")
-public class OrderMongo {
+public class Order {
 
     public static final Integer ORDER_STATUS_INIT = 1;
     public static final Integer ORDER_STATUS_FORBID = 2;
@@ -28,6 +28,6 @@ public class OrderMongo {
     private String orderNum;
     private String clientName;
     private Integer status;
-    private List<GoodMongo> items;
+    private List<Good> items;
 
 }

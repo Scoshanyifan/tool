@@ -5,8 +5,8 @@ import com.kunbu.common.util.basic.DateFormatUtil;
 import com.kunbu.common.util.tool.sql.mongo.MongoBsonAggregationUtil;
 import com.kunbu.common.util.tool.sql.mongo.MongoBsonQueryUtil;
 import com.kunbu.common.util.tool.sql.mongo.MongoCriteriaUtil;
-import com.kunbu.common.util.tool.sql.mongo.demo.GoodMongo;
-import com.kunbu.common.util.tool.sql.mongo.demo.OrderMongo;
+import com.kunbu.common.util.tool.sql.mongo.demo.entity.Good;
+import com.kunbu.common.util.tool.sql.mongo.demo.entity.Order;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.AggregateIterable;
 import org.bson.Document;
@@ -46,19 +46,19 @@ public class MongoReadTest {
 
     @Test
     public void initData() {
-        List<OrderMongo> orderList = Lists.newArrayList();
+        List<Order> orderList = Lists.newArrayList();
         long time = new Date().getTime();
         for (int i = 1; i <= 8; i++) {
-            OrderMongo order = new OrderMongo();
+            Order order = new Order();
             order.setClientName(new Random().nextBoolean() ? "kunbu" : "scosyf");
             order.setCreateTime(new Date(time - new Random().nextInt(100) * 1000 * 3600 * i));
             order.setOrderNum("201912020" + i);
             order.setItems(Lists.newArrayList(
-                    new GoodMongo("GD1" + new Random().nextInt(10), 1 + i, 0.5 * i + 2),
-                    new GoodMongo("GD2" + new Random().nextInt(10), 2 + i, 0.5 * i + 3)));
+                    new Good("GD1" + new Random().nextInt(10), 1 + i, 0.5 * i + 2),
+                    new Good("GD2" + new Random().nextInt(10), 2 + i, 0.5 * i + 3)));
             orderList.add(order);
         }
-        mongoTemplate.insert(orderList, OrderMongo.class);
+        mongoTemplate.insert(orderList, Order.class);
     }
 
     /**
@@ -162,7 +162,7 @@ public class MongoReadTest {
         );
         logger.info(">>> aggregation:{}", aggregation);
 
-        AggregationResults<Document> aggregationResults = mongoTemplate.aggregate(aggregation, OrderMongo.class, Document.class);
+        AggregationResults<Document> aggregationResults = mongoTemplate.aggregate(aggregation, Order.class, Document.class);
         logger.info(">>> rawResults:{}", aggregationResults.getRawResults());
         List<Document> mappedResults = aggregationResults.getMappedResults();
         mappedResults.stream().forEach(x -> logger.info(">>> result:{}", x));
@@ -287,7 +287,7 @@ public class MongoReadTest {
                         // push() 展开goodCode
                         .andOutput("items.goodCode").push().as("goodCodes")
         );
-        AggregationResults<Document> aggregationResults = mongoTemplate.aggregate(aggregation, OrderMongo.class, Document.class);
+        AggregationResults<Document> aggregationResults = mongoTemplate.aggregate(aggregation, Order.class, Document.class);
         // Document{{_id=0, goodCount=1, sum=2, goodCodes=[GD10]}}
         aggregationResults.getMappedResults().stream().forEach(x -> logger.info(">>> result:{}", x));
     }

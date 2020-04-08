@@ -3,8 +3,9 @@ package com.kunbu.common.util.basic;
 import java.util.Arrays;
 
 /**
- * bit和byte的转换
- * byte = [-128,127]
+ * bit和 byte的转换
+ * java byte = [-128,127]
+ * 普通byte = [0, 255]
  *
  * @see Byte
  * @author scosyf
@@ -117,6 +118,20 @@ public class ByteUtil {
             hexStr.append(hv);
         }
         return hexStr.toString();
+    }
+
+    private static String int2HexString(int iv) {
+        String hexStr = Integer.toHexString(iv);
+        if (hexStr.length() < 2) {
+            hexStr = "0" + hexStr;
+        }
+        return hexStr;
+    }
+
+    private static int hexString2Int(String hexStr) {
+
+        return Integer.parseInt(hexStr, 16);
+
     }
 
     public static void main(String[] args) {

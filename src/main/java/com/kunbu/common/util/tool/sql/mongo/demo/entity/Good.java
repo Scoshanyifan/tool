@@ -1,4 +1,4 @@
-package com.kunbu.common.util.tool.sql.mongo.demo;
+package com.kunbu.common.util.tool.sql.mongo.demo.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.Data;
  **/
 @Data
 @AllArgsConstructor
-public class GoodMongo {
+public class Good {
     private String goodCode;
     private Integer quantity;
     private Double price;

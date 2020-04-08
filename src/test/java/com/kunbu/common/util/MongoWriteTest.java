@@ -1,6 +1,6 @@
 package com.kunbu.common.util;
 
-import com.kunbu.common.util.tool.sql.mongo.demo.OrderMongo;
+import com.kunbu.common.util.tool.sql.mongo.demo.entity.Order;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -32,10 +32,10 @@ public class MongoWriteTest {
     @Test
     public void testFindAndModify() {
         // findAndModify的原子性
-        OrderMongo order = mongoTemplate.findAndModify(
-                new Query(Criteria.where("orderNum").is("2019120201").and("status").is(OrderMongo.ORDER_STATUS_INIT)),
-                new Update().set("status", OrderMongo.ORDER_STATUS_TAKE).set("createTime", new Date()),
-                OrderMongo.class
+        Order order = mongoTemplate.findAndModify(
+                new Query(Criteria.where("orderNum").is("2019120201").and("status").is(Order.ORDER_STATUS_INIT)),
+                new Update().set("status", Order.ORDER_STATUS_TAKE).set("createTime", new Date()),
+                Order.class
         );
 
         logger.info(">>> find and modify:{}", order);

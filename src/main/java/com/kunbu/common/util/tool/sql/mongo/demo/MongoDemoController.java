@@ -4,6 +4,7 @@ import com.kunbu.common.util.PageResult;
 import com.kunbu.common.util.ResultMap;
 import com.kunbu.common.util.basic.DateFormatUtil;
 import com.kunbu.common.util.tool.sql.mongo.MongoCriteriaUtil;
+import com.kunbu.common.util.tool.sql.mongo.demo.entity.Order;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;
@@ -74,13 +75,13 @@ public class MongoDemoController {
             query.addCriteria(MongoCriteriaUtil.dateCompare(
                     "createTime",
                     startDate,
-                    // 如果参数是2019-12-12，则需要手动加上24h，以便查询到下一天的时间点
+                    // TODO 如果参数是2019-12-12，则需要手动加上24h，以便查询到下一天的时间点
                     new Date(endDate.getTime() + 24 * 3600 * 1000L),
                     false));
         }
 
         // 先统计总条数
-        long total = mongoTemplate.count(query, OrderMongo.class);
+        long total = mongoTemplate.count(query, Order.class);
 
         // 因为mongodb的_id是按时间生成的，所以单表的时间排序也可以使用_id
         query.with(Sort.by(Sort.Direction.DESC, "_id"));
@@ -103,12 +104,12 @@ public class MongoDemoController {
             }
         }
 
-        List<OrderMongo> list = mongoTemplate.find(query, OrderMongo.class);
+        List<Order> list = mongoTemplate.find(query, Order.class);
         PageResult page = PageResult.init(pageNum, pageSize);
         if (CollectionUtils.isNotEmpty(list)) {
             page.setList(list);
             page.setTotal(total);
-            // 7/10=1， 20/10=2， 13/10=2
+            // TODO 7/10=1， 20/10=2， 13/10=2
             page.setPages((long) Math.ceil(total / pageSize));
         }
         return ResultMap.success(page);
