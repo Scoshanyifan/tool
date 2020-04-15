@@ -1,6 +1,5 @@
-package com.kunbu.common.util.tool.download;
+package com.kunbu.common.util.tool.file;
 
-import com.kunbu.common.util.tool.excel.ExcelConst;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,22 +10,22 @@ import java.io.*;
 import java.net.URLEncoder;
 
 /**
- * 文件下载工具类
+ * 文件上传，下载工具类
  *
  * @author: kunbu
  * @create: 2019-11-23 14:18
  **/
-public class DownloadUtil {
+public class FileUtil {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DownloadUtil.class);
-
-    private static final String MIME_TYPE_DEFAULT       = "application/octet-stream";
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileUtil.class);
 
     private static final String BROWSER_SAFARI          = "safari";
     private static final String BROWSER_CHROME          = "chrome";
 
     private static final String CHARSET_UTF8            = "UTF-8";
     private static final String CHARSET_ISO_8859_1      = "ISO-8859-1";
+
+
 
     /**
      * 通过文件路径下载
@@ -95,8 +94,6 @@ public class DownloadUtil {
             fileExt = originalFileName.substring(dotIdx + 1);
         }
         response.setContentType(MimeTypeUtil.getContentType(fileExt));
-        // excel特殊处理
-        handleExcel(fileExt, response);
         // 下载
         download(request, response, data, originalFileName);
     }
@@ -109,11 +106,12 @@ public class DownloadUtil {
      * @param data
      * @param originalFileName
      */
-    private static void download(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            byte[] data,
-            String originalFileName) {
+    private static void download(HttpServletRequest request, HttpServletResponse response, byte[] data, String originalFileName) {
+
+        response.reset();
+        if (data == null || StringUtils.isBlank(originalFileName)) {
+            return;
+        }
 
         OutputStream out = null;
         try {
@@ -139,25 +137,6 @@ public class DownloadUtil {
             } catch (IOException e) {
                 LOGGER.error(">>> download 资源释放异常", e);
             }
-        }
-    }
-
-    /**
-     * 处理excel的contentType
-     *
-     * @param fileExt
-     * @param response
-     * @author kunbu
-     * @time 2020/2/25 9:23
-     * @return
-     **/
-    private static void handleExcel(String fileExt, HttpServletResponse response) {
-        if (fileExt.indexOf(ExcelConst.EXCEL_XLSX_2007) >= 0) {
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        } else if (fileExt.indexOf(ExcelConst.EXCEL_XLS_2003) >= 0) {
-            response.setContentType("application/vnd.ms-excel");
-        } else {
-            return;
         }
     }
 
