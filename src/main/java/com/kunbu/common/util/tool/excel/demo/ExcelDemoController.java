@@ -71,7 +71,7 @@ public class ExcelDemoController {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ExcelExportUtil.exportExcelTemplate(importHeaders, baos);
         byte[] content = baos.toByteArray();
-        FileUtil.downloadFile(request, response, content, EXCEL_TEMPLATE_FILENAME + "." + ExcelConst.EXCEL_XLSX_2007);
+        FileUtil.download(request, response, content, EXCEL_TEMPLATE_FILENAME + "." + ExcelConst.EXCEL_XLSX_2007);
     }
 
     /**
@@ -94,7 +94,7 @@ public class ExcelDemoController {
 
             // /D:/kunbu/tool/target/classes/static\订单导入模板.xlsx
             LOGGER.info(">>> path: " + tempPath);
-            FileUtil.downloadFile(request, response, tempPath);
+            FileUtil.download(request, response, tempPath);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -146,7 +146,7 @@ public class ExcelDemoController {
 
             byte[] content = baos.toByteArray();
             String fileName = ExcelConst.EXCEL_EXPORT_FILE_NAME_PREFIX + System.currentTimeMillis();
-            FileUtil.downloadFile(request, response, content, fileName + "." + ExcelConst.EXCEL_XLSX_2007);
+            FileUtil.download(request, response, content, fileName + "." + ExcelConst.EXCEL_XLSX_2007);
         } catch (Exception e) {
             LOGGER.error(">>> exportExcelData error", e);
         }

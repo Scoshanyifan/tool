@@ -48,8 +48,6 @@ public class FileMongoServiceImpl implements FileService {
         return null;
     }
 
-
-
     @Override
     public FileDTO getFile(String fileId) {
         return getFile(fileId, null);
@@ -59,14 +57,13 @@ public class FileMongoServiceImpl implements FileService {
     public FileDTO getFile(String fileId, String httpHeaderRange) {
         GridFSFile file = gridFsTemplate.findOne(new Query(Criteria.where(MONGO_ID).is(fileId)));
         if (file != null) {
-            Map<String, String> headers = new HashMap<>();
-
             GridFsResource resource = gridFsTemplate.getResource(file);
-            String fileName = resource.getFilename();
-            String contentType = resource.getContentType();
-            long fileLength = file.getLength();
-            int bufferSize = file.getChunkSize();
 
+            FileDTO fileDTO = new FileDTO();
+            fileDTO.setFileName(resource.getFilename());
+            fileDTO.setContentType(resource.getContentType());
+
+            long fileLength = file.getLength();
             long begin = 0;
             long end = fileLength - 1;
             if (httpHeaderRange != null && httpHeaderRange.length() > 0) {
@@ -74,35 +71,32 @@ public class FileMongoServiceImpl implements FileService {
                 if (beginEnd != null) {
                     begin = beginEnd[0];
                     end = beginEnd[1];
-                    // Content-Range: bytes 0-499/22400
-                    headers.put("Content-Range", "bytes " + begin + "-" + end + "/" + fileLength);
+                    fileDTO.setBreakPoint(true);
+                    fileDTO.setBeginEnd(beginEnd);
                 }
             }
-
             long contentLength = end - begin + 1;
-            headers.put("Content-Length", contentLength + "");
-            GridFsResource gridFsResource = gridFsTemplate.getResource(file);
+            fileDTO.setContentLength(contentLength);
+
             InputStream is = null;
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
             try {
                 is = resource.getInputStream();
-                //buff用于存放循环读取的临时数据
-                byte[] buff = new byte[bufferSize];
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                // 如果是断点续传，从指定位置开始读取文件
                 is.skip(begin);
-                int read = -1;
+                byte[] buf = new byte[1024];
+                int index;
                 long remain = contentLength;
-                long readSize = Math.min(bufferSize, remain);
-
-                while ((read = is.read(buff, 0, (int) readSize)) != -1) {
-                    baos.write(buff, 0, read);
-                    remain -= read;
+                while ((index = is.read(buf)) != -1) {
+                    bos.write(buf, 0, index);
+                    remain -= index;
                     if (remain <= 0) {
                         break;
                     }
-                    readSize = Math.min(bufferSize, remain);
                 }
-                FileDTO fileDto = new FileDTO();
-                return fileDto;
+                fileDTO.setData(bos.toByteArray());
+                fileDTO.setSuccess(true);
+                return fileDTO;
             } catch (IOException e) {
                 LOGGER.error(">>> getFile error", e);
             } finally {

@@ -37,10 +37,10 @@ public class FileUtil {
     public static FileDTO upload(HttpServletRequest request, MultipartFile multipartFile) {
         try {
             if (multipartFile != null) {
-                return FileDTO.upload(multipartFile.getOriginalFilename(), multipartFile.getContentType(), multipartFile.getBytes());
+                return FileDTO.of(multipartFile.getOriginalFilename(), multipartFile.getContentType(), multipartFile.getBytes());
             }
         } catch (Exception e) {
-            LOGGER.error(">>> upload error", e);
+            LOGGER.error(">>> of error", e);
         }
         return null;
     }
@@ -52,34 +52,36 @@ public class FileUtil {
      * @param response
      * @param filePath
      **/
-    public static void downloadFile(HttpServletRequest request, HttpServletResponse response, String filePath) {
-
+    public static void download(HttpServletRequest request, HttpServletResponse response, String filePath) {
+        LOGGER.info(">>> download, filePath:{}", filePath);
+        if (filePath == null) {
+            return;
+        }
         InputStream is = null;
         try {
             // 实体文件先转换成字节数组
             is = new FileInputStream(filePath);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
             byte[] buf = new byte[1024];
-            int read;
-            while((read = is.read(buf)) != -1) {
-                baos.write(buf, 0, read);
+            int index;
+            while((index = is.read(buf)) != -1) {
+                bos.write(buf, 0, index);
             }
-            byte[] data = baos.toByteArray();
+            byte[] data = bos.toByteArray();
             // 截取文件名
-            String originalFileName = filePath.substring(filePath.lastIndexOf(File.separator) + 1);
-
-            downloadFile(request, response, data, originalFileName);
+            String fileName = filePath.substring(filePath.lastIndexOf(File.separator) + 1);
+            download(request, response, data, fileName);
         } catch (FileNotFoundException e) {
-            LOGGER.error(">>> downloadFile 文件不存在 ", e);
+            LOGGER.error(">>> download error, 文件不存在 ", e);
         } catch (IOException e) {
-            LOGGER.error(">>> downloadFile 文件写入异常 ", e);
+            LOGGER.error(">>> download error, 文件写入异常 ", e);
         } finally {
             try {
                 if (is != null) {
                     is.close();
                 }
             } catch (IOException e) {
-                LOGGER.error(">>> downloadFile 资源释放异常", e);
+                LOGGER.error(">>> download error, 资源释放异常", e);
             }
         }
     }
@@ -92,23 +94,11 @@ public class FileUtil {
      * @param data
      * @param fileName
      */
-    public static void downloadFile(HttpServletRequest request, HttpServletResponse response, byte[] data, String fileName) {
-
-        response.reset();
-        if (data == null || fileName == null) {
-            return;
-        }
-        // 检查文件后缀
-        String fileExt = "";
-        int dotIdx = fileName.lastIndexOf(".");
-        if (dotIdx > 0) {
-            fileExt = fileName.substring(dotIdx + 1);
-        }
-        response.setContentType(MimeTypeUtil.getContentType(fileExt));
-        // 下载
+    public static void download(HttpServletRequest request, HttpServletResponse response, byte[] data, String fileName) {
         FileDTO fileDTO = new FileDTO();
         fileDTO.setData(data);
         fileDTO.setFileName(fileName);
+        fileDTO.setSuccess(true);
         download(request, response, fileDTO);
     }
 
@@ -121,15 +111,14 @@ public class FileUtil {
      */
     public static void download(HttpServletRequest request, HttpServletResponse response, FileDTO fileDTO) {
         OutputStream out = null;
-        InputStream in = null;
         try {
             if (fileDTO == null || !fileDTO.isSuccess()) {
                 return;
             }
+            response.reset();
+
             String fileName = fileDTO.getFileName();
             String fileExt = MimeTypeUtil.getExt(fileName);
-            byte[] data = fileDTO.getData();
-            response.reset();
             // 文件类型
             String contentType = fileDTO.getContentType();
             if (contentType == null) {
@@ -150,31 +139,30 @@ public class FileUtil {
             }
             // 文件长度
             long contentLength = fileDTO.getContentLength();
+            response.setHeader("Content-Length", contentLength + "");
             // 文件断点续传
             if (fileDTO.isBreakPoint()) {
                 long[] beginEnd = fileDTO.getBeginEnd();
                 long begin = beginEnd[0];
                 long end = beginEnd[1];
                 // Content-Range: bytes 0-499/22400
-                contentLength = end - begin + 1;
                 response.setHeader("Content-Range", "bytes " + begin + "-" + end + "/" + contentLength);
-                response.setHeader("Content-Length", contentLength + "");
             }
-
+            // 文件输出
             out = response.getOutputStream();
-            out.write(data);
+            out.write(fileDTO.getData());
             out.flush();
         } catch (UnsupportedEncodingException e) {
-            LOGGER.error(">>> download 编码异常", e);
+            LOGGER.error(">>> download error, 编码异常", e);
         } catch (IOException e) {
-            LOGGER.error(">>> download 流操作异常", e);
+            LOGGER.error(">>> download error, 流操作异常", e);
         } finally {
             try {
                 if (out != null) {
                     out.close();
                 }
             } catch (IOException e) {
-                LOGGER.error(">>> download 资源释放异常", e);
+                LOGGER.error(">>> download error, 资源释放异常", e);
             }
         }
     }

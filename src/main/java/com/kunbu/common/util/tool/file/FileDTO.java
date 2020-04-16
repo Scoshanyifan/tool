@@ -47,21 +47,11 @@ public class FileDTO implements Serializable {
      **/
     private long[] beginEnd;
 
-    public static FileDTO upload(String fileName, String contentType, byte[] data) {
+    public static FileDTO of(String fileName, String contentType, byte[] data) {
         FileDTO fileDTO = new FileDTO();
         fileDTO.fileName = fileName;
         fileDTO.contentType = contentType;
         fileDTO.data = data;
-        return fileDTO;
-    }
-
-    public static FileDTO download(String fileName, String contentType, byte[] data, long contentLength, long[] beginEnd) {
-        FileDTO fileDTO = new FileDTO();
-        fileDTO.fileName = fileName;
-        fileDTO.contentType = contentType;
-        fileDTO.data = data;
-        fileDTO.contentLength = contentLength;
-        fileDTO.beginEnd = beginEnd;
         return fileDTO;
     }
 
