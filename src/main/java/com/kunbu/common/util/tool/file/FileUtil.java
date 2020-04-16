@@ -1,8 +1,10 @@
 package com.kunbu.common.util.tool.file;
 
-import org.apache.commons.lang3.StringUtils;
+import com.kunbu.common.util.tool.http.HttpHeaderUtil;
+import com.kunbu.common.util.tool.http.MimeTypeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +27,23 @@ public class FileUtil {
     private static final String CHARSET_UTF8            = "UTF-8";
     private static final String CHARSET_ISO_8859_1      = "ISO-8859-1";
 
-
+    /**
+     * 上传文件
+     *
+     * @param request
+     * @param multipartFile
+     * @return
+     **/
+    public static FileDTO upload(HttpServletRequest request, MultipartFile multipartFile) {
+        try {
+            if (multipartFile != null) {
+                return FileDTO.upload(multipartFile.getOriginalFilename(), multipartFile.getContentType(), multipartFile.getBytes());
+            }
+        } catch (Exception e) {
+            LOGGER.error(">>> upload error", e);
+        }
+        return null;
+    }
 
     /**
      * 通过文件路径下载
@@ -34,10 +52,7 @@ public class FileUtil {
      * @param response
      * @param filePath
      **/
-    public static void downloadFile(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            String filePath) {
+    public static void downloadFile(HttpServletRequest request, HttpServletResponse response, String filePath) {
 
         InputStream is = null;
         try {
@@ -45,9 +60,9 @@ public class FileUtil {
             is = new FileInputStream(filePath);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             byte[] buf = new byte[1024];
-            int bytesRead;
-            while((bytesRead = is.read(buf)) != -1) {
-                baos.write(buf, 0, bytesRead);
+            int read;
+            while((read = is.read(buf)) != -1) {
+                baos.write(buf, 0, read);
             }
             byte[] data = baos.toByteArray();
             // 截取文件名
@@ -75,52 +90,76 @@ public class FileUtil {
      * @param request
      * @param response
      * @param data
-     * @param originalFileName
+     * @param fileName
      */
-    public static void downloadFile(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            byte[] data,
-            String originalFileName) {
+    public static void downloadFile(HttpServletRequest request, HttpServletResponse response, byte[] data, String fileName) {
 
         response.reset();
-        if (data == null || StringUtils.isBlank(originalFileName)) {
+        if (data == null || fileName == null) {
             return;
         }
         // 检查文件后缀
         String fileExt = "";
-        int dotIdx = originalFileName.lastIndexOf(".");
+        int dotIdx = fileName.lastIndexOf(".");
         if (dotIdx > 0) {
-            fileExt = originalFileName.substring(dotIdx + 1);
+            fileExt = fileName.substring(dotIdx + 1);
         }
         response.setContentType(MimeTypeUtil.getContentType(fileExt));
         // 下载
-        download(request, response, data, originalFileName);
+        FileDTO fileDTO = new FileDTO();
+        fileDTO.setData(data);
+        fileDTO.setFileName(fileName);
+        download(request, response, fileDTO);
     }
 
     /**
-     * 下载文件，需指定格式Content-Type
+     * 下载文件
      *
      * @param request
      * @param response
-     * @param data
-     * @param originalFileName
+     * @param fileDTO
      */
-    private static void download(HttpServletRequest request, HttpServletResponse response, byte[] data, String originalFileName) {
-
-        response.reset();
-        if (data == null || StringUtils.isBlank(originalFileName)) {
-            return;
-        }
-
+    public static void download(HttpServletRequest request, HttpServletResponse response, FileDTO fileDTO) {
         OutputStream out = null;
+        InputStream in = null;
         try {
+            if (fileDTO == null || !fileDTO.isSuccess()) {
+                return;
+            }
+            String fileName = fileDTO.getFileName();
+            String fileExt = MimeTypeUtil.getExt(fileName);
+            byte[] data = fileDTO.getData();
+            response.reset();
+            // 文件类型
+            String contentType = fileDTO.getContentType();
+            if (contentType == null) {
+                contentType = MimeTypeUtil.getContentType(fileExt);
+            }
+            response.setContentType(contentType);
             // 文件名编码
-            String encodeFileName = encodeFileName(request, originalFileName);
-            response.addHeader("Content-Disposition", "attachment;filename=" + encodeFileName);
-            // 关闭缓存 Http 1.1 header
-            response.setHeader("Cache-Control", "no-cache, no-store, max-age=0");
-            response.setHeader("Connection", "close");
+            String encodeFileName = encodeFileName(request, fileName);
+            // 文件展示或下载
+            setInlineOrAttachment(response, encodeFileName, false);
+            // 文件缓存
+            if (HttpHeaderUtil.needCache(fileExt)) {
+                response.setHeader("Cache-Control", "max-age=" + HttpHeaderUtil.DEFAULT_CACHE_SECONDS);
+            } else {
+                response.setHeader("Pragma", "no-cache");
+                response.setHeader("Cache-Control", "no-cache");
+//                response.setHeader("Connection", "close");
+            }
+            // 文件长度
+            long contentLength = fileDTO.getContentLength();
+            // 文件断点续传
+            if (fileDTO.isBreakPoint()) {
+                long[] beginEnd = fileDTO.getBeginEnd();
+                long begin = beginEnd[0];
+                long end = beginEnd[1];
+                // Content-Range: bytes 0-499/22400
+                contentLength = end - begin + 1;
+                response.setHeader("Content-Range", "bytes " + begin + "-" + end + "/" + contentLength);
+                response.setHeader("Content-Length", contentLength + "");
+            }
 
             out = response.getOutputStream();
             out.write(data);
@@ -141,7 +180,8 @@ public class FileUtil {
     }
 
     /**
-     * 文件名encode，同时处理safari的乱码问题
+     * 1. encode，否则会显示%8E这种形式
+     * 2. 处理safari的乱码问题
      *
      * @param request
      * @param fileName
@@ -156,6 +196,21 @@ public class FileUtil {
             return new String(bytes, CHARSET_ISO_8859_1);
         } else {
             return URLEncoder.encode(fileName, CHARSET_UTF8);
+        }
+    }
+
+    /**
+     * 设置文件直接在网页展示还是下载
+     *
+     * @param response
+     * @param fileName
+     * @param inline
+     **/
+    public static void setInlineOrAttachment(HttpServletResponse response, String fileName, boolean inline) {
+        if (inline) {
+            response.setHeader("Content-Disposition", "inline;filename=" + fileName);
+        } else {
+            response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
         }
     }
 

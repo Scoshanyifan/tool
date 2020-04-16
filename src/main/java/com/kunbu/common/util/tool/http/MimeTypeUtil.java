@@ -1,4 +1,4 @@
-package com.kunbu.common.util.tool.file;
+package com.kunbu.common.util.tool.http;
 
 /**
  *
@@ -10,14 +10,14 @@ public class MimeTypeUtil {
 
     public static final String FILE_EXT_DOT         = ".";
 
-    public static String getExt(String originalFileName) {
-        if (originalFileName == null || originalFileName.length() == 0) {
+    public static String getExt(String fileName) {
+        if (fileName == null || fileName.length() == 0) {
             return null;
         }
         String ext = null;
-        int index = originalFileName.lastIndexOf(FILE_EXT_DOT);
+        int index = fileName.lastIndexOf(FILE_EXT_DOT);
         if (index > 0) {
-            ext = originalFileName.substring(index + 1);
+            ext = fileName.substring(index + 1);
         }
         return ext;
     }
@@ -33,7 +33,6 @@ public class MimeTypeUtil {
                 return "application/vnd.ms-excel";
             case "xlsx":
                 return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-
             case "jpg":
                 return "image/jpeg";
             case "jpeg":
@@ -53,6 +52,8 @@ public class MimeTypeUtil {
                 return "application/pdf";
             case "doc":
                 return "application/msword";
+            case "zip":
+                return "application/zip";
             default:
                 return DEFAULT_MIME_TYPE;
         }
