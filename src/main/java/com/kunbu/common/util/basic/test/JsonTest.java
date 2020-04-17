@@ -1,7 +1,7 @@
 package com.kunbu.common.util.basic.test;
 
 import com.alibaba.fastjson.JSONObject;
-import com.kunbu.common.util.ResultMap;
+import com.kunbu.common.util.web.ApiResult;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ public class JsonTest {
 
     public static void main(String[] args) {
 
-        Object result = ResultMap.error("xxx");
+        Object result = ApiResult.fail("xxx");
         JSONObject json = (JSONObject) JSONObject.toJSON(result);
         System.out.println(json + ", " + json.getInteger("code"));
 

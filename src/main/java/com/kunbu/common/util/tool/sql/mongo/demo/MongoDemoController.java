@@ -1,7 +1,7 @@
 package com.kunbu.common.util.tool.sql.mongo.demo;
 
-import com.kunbu.common.util.PageResult;
-import com.kunbu.common.util.ResultMap;
+import com.kunbu.common.util.web.PageResult;
+import com.kunbu.common.util.web.ApiResult;
 import com.kunbu.common.util.basic.DateFormatUtil;
 import com.kunbu.common.util.tool.sql.mongo.MongoCriteriaUtil;
 import com.kunbu.common.util.tool.sql.mongo.demo.entity.Order;
@@ -48,7 +48,7 @@ public class MongoDemoController {
      *
      **/
     @GetMapping("/query")
-    public ResultMap query(      /** 查询条件 */
+    public ApiResult query(      /** 查询条件 */
                                  @RequestParam(required = false) String orderNum,
                                  @RequestParam(required = false) String clientName,
                                  @RequestParam(required = false) String start,
@@ -112,7 +112,7 @@ public class MongoDemoController {
             // TODO 7/10=1， 20/10=2， 13/10=2
             page.setPages((long) Math.ceil(total / pageSize));
         }
-        return ResultMap.success(page);
+        return ApiResult.success(page);
     }
 
 

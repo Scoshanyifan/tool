@@ -67,7 +67,7 @@ public class HttpHeaderUtil {
             }
             return beginEnd;
         } catch (Exception e) {
-            LOGGER.error(">>> handle range error", e);
+            LOGGER.error(">>> handle range fail", e);
             return null;
         }
     }

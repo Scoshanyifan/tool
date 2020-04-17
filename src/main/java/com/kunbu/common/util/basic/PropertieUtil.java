@@ -42,13 +42,13 @@ public class PropertieUtil {
                 logger.info(">>> 配置文件加载完成：{}", kvMap);
             }
         } catch (Exception e) {
-            logger.error(">>> PropertiesUtil load properties error.", e);
+            logger.error(">>> PropertiesUtil load properties fail.", e);
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    logger.error(">>> PropertiesUtil close resource error.", e);
+                    logger.error(">>> PropertiesUtil close resource fail.", e);
                 }
             }
         }

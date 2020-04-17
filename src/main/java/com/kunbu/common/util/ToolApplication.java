@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class KunbutoolApplication {
+public class ToolApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(KunbutoolApplication.class, args);
+        SpringApplication.run(ToolApplication.class, args);
     }
 
 }

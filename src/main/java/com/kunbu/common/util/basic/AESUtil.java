@@ -72,7 +72,7 @@ public class AESUtil {
             //返回base64后的密文
             return Base64.getEncoder().encodeToString(result);
         } catch (Exception e) {
-            logger.error(">>> AESUtil encrypt error.", e);
+            logger.error(">>> AESUtil encrypt fail.", e);
             return null;
         }
     }
@@ -100,7 +100,7 @@ public class AESUtil {
             //返回base64后的密文
             return Base64.getEncoder().encodeToString(result);
         } catch (Exception e) {
-            logger.error(">>> AESUtil encrypt error.", e);
+            logger.error(">>> AESUtil encrypt fail.", e);
             return null;
         }
     }
@@ -128,7 +128,7 @@ public class AESUtil {
 
             return new String(result, DEFAULT_CHARSET);
         } catch (Exception e) {
-            logger.error(">>> AESUtil decrypt error.", e);
+            logger.error(">>> AESUtil decrypt fail.", e);
             return null;
         }
     }
@@ -153,7 +153,7 @@ public class AESUtil {
             byte[] result = cipher.doFinal(Base64.getDecoder().decode(content));
             return new String(result, DEFAULT_CHARSET);
         } catch (Exception e) {
-            logger.error(">>> AESUtil decrypt error.", e);
+            logger.error(">>> AESUtil decrypt fail.", e);
             return null;
         }
     }

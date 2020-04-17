@@ -51,7 +51,7 @@ public class ExceptionMailUtil {
 
             mailSendUtil.sendSimpleMail(tos, subject, exceptionMsg);
         } catch (Exception e) {
-            LOGGER.error(">>> ExceptionMailUtil send mail error", e);
+            LOGGER.error(">>> ExceptionMailUtil send mail fail", e);
         }
     }
 

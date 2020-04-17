@@ -10,7 +10,7 @@ import java.util.Arrays;
  *          Throwable
  *      ________|__________
  *      |                 |
- *    Error             Exception
+ *    Error             exception
  *                  ________|________
  *                  |               |
  *             IOException...     RuntimeException
@@ -18,7 +18,7 @@ import java.util.Arrays;
  *
  * tips：
  * 1.在catch中，非受检异常的抛出（业务相关等等），需要 throw new RuntimeException(e);
- * 2.日志记录异常需要直接扔e，即log.error("..." + e)
+ * 2.日志记录异常需要直接扔e，即log.fail("..." + e)
  *
  * ps：上述方法在正常情况下可以打印出错误信息，但是有时候不能展示堆栈信息，需要手动用流获取再打印
  *

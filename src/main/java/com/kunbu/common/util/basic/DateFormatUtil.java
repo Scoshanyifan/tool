@@ -44,7 +44,7 @@ public class DateFormatUtil {
         try {
             return DEFAULT_SDF.get().parse(source);
         } catch (ParseException e) {
-            logger.error(">>> parseDefault error", e);
+            logger.error(">>> parseDefault fail", e);
             return null;
         }
     }
@@ -61,7 +61,7 @@ public class DateFormatUtil {
         try {
             return new SimpleDateFormat(pattern).parse(source);
         } catch (ParseException e) {
-            logger.error(">>> parse error", e);
+            logger.error(">>> parse fail", e);
             return null;
         }
     }

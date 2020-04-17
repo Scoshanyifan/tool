@@ -1,6 +1,6 @@
 package com.kunbu.common.util.tool.log;
 
-import com.kunbu.common.util.ResultMap;
+import com.kunbu.common.util.web.ApiResult;
 import com.kunbu.common.util.basic.HttpRequestUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +23,12 @@ public class LogDemoController {
     private static final Logger LOGGER = LoggerFactory.getLogger(LogDemoController.class);
 
     @GetMapping("/print")
-    public ResultMap query(@RequestParam(required = false) String content, HttpServletRequest request) {
+    public ApiResult query(@RequestParam(required = false) String content, HttpServletRequest request) {
 
         LOGGER.info(">>> content:{}", content);
         HttpRequestUtil.printHttpRequest(request, LOGGER);
 
-        return ResultMap.success();
+        return ApiResult.success();
     }
 
 }

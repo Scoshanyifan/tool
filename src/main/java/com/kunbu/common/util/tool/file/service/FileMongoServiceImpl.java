@@ -17,8 +17,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @project: kunbutool
@@ -98,13 +96,13 @@ public class FileMongoServiceImpl implements FileService {
                 fileDTO.setSuccess(true);
                 return fileDTO;
             } catch (IOException e) {
-                LOGGER.error(">>> getFile error", e);
+                LOGGER.error(">>> getFile fail", e);
             } finally {
                 if (is != null) {
                     try {
                         is.close();
                     } catch (IOException e) {
-                        LOGGER.error(">>> getFile close error", e);
+                        LOGGER.error(">>> getFile close fail", e);
                     }
                 }
             }

@@ -40,7 +40,7 @@ public class FileUtil {
                 return FileDTO.of(multipartFile.getOriginalFilename(), multipartFile.getContentType(), multipartFile.getBytes());
             }
         } catch (Exception e) {
-            LOGGER.error(">>> of error", e);
+            LOGGER.error(">>> of fail", e);
         }
         return null;
     }
@@ -72,16 +72,16 @@ public class FileUtil {
             String fileName = filePath.substring(filePath.lastIndexOf(File.separator) + 1);
             download(request, response, data, fileName);
         } catch (FileNotFoundException e) {
-            LOGGER.error(">>> download error, 文件不存在 ", e);
+            LOGGER.error(">>> download fail, 文件不存在 ", e);
         } catch (IOException e) {
-            LOGGER.error(">>> download error, 文件写入异常 ", e);
+            LOGGER.error(">>> download fail, 文件写入异常 ", e);
         } finally {
             try {
                 if (is != null) {
                     is.close();
                 }
             } catch (IOException e) {
-                LOGGER.error(">>> download error, 资源释放异常", e);
+                LOGGER.error(">>> download fail, 资源释放异常", e);
             }
         }
     }
@@ -153,22 +153,22 @@ public class FileUtil {
             out.write(fileDTO.getData());
             out.flush();
         } catch (UnsupportedEncodingException e) {
-            LOGGER.error(">>> download error, 编码异常", e);
+            LOGGER.error(">>> download fail, 编码异常", e);
         } catch (IOException e) {
-            LOGGER.error(">>> download error, 流操作异常", e);
+            LOGGER.error(">>> download fail, 流操作异常", e);
         } finally {
             try {
                 if (out != null) {
                     out.close();
                 }
             } catch (IOException e) {
-                LOGGER.error(">>> download error, 资源释放异常", e);
+                LOGGER.error(">>> download fail, 资源释放异常", e);
             }
         }
     }
 
     /**
-     * 1. encode，否则会显示%8E这种形式
+     * 1. 中文encode，否则会显示 %8E%34%1A 这种形式
      * 2. 处理safari的乱码问题
      *
      * @param request

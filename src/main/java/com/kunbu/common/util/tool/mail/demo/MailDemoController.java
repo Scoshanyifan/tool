@@ -1,7 +1,7 @@
 package com.kunbu.common.util.tool.mail.demo;
 
 import com.google.common.base.Splitter;
-import com.kunbu.common.util.ResultMap;
+import com.kunbu.common.util.web.ApiResult;
 import com.kunbu.common.util.tool.mail.CommonMail;
 import com.kunbu.common.util.tool.mail.ExceptionMailUtil;
 import com.kunbu.common.util.tool.mail.MailSendUtil;
@@ -35,7 +35,7 @@ public class MailDemoController {
     private ExceptionMailUtil exceptionMailUtil;
 
     @PostMapping("/send")
-    public ResultMap sendMail(@RequestParam String subject,
+    public ApiResult sendMail(@RequestParam String subject,
                               @RequestParam String text,
                               @RequestParam String tos,
                               @RequestParam(required = false) String ccs,
@@ -67,8 +67,8 @@ public class MailDemoController {
         try {
             mailSendUtil.sendMail(mail, true);
         } catch (Exception e) {
-            LOGGER.error(">>> sendMail error", e);
-            return ResultMap.error("发送邮件失败，请重试");
+            LOGGER.error(">>> sendMail fail", e);
+            return ApiResult.fail("发送邮件失败，请重试");
         }
 
         try {
@@ -77,7 +77,7 @@ public class MailDemoController {
         } catch (Exception e) {
             exceptionMailUtil.sendExceptionMail(e, "测试报错", "异常内容：");
         }
-        return ResultMap.success();
+        return ApiResult.success();
     }
 
 }

@@ -3,7 +3,7 @@ package com.kunbu.common.util.tool.excel.demo;
 import com.alibaba.fastjson.util.IOUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.kunbu.common.util.ResultMap;
+import com.kunbu.common.util.web.ApiResult;
 import com.kunbu.common.util.tool.file.FileUtil;
 import com.kunbu.common.util.tool.excel.ExcelConst;
 import com.kunbu.common.util.tool.excel.ExcelExportUtil;
@@ -148,7 +148,7 @@ public class ExcelDemoController {
             String fileName = ExcelConst.EXCEL_EXPORT_FILE_NAME_PREFIX + System.currentTimeMillis();
             FileUtil.download(request, response, content, fileName + "." + ExcelConst.EXCEL_XLSX_2007);
         } catch (Exception e) {
-            LOGGER.error(">>> exportExcelData error", e);
+            LOGGER.error(">>> exportExcelData fail", e);
         }
     }
 
@@ -161,12 +161,12 @@ public class ExcelDemoController {
      */
     @RequestMapping("/import/data")
     @ResponseBody
-    public ResultMap importExcelData(@RequestParam MultipartFile file, HttpServletRequest request) {
+    public ApiResult importExcelData(@RequestParam MultipartFile file, HttpServletRequest request) {
         // TODO 业务判断，比如导入者必须是小区管理员，只能导入该小区下用户，因为小区id从session或token中拿到
         String orgId = request.getHeader("orgId");
         if (StringUtils.isBlank(orgId)) {
             LOGGER.error(">>> importExcelData orgId null");
-            return ResultMap.error("请用物业管理员，或小区管理员的身份进行用户导入");
+            return ApiResult.fail("请用物业管理员，或小区管理员的身份进行用户导入");
         }
 
         InputStream input = null;
@@ -190,7 +190,7 @@ public class ExcelDemoController {
                         continue;
                     }
                     // TODO 校验数据格式并生成业务模型（只有全部通过后，才进行批量插入DB）
-                    ResultMap checkResult = checkImportData(values);
+                    ApiResult checkResult = checkImportData(values);
                     if (!checkResult.isSuccess()) {
                         errorMsgList.add(checkResult.getMsg());
                     } else {
@@ -199,21 +199,21 @@ public class ExcelDemoController {
                 }
                 // 如果有导入失败的错误信息，集中返回
                 if (CollectionUtils.isNotEmpty(errorMsgList)) {
-                    return ResultMap.error(errorMsgList);
+                    return ApiResult.fail(errorMsgList);
                 }
                 // TODO 导入数据全部校验完成后插入DB
                 for (ExcelEntity entity : importDataList) {
                 }
             } else {
-                return ResultMap.error("上传的excel内容为空");
+                return ApiResult.fail("上传的excel内容为空");
             }
         } catch (Exception e) {
             LOGGER.error(">>> 导入excel异常", e);
-            return ResultMap.error("导入电梯excel失败，请重新尝试");
+            return ApiResult.fail("导入电梯excel失败，请重新尝试");
         } finally {
             IOUtils.close(input);
         }
-        return ResultMap.success();
+        return ApiResult.success();
     }
 
     /**
@@ -222,7 +222,7 @@ public class ExcelDemoController {
      *
      * @param values
      */
-    private ResultMap checkImportData(List<String> values) {
+    private ApiResult checkImportData(List<String> values) {
 
         // TODO 检查数据格式，如错误注明其内容位置等用于返回
 
@@ -235,6 +235,6 @@ public class ExcelDemoController {
         entity.setUserPhone(values.get(4));
         entity.setUserRemark(values.get(5));
         
-        return ResultMap.success(entity);
+        return ApiResult.success(entity);
     }
 }
