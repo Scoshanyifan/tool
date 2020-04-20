@@ -9,20 +9,27 @@ import java.io.Serializable;
  * @author: kunbu
  * @create: 2020-04-17 08:59
  **/
-public class ServiceResult implements Serializable {
+public class ServiceResult<T> implements Serializable {
 
     private boolean success;
-    private Object data;
+    private T data;
     private ResultCode code;
 
     public static ServiceResult success() {
         return success(null);
     }
 
-    public static ServiceResult success(Object data) {
+    public static <T> ServiceResult success(T data) {
         ServiceResult result = new ServiceResult();
         result.setSuccess(true);
         result.setData(data);
+        return result;
+    }
+
+    @Deprecated
+    public static ServiceResult fail() {
+        ServiceResult result = new ServiceResult();
+        result.setSuccess(false);
         return result;
     }
 
@@ -41,11 +48,11 @@ public class ServiceResult implements Serializable {
         this.success = success;
     }
 
-    public Object getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 

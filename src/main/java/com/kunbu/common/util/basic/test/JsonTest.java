@@ -15,7 +15,7 @@ public class JsonTest {
 
     public static void main(String[] args) {
 
-        Object result = ApiResult.fail("xxx");
+        Object result = ApiResult.success();
         JSONObject json = (JSONObject) JSONObject.toJSON(result);
         System.out.println(json + ", " + json.getInteger("code"));
 

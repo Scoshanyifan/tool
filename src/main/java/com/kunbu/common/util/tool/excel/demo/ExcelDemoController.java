@@ -3,11 +3,11 @@ package com.kunbu.common.util.tool.excel.demo;
 import com.alibaba.fastjson.util.IOUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.kunbu.common.util.web.ApiResult;
-import com.kunbu.common.util.tool.file.FileUtil;
 import com.kunbu.common.util.tool.excel.ExcelConst;
 import com.kunbu.common.util.tool.excel.ExcelExportUtil;
 import com.kunbu.common.util.tool.excel.ExcelReadUtil;
+import com.kunbu.common.util.tool.file.FileUtil;
+import com.kunbu.common.util.web.ApiResult;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -199,7 +199,7 @@ public class ExcelDemoController {
                 }
                 // 如果有导入失败的错误信息，集中返回
                 if (CollectionUtils.isNotEmpty(errorMsgList)) {
-                    return ApiResult.fail(errorMsgList);
+                    return ApiResult.fail(null, errorMsgList);
                 }
                 // TODO 导入数据全部校验完成后插入DB
                 for (ExcelEntity entity : importDataList) {

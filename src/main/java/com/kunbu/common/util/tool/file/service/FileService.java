@@ -1,6 +1,7 @@
 package com.kunbu.common.util.tool.file.service;
 
 import com.kunbu.common.util.tool.file.FileDTO;
+import com.kunbu.common.util.web.ServiceResult;
 
 /**
  * @author: KunBu
@@ -9,9 +10,9 @@ import com.kunbu.common.util.tool.file.FileDTO;
  */
 public interface FileService {
 
-    String saveFile(FileDTO fileDTO);
+    ServiceResult<String> saveFile(FileDTO fileDTO);
 
-    FileDTO getFile(String fileId);
+    ServiceResult<FileDTO> getFile(String fileId);
 
     /**
      * 支持断点续传
@@ -22,6 +23,6 @@ public interface FileService {
      * @time 2020/4/16 14:34
      * @return       
      **/
-    FileDTO getFile(String fileId, String httpHeaderRange);
+    ServiceResult<FileDTO> getFile(String fileId, String httpHeaderRange);
 
 }

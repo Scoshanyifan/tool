@@ -14,7 +14,10 @@ public class HttpHeaderUtil {
 
     public static final long DEFAULT_CACHE_SECONDS = 7 * 24 * 3600L;
 
-    private static final String DELIMITER_MINUS = "-";
+    public static final String HTTP_HEADER_RANGE = "Range";
+
+    public static final String HTTP_HEADER_DELIMITER_MINUS = "-";
+
 
     public static boolean needCache(String ext) {
         if (ext == null || ext.length() == 0) {
@@ -49,12 +52,12 @@ public class HttpHeaderUtil {
                 return null;
             }
             range = range.substring("bytes=".length());
-            String[] rangeArr = range.split(DELIMITER_MINUS);
+            String[] rangeArr = range.split(HTTP_HEADER_DELIMITER_MINUS);
 
             long[] beginEnd = new long[]{0, fileLength - 1};
             if (rangeArr.length == 1) {
                 // bytes=-500
-                if (range.startsWith(DELIMITER_MINUS)) {
+                if (range.startsWith(HTTP_HEADER_DELIMITER_MINUS)) {
                     beginEnd[0] = fileLength - Long.parseLong(rangeArr[0]);
                 } else {
                     beginEnd[0] = Integer.parseInt(rangeArr[0]);

@@ -26,12 +26,32 @@ public class ApiResult {
         return result;
     }
 
+    @Deprecated
+    public static ApiResult fail(String msg) {
+        ApiResult result = new ApiResult();
+        result.setSuccess(false);
+        result.setMsg(msg);
+        return result;
+    }
 
     public static ApiResult fail(ResultCode apiCode) {
         ApiResult result = new ApiResult();
         result.setSuccess(false);
-        result.setCode(apiCode.getCode());
-        result.setMsg(apiCode.getMsg());
+        if (apiCode != null) {
+            result.setCode(apiCode.getCode());
+            result.setMsg(apiCode.getMsg());
+        }
+        return result;
+    }
+
+    public static ApiResult fail(ResultCode apiCode, Object data) {
+        ApiResult result = new ApiResult();
+        result.setSuccess(false);
+        if (apiCode != null) {
+            result.setCode(apiCode.getCode());
+            result.setMsg(apiCode.getMsg());
+        }
+        result.setData(data);
         return result;
     }
 
