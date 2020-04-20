@@ -27,6 +27,11 @@ spring:
       mail.smtp.starttls.enable: false
       mail.smtp.socketFactory.fallback: false
       mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+# 上传文件大小限制，默认1M
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
 
 exception:
   mail:
