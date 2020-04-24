@@ -1,6 +1,6 @@
 package com.kunbu.common.util.web;
 
-import com.kunbu.common.util.web.code.ResultCode;
+import com.kunbu.common.util.web.constant.ResultCode;
 
 import java.io.Serializable;
 

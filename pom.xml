@@ -19,6 +19,7 @@
 
         <poi.version>3.9</poi.version>
         <poi.ooxml.version>3.9</poi.ooxml.version>
+        <zxing.version>3.1.0</zxing.version>
         <javax.mail.version>1.4.7</javax.mail.version>
 
         <commons-io.version>2.6</commons-io.version>
@@ -92,6 +93,17 @@
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>${javax.mail.version}</version>
+        </dependency>
+        <!--zxing-->
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>${zxing.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>${zxing.version}</version>
         </dependency>
         <!-- excel -->
         <dependency>

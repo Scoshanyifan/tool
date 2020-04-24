@@ -1,4 +1,4 @@
-package com.kunbu.common.util.tool.log;
+package com.kunbu.common.util.web.controller;
 
 import com.kunbu.common.util.web.ApiResult;
 import com.kunbu.common.util.basic.HttpRequestUtil;
@@ -18,9 +18,9 @@ import javax.servlet.http.HttpServletRequest;
  **/
 @RestController
 @RequestMapping("/log")
-public class LogDemoController {
+public class LogController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LogDemoController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LogController.class);
 
     @GetMapping("/print")
     public ApiResult query(@RequestParam(required = false) String content, HttpServletRequest request) {

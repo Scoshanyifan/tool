@@ -1,4 +1,4 @@
-package com.kunbu.common.util.web.code;
+package com.kunbu.common.util.web.constant;
 
 /**
  * @author: KunBu

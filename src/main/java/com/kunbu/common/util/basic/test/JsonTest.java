@@ -17,7 +17,7 @@ public class JsonTest {
 
         Object result = ApiResult.success();
         JSONObject json = (JSONObject) JSONObject.toJSON(result);
-        System.out.println(json + ", " + json.getInteger("code"));
+        System.out.println(json + ", " + json.getInteger("constant"));
 
 
         Map<String, Object> map = new HashMap<>();

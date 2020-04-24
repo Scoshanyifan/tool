@@ -115,7 +115,7 @@ public class FileUtil {
             if (fileDTO == null || !fileDTO.isSuccess()) {
                 return;
             }
-            response.reset();
+//            response.reset();
 
             String fileName = fileDTO.getFileName();
             String fileExt = MimeTypeUtil.getExt(fileName);

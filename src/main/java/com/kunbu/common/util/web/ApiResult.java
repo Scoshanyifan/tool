@@ -1,7 +1,7 @@
 package com.kunbu.common.util.web;
 
-import com.kunbu.common.util.web.code.ApiCodeEnum;
-import com.kunbu.common.util.web.code.ResultCode;
+import com.kunbu.common.util.web.constant.ApiCodeEnum;
+import com.kunbu.common.util.web.constant.ResultCode;
 
 /**
  * @project: kunbutool
