@@ -37,7 +37,8 @@ public class FileUtil {
     public static FileDTO upload(HttpServletRequest request, MultipartFile multipartFile) {
         try {
             if (multipartFile != null) {
-                return FileDTO.of(multipartFile.getOriginalFilename(), multipartFile.getContentType(), multipartFile.getBytes());
+                FileDTO fileDTO = FileDTO.of(multipartFile.getOriginalFilename(), multipartFile.getBytes());
+                fileDTO.setContentType(multipartFile.getContentType());
             }
         } catch (Exception e) {
             LOGGER.error(">>> of fail", e);
@@ -115,20 +116,24 @@ public class FileUtil {
             if (fileDTO == null || !fileDTO.isSuccess()) {
                 return;
             }
-//            response.reset();
-
             String fileName = fileDTO.getFileName();
-            String fileExt = MimeTypeUtil.getExt(fileName);
+            if (fileName == null) {
+                return;
+            }
+
+            response.reset();
             // 文件类型
+            String fileExt = MimeTypeUtil.getExt(fileName);
             String contentType = fileDTO.getContentType();
             if (contentType == null) {
                 contentType = MimeTypeUtil.getContentType(fileExt);
             }
-            response.setContentType(contentType);
+            response.setHeader("Content-Type", contentType);
+//            response.setContentType(contentType);
             // 文件名编码
             String encodeFileName = encodeFileName(request, fileName);
             // 文件展示或下载
-            setInlineOrAttachment(response, encodeFileName, false);
+            setInlineOrAttachment(response, encodeFileName, fileDTO.isInline());
             // 文件缓存
             if (HttpHeaderUtil.needCache(fileExt)) {
                 response.setHeader("Cache-Control", "max-age=" + HttpHeaderUtil.DEFAULT_CACHE_SECONDS);
@@ -138,7 +143,11 @@ public class FileUtil {
 //                response.setHeader("Connection", "close");
             }
             // 文件长度
-            long contentLength = fileDTO.getContentLength();
+            Long contentLength = fileDTO.getContentLength();
+            if (contentLength != null) {
+                contentLength = (long) fileDTO.getData().length;
+            }
+            System.out.println(fileDTO);
             response.setHeader("Content-Length", contentLength + "");
             // 文件断点续传
             if (fileDTO.isBreakPoint()) {
@@ -194,7 +203,7 @@ public class FileUtil {
      * @param fileName
      * @param inline
      **/
-    public static void setInlineOrAttachment(HttpServletResponse response, String fileName, boolean inline) {
+    private static void setInlineOrAttachment(HttpServletResponse response, String fileName, boolean inline) {
         if (inline) {
             response.setHeader("Content-Disposition", "inline;filename=" + fileName);
         } else {

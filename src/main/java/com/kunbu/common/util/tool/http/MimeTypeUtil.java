@@ -11,7 +11,7 @@ public class MimeTypeUtil {
     public static final String FILE_EXT_DOT         = ".";
 
     public static String getExt(String fileName) {
-        if (fileName == null || fileName.length() == 0) {
+        if (fileName == null) {
             return null;
         }
         String ext = null;

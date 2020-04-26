@@ -44,6 +44,7 @@ public class FileDemoController {
 
         ServiceResult<FileDTO> serviceResult = fileService.getFile(fileId, httpHeaderRange);
         if (serviceResult.isSuccess()) {
+            LOGGER.info(">>> fileDTO:{}", serviceResult.getData());
             FileUtil.download(request, response, serviceResult.getData());
         }
     }

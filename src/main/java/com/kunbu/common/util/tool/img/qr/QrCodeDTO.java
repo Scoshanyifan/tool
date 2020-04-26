@@ -12,9 +12,9 @@ public class QrCodeDTO {
     public static final String FORMAT_PNG = "png";
     public static final String FORMAT_JPG = "jpg";
 
-    private static final int DEFAULT_QR_WIDTH = 200;
-    private static final int DEFAULT_QR_HEIGHT = 200;
-    private static final int DEFAULT_WORD_HEIGHT = 20;
+    private static final int DEFAULT_QR_WIDTH = 400;
+    private static final int DEFAULT_QR_HEIGHT = 400;
+    private static final int DEFAULT_WORD_BOTTOM = 20;
 
     /**
      * 宽度
@@ -29,7 +29,7 @@ public class QrCodeDTO {
      */
     private String word;
     /**
-     * 文字高度
+     * 文字高度，从底部算起
      */
     private int wordHeight;
     /**
@@ -43,7 +43,7 @@ public class QrCodeDTO {
     /**
      * logo图片
      */
-    private BufferedImage logoImage;
+    private BufferedImage logoBufImg;
 
     private Map<EncodeHintType, Object> encodeTypeMap;
 
@@ -60,7 +60,7 @@ public class QrCodeDTO {
         qrCodeDTO.format = format;
         qrCodeDTO.width = qrWidth;
         qrCodeDTO.height = qrHeight;
-        qrCodeDTO.wordHeight = DEFAULT_WORD_HEIGHT;
+        qrCodeDTO.wordHeight = DEFAULT_WORD_BOTTOM;
 
         Map<EncodeHintType, Object> encodeTypeMap = new HashMap<>();
         //编码
@@ -130,11 +130,11 @@ public class QrCodeDTO {
         this.wordHeight = wordHeight;
     }
 
-    public BufferedImage getLogoImage() {
-        return logoImage;
+    public BufferedImage getLogoBufImg() {
+        return logoBufImg;
     }
 
-    public void setLogoImage(BufferedImage logoImage) {
-        this.logoImage = logoImage;
+    public void setLogoBufImg(BufferedImage logoBufImg) {
+        this.logoBufImg = logoBufImg;
     }
 }

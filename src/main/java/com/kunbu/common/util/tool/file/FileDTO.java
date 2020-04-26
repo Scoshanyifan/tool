@@ -25,7 +25,7 @@ public class FileDTO implements Serializable {
     /**
      * 文件大小
      **/
-    private long contentLength;
+    private Long contentLength;
     /**
      * 文件内容
      */
@@ -46,11 +46,14 @@ public class FileDTO implements Serializable {
      * 断点续传的首尾位置
      **/
     private long[] beginEnd;
+    /**
+     * 网页展示或下载
+     **/
+    private boolean inline;
 
-    public static FileDTO of(String fileName, String contentType, byte[] data) {
+    public static FileDTO of(String fileName, byte[] data) {
         FileDTO fileDTO = new FileDTO();
         fileDTO.fileName = fileName;
-        fileDTO.contentType = contentType;
         fileDTO.data = data;
         return fileDTO;
     }
@@ -79,11 +82,11 @@ public class FileDTO implements Serializable {
         this.contentType = contentType;
     }
 
-    public long getContentLength() {
+    public Long getContentLength() {
         return contentLength;
     }
 
-    public void setContentLength(long contentLength) {
+    public void setContentLength(Long contentLength) {
         this.contentLength = contentLength;
     }
 
@@ -127,6 +130,14 @@ public class FileDTO implements Serializable {
         this.beginEnd = beginEnd;
     }
 
+    public boolean isInline() {
+        return inline;
+    }
+
+    public void setInline(boolean inline) {
+        this.inline = inline;
+    }
+
     @Override
     public String toString() {
         return "FileDTO{" +
@@ -139,6 +150,7 @@ public class FileDTO implements Serializable {
                 ", success=" + success +
                 ", breakPoint=" + breakPoint +
                 ", beginEnd=" + Arrays.toString(beginEnd) +
+                ", inline=" + inline +
                 '}';
     }
 }
