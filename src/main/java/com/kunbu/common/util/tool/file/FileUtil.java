@@ -120,8 +120,8 @@ public class FileUtil {
             if (fileName == null) {
                 return;
             }
+//            response.reset();
 
-            response.reset();
             // 文件类型
             String fileExt = MimeTypeUtil.getExt(fileName);
             String contentType = fileDTO.getContentType();
@@ -144,10 +144,9 @@ public class FileUtil {
             }
             // 文件长度
             Long contentLength = fileDTO.getContentLength();
-            if (contentLength != null) {
+            if (contentLength == null) {
                 contentLength = (long) fileDTO.getData().length;
             }
-            System.out.println(fileDTO);
             response.setHeader("Content-Length", contentLength + "");
             // 文件断点续传
             if (fileDTO.isBreakPoint()) {

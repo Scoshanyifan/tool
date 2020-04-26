@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -30,7 +31,7 @@ public class QrCodeUtil {
 
     private static final String DEFAULT_CHARSET             = "utf-8";
     private static final int DEFAULT_QR_WIDTH               = 400;
-    private static final int DEFAULT_QR_HEIGHT              = 400;
+    private static final int DEFAULT_QR_HEIGHT              = 500;
 
     /**
      * 仅生成二维码
@@ -98,29 +99,23 @@ public class QrCodeUtil {
         }
         // 3.插入文字， 需要先绘制新图层，高度为二维码的1.2
         if (qrText != null) {
-            BufferedImage qrBufImgNew = ImgUtil.newImg(qrBufImg, qrBufImg.getWidth(), (int) (qrBufImg.getHeight() * 1.2));
-            ImgUtil.addText(qrBufImgNew, qrText, null, null, null, null);
-            return qrBufImgNew;
+            Graphics2D newG = null;
+            try {
+                BufferedImage qrBufImgNew = new BufferedImage(qrBufImg.getWidth(), (int) (qrBufImg.getHeight() * 0.9), BufferedImage.TYPE_INT_ARGB);
+                newG = qrBufImgNew.createGraphics();
+                // 把二维码内容上移
+                newG.drawImage(qrBufImg, 0, - qrBufImg.getHeight() / 10, qrBufImg.getWidth(), qrBufImg.getHeight(), null);
+                ImgUtil.addText(qrBufImgNew, qrText, null, null, null, null);
+                return qrBufImgNew;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            } finally {
+                if (newG != null) {
+                    newG.dispose();
+                }
+            }
         }
         return qrBufImg;
-    }
-
-    private static void saveTempImg(BufferedImage bufImg, String path) {
-        try {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ImageIO.write(bufImg, "png", bos);
-            byte[] bytes = bos.toByteArray();
-
-            File file = new File(path);
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(bytes);
-            fos.close();
-        } catch (Exception e) {
-
-        }
     }
 
     public static void main(String[] args) {
@@ -128,11 +123,11 @@ public class QrCodeUtil {
         try {
             String qrContent = "https://xiao-2020-test.yunext.com/speedy/#/scanCode?id=f74c06a7aa804957ac34465b5fd81889";
             String qrText = "乘梯二维码";
-            String logoPath = "C:\\Users\\mojun\\Desktop\\logo.png";
+            String logoPath = "demo/img/logo.png";
 
             byte[] bytes = createQrCode(qrContent, qrText, logoPath);
 
-            File file = new File("C:\\Users\\mojun\\Desktop\\qrCode.png");
+            File file = new File("demo/img/qrCode.png");
             if (!file.exists()) {
                 file.createNewFile();
             }

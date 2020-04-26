@@ -126,6 +126,7 @@ public class ImgUtil {
      * @param targetHeight
      * @return
      **/
+    @Deprecated
     public static BufferedImage newImg(BufferedImage oldBufImg, int targetWidth, int targetHeight) {
         Graphics2D newG = null;
         try {
@@ -148,14 +149,13 @@ public class ImgUtil {
      * @param bufImg
      * @param targetWidth
      * @param targetHeight
-     * @param scale
      **/
-    public static BufferedImage scaleImg(BufferedImage bufImg, int targetWidth, int targetHeight, Integer scale) {
+    public static BufferedImage scaleImg(BufferedImage bufImg, int targetWidth, int targetHeight) {
         Graphics scaleG = null;
         try {
             BufferedImage imageNew = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
             scaleG = imageNew.getGraphics();
-            Image tempIng = bufImg.getScaledInstance(targetWidth, targetHeight, scale == null ? BufferedImage.SCALE_DEFAULT : scale);
+            Image tempIng = bufImg.getScaledInstance(targetWidth, targetHeight, BufferedImage.SCALE_DEFAULT);
             scaleG.drawImage(tempIng, 0, 0, null);
             return imageNew;
         } catch (Exception e) {
@@ -196,14 +196,14 @@ public class ImgUtil {
              **/
             int imgWidth = bufImg.getWidth();
             if (textPadding == null) {
-                textPadding = imgWidth / 20;
+                textPadding = imgWidth / 15;
             }
             // 计算文字数量
             int textLength = calTextLength(text);
             // 计算字体宽度，最大取1/20的图片宽度
-            int fontWidth = imgWidth / 20;
+            int fontWidth = imgWidth / 15;
             // 文字总宽度取图片宽度的3/5计算
-            while (fontWidth * textLength > imgWidth * 0.6) {
+            while (fontWidth * textLength > imgWidth * 0.8) {
                 fontWidth -= 1;
             }
             // 计算字体大小
@@ -313,9 +313,9 @@ public class ImgUtil {
     public static void main(String[] args) {
         FileOutputStream fos = null;
         try {
-            BufferedImage outImg = ImageIO.read(new File("C:\\Users\\mojun\\Desktop\\qr.jpg"));
-            BufferedImage qrImgOld = ImageIO.read(new File("C:\\Users\\mojun\\Desktop\\cat.png"));
-            BufferedImage qrImg = ImgUtil.scaleImg(qrImgOld, (int) (qrImgOld.getWidth() * 0.9), (int) (qrImgOld.getHeight() * 0.9), null);
+            BufferedImage outImg = ImageIO.read(new File("demo/img/qr.png"));
+            BufferedImage qrImgOld = ImageIO.read(new File("demo/img/cat.png"));
+            BufferedImage qrImg = ImgUtil.scaleImg(qrImgOld, (int) (qrImgOld.getWidth() * 0.9), (int) (qrImgOld.getHeight() * 0.9));
 
             // 二维码居中
             int startX = (outImg.getWidth() - qrImg.getWidth()) / 2;
@@ -335,7 +335,7 @@ public class ImgUtil {
                 bytes = bos.toByteArray();
             }
 
-            File file = new File("C:\\Users\\mojun\\Desktop\\test.jpg");
+            File file = new File("demo/img/demo.png");
             if (!file.exists()) {
                 file.createNewFile();
             }
