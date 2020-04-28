@@ -1,4 +1,4 @@
-package com.kunbu.common.util.tool.img.verify;
+package com.kunbu.common.util.tool.img.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

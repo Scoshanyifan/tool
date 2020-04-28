@@ -41,7 +41,7 @@ public class FileUtil {
                 fileDTO.setContentType(multipartFile.getContentType());
             }
         } catch (Exception e) {
-            LOGGER.error(">>> of fail", e);
+            LOGGER.error(">>> upload fail", e);
         }
         return null;
     }

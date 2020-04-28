@@ -126,7 +126,6 @@ public class ImgUtil {
      * @param targetHeight
      * @return
      **/
-    @Deprecated
     public static BufferedImage newImg(BufferedImage oldBufImg, int targetWidth, int targetHeight) {
         Graphics2D newG = null;
         try {
@@ -175,7 +174,7 @@ public class ImgUtil {
      * @param font 默认：微软雅黑
      * @param color 默认：黑色
      * @param ifBottom 文字位于顶部或底部，默认：底部
-     * @param textPadding 文字距离顶部或底部距离，默认：1/20的图片宽度
+     * @param textPadding 文字距离顶部或底部距离，默认：1/15的图片宽度
      */
     public static void addText(BufferedImage bufImg, String text, String font, Color color, Boolean ifBottom, Integer textPadding) {
         Graphics2D graphics2D = null;
@@ -200,7 +199,7 @@ public class ImgUtil {
             }
             // 计算文字数量
             int textLength = calTextLength(text);
-            // 计算字体宽度，最大取1/20的图片宽度
+            // 计算字体宽度，最大取1/15的图片宽度
             int fontWidth = imgWidth / 15;
             // 文字总宽度取图片宽度的3/5计算
             while (fontWidth * textLength > imgWidth * 0.8) {
@@ -215,11 +214,11 @@ public class ImgUtil {
             /**
              * 计算文字位置，起点是左上角，但是从文字左下角计算
              **/
-            int textWidth2 = graphics2D.getFontMetrics().stringWidth(text);
-            int textWidth = textLength * fontWidth;
-            LOGGER.info(">>> textLength:{}, fontWidth:{}, fontSize:{}, textWidth:{}", textLength, fontWidth, fontSize, textWidth);
+            int textWidth = textLength * fontSize;
+            int textWidthSys = graphics2D.getFontMetrics().stringWidth(text);
+            LOGGER.info(">>> textLength:{}, fontWidth:{}, fontSize:{}, textWidth:{}, textWidthSys:{}", textLength, fontWidth, fontSize, textWidth, textWidthSys);
             // 计算X轴，居中
-            int textStartX = (imgWidth - textWidth2) / 2;
+            int textStartX = (imgWidth - textWidth) / 2;
             // 计算Y轴
             int textStartY;
             if (ifBottom) {

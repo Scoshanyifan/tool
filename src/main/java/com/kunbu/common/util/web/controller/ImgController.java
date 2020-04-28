@@ -2,8 +2,8 @@ package com.kunbu.common.util.web.controller;
 
 import com.kunbu.common.util.tool.file.FileDTO;
 import com.kunbu.common.util.tool.file.FileUtil;
-import com.kunbu.common.util.tool.img.qr.QrCodeUtil;
-import com.kunbu.common.util.tool.img.verify.VerifyCodeUtil;
+import com.kunbu.common.util.tool.img.utils.QrCodeUtil;
+import com.kunbu.common.util.tool.img.utils.VerifyCodeUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,5 +39,12 @@ public class ImgController {
         FileUtil.download(request, response, fileDTO);
     }
 
+    @GetMapping("/sticker")
+    public void getSticker(HttpServletRequest request, HttpServletResponse response, @RequestParam String text, @RequestParam String fileId) {
 
+        FileDTO fileDTO = FileDTO.of("qrCode.png", null);
+        fileDTO.setInline(true);
+        fileDTO.setSuccess(true);
+        FileUtil.download(request, response, fileDTO);
+    }
 }

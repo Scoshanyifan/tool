@@ -1,4 +1,4 @@
-package com.kunbu.common.util.tool.img.qr;
+package com.kunbu.common.util.tool.img.utils;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -10,10 +10,8 @@ import com.kunbu.common.util.tool.img.ImgUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,7 +29,8 @@ public class QrCodeUtil {
 
     private static final String DEFAULT_CHARSET             = "utf-8";
     private static final int DEFAULT_QR_WIDTH               = 400;
-    private static final int DEFAULT_QR_HEIGHT              = 500;
+    private static final int DEFAULT_QR_HEIGHT              = 400;
+    private static final int DEFAULT_QR_BOTTOM              = 50;
 
     /**
      * 仅生成二维码
@@ -101,11 +100,14 @@ public class QrCodeUtil {
         if (qrText != null) {
             Graphics2D newG = null;
             try {
-                BufferedImage qrBufImgNew = new BufferedImage(qrBufImg.getWidth(), (int) (qrBufImg.getHeight() * 0.9), BufferedImage.TYPE_INT_ARGB);
+                BufferedImage qrBufImgNew = new BufferedImage(qrBufImg.getWidth(), qrBufImg.getHeight() + DEFAULT_QR_BOTTOM, BufferedImage.TYPE_INT_ARGB);
                 newG = qrBufImgNew.createGraphics();
-                // 把二维码内容上移
-                newG.drawImage(qrBufImg, 0, - qrBufImg.getHeight() / 10, qrBufImg.getWidth(), qrBufImg.getHeight(), null);
-                ImgUtil.addText(qrBufImgNew, qrText, null, null, null, null);
+                // 填充底色
+                newG.setBackground(Color.WHITE);
+                newG.fillRect(0, qrBufImg.getHeight(),qrBufImg.getWidth(), qrBufImg.getHeight() + DEFAULT_QR_BOTTOM);
+                // 把二维码加上去
+                newG.drawImage(qrBufImg, 0, 0, qrBufImg.getWidth(), qrBufImg.getHeight(), null);
+                ImgUtil.addText(qrBufImgNew, qrText, null, null, null, qrBufImg.getHeight() / 10);
                 return qrBufImgNew;
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -122,7 +124,7 @@ public class QrCodeUtil {
         FileOutputStream fos = null;
         try {
             String qrContent = "https://xiao-2020-test.yunext.com/speedy/#/scanCode?id=f74c06a7aa804957ac34465b5fd81889";
-            String qrText = "乘梯二维码";
+            String qrText = "乘梯二维码A11";
             String logoPath = "demo/img/logo.png";
 
             byte[] bytes = createQrCode(qrContent, qrText, logoPath);
