@@ -136,10 +136,20 @@ public class ImgUtil {
                 newG.setBackground(color);
                 int oldWidth = oldBufImg.getWidth();
                 int oldHeight = oldBufImg.getHeight();
+                // 扩展部分上色
                 if (oldHeight < targetHeight && oldWidth < targetWidth) {
-                    // 扩展部分上色（2部分）
-//                    newG.fillRect(0, qrBufImg.getHeight(),qrBufImg.getWidth(), qrBufImg.getHeight());
-//                    newG.fillRect(0, qrBufImg.getHeight(),qrBufImg.getWidth(), qrBufImg.getHeight());
+                    // 下方
+                    newG.fillRect(0, oldHeight, oldWidth, targetHeight);
+                    // 右边
+                    newG.fillRect(oldWidth, 0, targetWidth, targetHeight);
+                }
+                // 仅右边
+                if (oldHeight >= targetHeight && oldWidth < targetWidth) {
+                    newG.fillRect(oldWidth, 0, targetWidth, targetHeight);
+                }
+                // 仅下方
+                if (oldWidth >= targetWidth && oldHeight < targetHeight) {
+                    newG.fillRect(0, oldHeight, targetWidth, targetHeight);
                 }
             }
             newG.drawImage(oldBufImg, 0, 0, oldBufImg.getWidth(), oldBufImg.getHeight(), null);
@@ -164,7 +174,7 @@ public class ImgUtil {
     }
 
     /**
-     * 缩放图片
+     * 缩放图片 TODO 如何做到无损缩放
      *
      * @param bufImg
      * @param targetWidth
@@ -175,7 +185,7 @@ public class ImgUtil {
         try {
             BufferedImage imageNew = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
             scaleG = imageNew.getGraphics();
-            Image tempIng = bufImg.getScaledInstance(targetWidth, targetHeight, BufferedImage.SCALE_DEFAULT);
+            Image tempIng = bufImg.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
             scaleG.drawImage(tempIng, 0, 0, null);
             return imageNew;
         } catch (Exception e) {

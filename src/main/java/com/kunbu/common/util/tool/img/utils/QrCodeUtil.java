@@ -88,36 +88,18 @@ public class QrCodeUtil {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        // TODO 生成的二维码图层是黑白ARGB，需要改成全彩
-//        qrBufImg = ImgUtil.newImg(qrBufImg, qrWidth, qrHeight);
-        // 2. 插入logo
+        // 2. 插入logo TODO 生成的二维码图层是黑白ARGB，需要改成全彩
         if (logoBufImg != null) {
+            qrBufImg = ImgUtil.newImg(qrBufImg, qrWidth, qrWidth, null);
             logoBufImg = ImgUtil.scaleImg(logoBufImg, 0.9);
             int logoX = (qrBufImg.getWidth() - logoBufImg.getWidth()) / 2;
             int logoY = (qrBufImg.getHeight() - logoBufImg.getHeight()) / 2;
             ImgUtil.joinImg(qrBufImg, logoBufImg, logoX, logoY);
         }
-        // 3.插入文字， 需要先绘制新图层，高度为二维码的1.2
+        // 3. 扩展图层, 插入文字，高度为二维码的1.1
         if (qrText != null) {
-            Graphics2D newG = null;
-            try {
-                BufferedImage qrBufImgNew = new BufferedImage(qrBufImg.getWidth(), qrBufImg.getHeight() + DEFAULT_QR_BOTTOM, BufferedImage.TYPE_INT_ARGB);
-                newG = qrBufImgNew.createGraphics();
-                // 填充底色
-                newG.setBackground(Color.WHITE);
-                // 扩展部分上色
-                newG.fillRect(0, qrBufImg.getHeight(),qrBufImg.getWidth(), qrBufImg.getHeight() + DEFAULT_QR_BOTTOM);
-                // 把二维码加上去
-                newG.drawImage(qrBufImg, 0, 0, qrBufImg.getWidth(), qrBufImg.getHeight(), null);
-                ImgUtil.addText(qrBufImgNew, qrText, null, null, null, qrBufImg.getHeight() / 10);
-                return qrBufImgNew;
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            } finally {
-                if (newG != null) {
-                    newG.dispose();
-                }
-            }
+            qrBufImg = ImgUtil.newImg(qrBufImg, qrWidth, (int) (qrHeight * 1.1), Color.WHITE);
+            ImgUtil.addText(qrBufImg, qrText, null, null, true, qrBufImg.getHeight() / 15);
         }
         return qrBufImg;
     }
