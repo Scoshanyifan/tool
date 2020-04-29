@@ -89,9 +89,10 @@ public class QrCodeUtil {
             throw new RuntimeException(e);
         }
         // TODO 生成的二维码图层是黑白ARGB，需要改成全彩
-        qrBufImg = ImgUtil.newImg(qrBufImg, qrWidth, qrHeight);
+//        qrBufImg = ImgUtil.newImg(qrBufImg, qrWidth, qrHeight);
         // 2. 插入logo
         if (logoBufImg != null) {
+            logoBufImg = ImgUtil.scaleImg(logoBufImg, 0.9);
             int logoX = (qrBufImg.getWidth() - logoBufImg.getWidth()) / 2;
             int logoY = (qrBufImg.getHeight() - logoBufImg.getHeight()) / 2;
             ImgUtil.joinImg(qrBufImg, logoBufImg, logoX, logoY);
@@ -104,6 +105,7 @@ public class QrCodeUtil {
                 newG = qrBufImgNew.createGraphics();
                 // 填充底色
                 newG.setBackground(Color.WHITE);
+                // 扩展部分上色
                 newG.fillRect(0, qrBufImg.getHeight(),qrBufImg.getWidth(), qrBufImg.getHeight() + DEFAULT_QR_BOTTOM);
                 // 把二维码加上去
                 newG.drawImage(qrBufImg, 0, 0, qrBufImg.getWidth(), qrBufImg.getHeight(), null);

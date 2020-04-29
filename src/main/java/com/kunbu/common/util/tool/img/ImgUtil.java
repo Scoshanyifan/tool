@@ -119,18 +119,29 @@ public class ImgUtil {
     }
 
     /**
-     * 绘制新图层，旧图层以外为透明
+     * 绘制新图层，起点是左上角，原图以外部分默认为透明，可选颜色
      *
      * @param oldBufImg
      * @param targetWidth
      * @param targetHeight
      * @return
      **/
-    public static BufferedImage newImg(BufferedImage oldBufImg, int targetWidth, int targetHeight) {
+    public static BufferedImage newImg(BufferedImage oldBufImg, int targetWidth, int targetHeight, Color color) {
         Graphics2D newG = null;
         try {
             BufferedImage qrBufImgNew = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
             newG = qrBufImgNew.createGraphics();
+            if (color != null) {
+                // 填充底色
+                newG.setBackground(color);
+                int oldWidth = oldBufImg.getWidth();
+                int oldHeight = oldBufImg.getHeight();
+                if (oldHeight < targetHeight && oldWidth < targetWidth) {
+                    // 扩展部分上色（2部分）
+//                    newG.fillRect(0, qrBufImg.getHeight(),qrBufImg.getWidth(), qrBufImg.getHeight());
+//                    newG.fillRect(0, qrBufImg.getHeight(),qrBufImg.getWidth(), qrBufImg.getHeight());
+                }
+            }
             newG.drawImage(oldBufImg, 0, 0, oldBufImg.getWidth(), oldBufImg.getHeight(), null);
             return qrBufImgNew;
         } catch (Exception e) {
@@ -140,6 +151,16 @@ public class ImgUtil {
                 newG.dispose();
             }
         }
+    }
+
+    /**
+     * 缩放图片
+     *
+     * @param bufImg
+     * @param scale 同比伸缩
+     **/
+    public static BufferedImage scaleImg(BufferedImage bufImg, double scale) {
+        return scaleImg(bufImg, (int) (bufImg.getWidth() * scale), (int) (bufImg.getHeight() * scale));
     }
 
     /**
