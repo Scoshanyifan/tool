@@ -26,6 +26,8 @@ public class StickerUtil {
     }
 
     /**
+     * 生成ycb桌贴
+     *
      * X：166 Y：600
      *
      * @param qrContent

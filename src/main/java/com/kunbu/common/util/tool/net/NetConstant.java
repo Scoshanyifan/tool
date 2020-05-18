@@ -15,7 +15,7 @@ public interface NetConstant {
 
 
     String NET_RESULT_SUCCESS               = "success";
-    String NET_RESULT_CODE                  = "constant";
+    String NET_RESULT_CODE                  = "code";
     String NET_RESULT_DATA                  = "data";
     String NET_RESULT_MSG                   = "msg";
 

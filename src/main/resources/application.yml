@@ -1,16 +1,25 @@
-server:
-  port: 9999
-
-logging:
-  config: classpath:log4j2.xml
-
 spring:
+
+  redis:
+    database: 2
+    host: localhost
+    password:
+    port: 6379
+    jedis:
+      pool:
+        max-idle: 8
+        min-idle: 0
+        max-active: 200
+        max-wait: -1
+    timeout: 2000
+
   data:
     mongodb:
       uri: mongodb://localhost/tool
       port: 27017
       username: kunbu
       password: 123456
+
   mail:
 #    host: smtp.qq.com
     host: smtp.163.com
@@ -27,6 +36,7 @@ spring:
       mail.smtp.starttls.enable: false
       mail.smtp.socketFactory.fallback: false
       mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+
 # 上传文件大小限制，默认1M
   servlet:
     multipart:
@@ -40,7 +50,11 @@ exception:
 img:
   sticker: demo/img/template.png
 
+server:
+  port: 9999
 
+logging:
+  config: classpath:log4j2.xml
 
 # mail 原生配置，需要手动读取并配置 JavaMailSenderImpl
 mail:

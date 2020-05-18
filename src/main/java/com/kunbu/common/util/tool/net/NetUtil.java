@@ -1,5 +1,6 @@
 package com.kunbu.common.util.tool.net;
 
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,16 @@ public class NetUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(NetUtil.class);
 
+    /**
+     * get
+     *
+     * @param url
+     * @return {success:true, code:200, msg:"请求失败", data:xxx}
+     **/
+    public static Map<String, Object> doGet(String url) {
+        return doRequest(url, null, NetConstant.HTTP_METHOD_GET, NetConstant.DEFAULT_CONNECT_TIMEOUT, NetConstant.DEFAULT_READ_TIMEOUT);
+    }
+
 
     /**
      * http请求
@@ -32,9 +43,9 @@ public class NetUtil {
      * @param httpMethod     请求方式
      * @param connectTimeout 连接超时时间
      * @param readTimeout    读取超时时间
-     * @return
+     * @return {success:true, code:200, msg:"请求失败", data:xxx}
      */
-    public static Map<String, Object> doRequestSimple(
+    public static Map<String, Object> doRequest(
             String requestUrl, Map<String, Object> params, String httpMethod, Integer connectTimeout, Integer readTimeout) {
         return doRequest(requestUrl, params, null, httpMethod, connectTimeout, readTimeout, null);
     }
@@ -47,7 +58,7 @@ public class NetUtil {
      * @param httpMethod     请求方式
      * @param connectTimeout 连接超时时间
      * @param readTimeout    读取超时时间
-     * @return
+     * @return {success:true, code:200, msg:"请求失败", data:xxx}
      */
     public static Map<String, Object> doRequestWithDefaultSSL(
             String requestUrl, Map<String, Object> params, String httpMethod, Integer connectTimeout, Integer readTimeout) {
@@ -74,7 +85,7 @@ public class NetUtil {
      * @param connectTimeout 连接超时时间
      * @param readTimeout    读取超时时间
      * @param ssf            ssl工厂类
-     * @return
+     * @return {success:true, code:200, msg:"请求失败", data:xxx}
      */
     public static Map<String, Object> doRequest(
             String requestUrl,
@@ -85,8 +96,8 @@ public class NetUtil {
             Integer readTimeout,
             SSLSocketFactory ssf) {
 
-        logger.info(">>> http request, url:{}, method:{}, connTimeout:{}, readTimeout:{}, ssf:{}, params:{}",
-                new Object[]{requestUrl, httpMethod, connectTimeout, readTimeout, ssf, params});
+        logger.info(">>> http request, url:{}, params:{}, headers:{}, method:{}, connTimeout:{}, readTimeout:{}, ssf:{}",
+                requestUrl, params, headers, httpMethod, connectTimeout, readTimeout, ssf);
 
         Map<String, Object> result = new HashMap<>();
 
@@ -174,7 +185,7 @@ public class NetUtil {
                 }
 
                 result.put(NetConstant.NET_RESULT_SUCCESS, true);
-                result.put(NetConstant.NET_RESULT_DATA, bodyBuilder.toString());
+                result.put(NetConstant.NET_RESULT_DATA, JSONObject.parse(bodyBuilder.toString()));
                 result.put(NetConstant.NET_RESULT_CODE, 200);
                 result.put(NetConstant.NET_RESULT_MSG, "请求成功");
             } else {

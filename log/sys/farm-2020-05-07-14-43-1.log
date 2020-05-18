@@ -1,0 +1,33 @@
+2020-05-07 14:43:57 969 [main] INFO  ToolApplication:55 - Starting ToolApplication on DESKTOP-QA9ODS5 with PID 8052 (D:\kunbu\tool\target\classes started by mojun in D:\kunbu\tool)
+2020-05-07 14:43:57 983 [main] INFO  ToolApplication:651 - No active profile set, falling back to default profiles: default
+2020-05-07 14:43:58 470 [main] INFO  RepositoryConfigurationDelegate:126 - Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-05-07 14:43:58 492 [main] INFO  RepositoryConfigurationDelegate:184 - Finished Spring Data repository scanning in 18ms. Found 0 repository interfaces.
+2020-05-07 14:43:58 966 [main] INFO  TomcatWebServer:92 - Tomcat initialized with port(s): 9999 (http)
+2020-05-07 14:43:58 975 [main] INFO  Http11NioProtocol:173 - Initializing ProtocolHandler ["http-nio-9999"]
+2020-05-07 14:43:58 976 [main] INFO  StandardService:173 - Starting service [Tomcat]
+2020-05-07 14:43:58 976 [main] INFO  StandardEngine:173 - Starting Servlet engine: [Apache Tomcat/9.0.27]
+2020-05-07 14:43:59 104 [main] INFO  [/]:173 - Initializing Spring embedded WebApplicationContext
+2020-05-07 14:43:59 104 [main] INFO  ContextLoader:284 - Root WebApplicationContext: initialization completed in 1091 ms
+2020-05-07 14:43:59 703 [main] INFO  cluster:71 - Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
+2020-05-07 14:43:59 755 [cluster-ClusterId{value='5eb3ae2ffd2c2c48c51d34c7', description='null'}-localhost:27017] INFO  connection:71 - Opened connection [connectionId{localValue:1, serverValue:1}] to localhost:27017
+2020-05-07 14:43:59 759 [cluster-ClusterId{value='5eb3ae2ffd2c2c48c51d34c7', description='null'}-localhost:27017] INFO  cluster:71 - Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, version=ServerVersion{versionList=[3, 6, 12]}, minWireVersion=0, maxWireVersion=6, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=2488100}
+2020-05-07 14:43:59 813 [main] WARN  CustomConversions:207 - Registering converter from class java.time.LocalDateTime to class java.time.Instant as reading converter although it doesn't convert from a store-supported type! You might wanna check you annotation setup at the converter implementation.
+2020-05-07 14:43:59 813 [main] WARN  CustomConversions:207 - Registering converter from class java.time.Instant to class java.time.LocalDateTime as reading converter although it doesn't convert from a store-supported type! You might wanna check you annotation setup at the converter implementation.
+2020-05-07 14:43:59 890 [main] WARN  CustomConversions:207 - Registering converter from class java.time.LocalDateTime to class java.time.Instant as reading converter although it doesn't convert from a store-supported type! You might wanna check you annotation setup at the converter implementation.
+2020-05-07 14:43:59 891 [main] WARN  CustomConversions:207 - Registering converter from class java.time.Instant to class java.time.LocalDateTime as reading converter although it doesn't convert from a store-supported type! You might wanna check you annotation setup at the converter implementation.
+2020-05-07 14:43:59 927 [main] WARN  MongoPersistentEntityIndexCreator:72 - Automatic index creation will be disabled by default as of Spring Data MongoDB 3.x.
+	Please use 'MongoMappingContext#setAutoIndexCreation(boolean)' or override 'MongoConfigurationSupport#autoIndexCreation()' to be explicit.
+	However, we recommend setting up indices manually in an application ready block. You may use index derivation there as well.
+
+	> -----------------------------------------------------------------------------------------
+	> @EventListener(ApplicationReadyEvent.class)
+	> public void initIndicesAfterStartup() {
+	>
+	>     IndexOperations indexOps = mongoTemplate.indexOps(DomainType.class);
+	>
+	>     IndexResolver resolver = new MongoPersistentEntityIndexResolver(mongoMappingContext);
+	>     resolver.resolveIndexFor(DomainType.class).forEach(indexOps::ensureIndex);
+	> }
+	> -----------------------------------------------------------------------------------------
+
+2020-05-07 14:43:59 960 [main] INFO  connection:71 - Opened connection [connectionId{localValue:2, serverValue:2}] to localhost:27017

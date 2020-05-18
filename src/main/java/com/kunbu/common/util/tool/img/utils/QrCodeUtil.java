@@ -30,7 +30,6 @@ public class QrCodeUtil {
     private static final String DEFAULT_CHARSET             = "utf-8";
     private static final int DEFAULT_QR_WIDTH               = 400;
     private static final int DEFAULT_QR_HEIGHT              = 400;
-    private static final int DEFAULT_QR_BOTTOM              = 50;
 
     /**
      * 仅生成二维码
@@ -51,7 +50,10 @@ public class QrCodeUtil {
      * @return png
      **/
     public static byte[] createQrCode(String qrContent, String qrText, String logoPath) {
-        BufferedImage logoBufImg = ImgUtil.getBufImg(logoPath);
+        BufferedImage logoBufImg = null;
+        if (logoPath != null) {
+            logoBufImg = ImgUtil.getBufImg(logoPath);
+        }
         return createQrCode(qrContent, DEFAULT_QR_WIDTH, DEFAULT_QR_HEIGHT, logoBufImg, qrText, ImgUtil.IMAGE_FORMAT_PNG);
     }
 

@@ -107,7 +107,7 @@ public class ImgUtil {
         Graphics2D outG = null;
         try {
             outG = outBufImg.createGraphics();
-            setRender(outG);
+            setG2Render(outG);
             outG.drawImage(inBufImg, inImgX, inImgY, inBufImg.getWidth(), inBufImg.getHeight(), null);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -211,7 +211,7 @@ public class ImgUtil {
         Graphics2D graphics2D = null;
         try {
             graphics2D = bufImg.createGraphics();
-            setRender(graphics2D);
+            setG2Render(graphics2D);
             if (font == null) {
                 font = FONT_DEFAULT;
             }
@@ -274,14 +274,14 @@ public class ImgUtil {
      * @param graphics2D
      *
      **/
-    private static void setRender(Graphics2D graphics2D) {
+    private static void setG2Render(Graphics2D graphics2D) {
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         graphics2D.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_DEFAULT);
         graphics2D.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
     }
 
     /**
-     * 动态计算文本长度，小写英文算0.6个中文，大写算0.8个中文
+     * 动态计算文字个数：小写字母，数字=0.6个中文，大写字母，符号=0.8个中文
      * @param text
      * @return
      */
@@ -289,9 +289,23 @@ public class ImgUtil {
         char[] crs = text.toCharArray();
         double count = 0;
         for (char c : crs) {
-            if (65 <= c && c <= 90) {
+            if (33 <= c && c <= 47) {
+                // 符号
                 count += 0.8;
+            } else if (48 <= c && c <= 57) {
+                // 数字
+                count += 0.6;
+            } else if (58 <= c && c <= 64) {
+                // 符号
+                count += 0.8;
+            } else if (65 <=c && c <= 90) {
+                // 大写祖母
+                count += 0.8;
+            } else if (91 <=c && c <= 96) {
+                // 符号
+                count += 0.6;
             } else if (97 <=c && c <= 122) {
+                // 小写字母
                 count += 0.6;
             } else {
                 count++;
@@ -301,7 +315,7 @@ public class ImgUtil {
     }
 
     /**
-     * 根据像素px，动态计算字体大小，从小四开始，初号结束
+     * 动态计算字体大小：单位像素px，从小四开始，初号结束
      *
      * @param fontWidth 字体宽度
      * @return

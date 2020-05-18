@@ -9,6 +9,8 @@ import java.util.Arrays;
  *
  * @see Byte
  * @author scosyf
+ *
+ * https://www.jianshu.com/p/058b46fef220
  */
 public class ByteUtil {
 
@@ -120,7 +122,7 @@ public class ByteUtil {
         return hexStr.toString();
     }
 
-    private static String int2HexString(int iv) {
+    public static String int2HexString(int iv) {
         String hexStr = Integer.toHexString(iv);
         if (hexStr.length() < 2) {
             hexStr = "0" + hexStr;
@@ -128,10 +130,22 @@ public class ByteUtil {
         return hexStr;
     }
 
-    private static int hexString2Int(String hexStr) {
+    public static int hexString2Int(String hexStr) {
 
         return Integer.parseInt(hexStr, 16);
 
+    }
+
+    public static String hexString2Binary(String hexStr) {
+        int i = Integer.parseInt(hexStr, 16);
+        String str2 = Integer.toBinaryString(i);
+        int zero = 8 - str2.length();
+        if (zero > 0) {
+            for (int idx = 0; idx < zero; idx++) {
+                str2 = "0" + str2;
+            }
+        }
+        return str2;
     }
 
     public static void main(String[] args) {
@@ -152,6 +166,9 @@ public class ByteUtil {
 
         byte[] hbs = new byte[]{17,2,7,111,-127};
         System.out.println(byteToHexString(hbs));
+
+
+        System.out.println(hexString2Binary("20"));
     }
 
 }
