@@ -48,7 +48,7 @@ public class ListArrayTest {
 
         //1. for
 
-        //2. List.toArray(T[])  不能用list.toArray()，返回的是Object[]数组
+        //2. list.toArray(T[])  不能用list.toArray()，返回的是Object[]数组
         String[] array =  list.toArray(new String[list.size()]);
         System.out.println(Arrays.toString(array));
     }

@@ -11,8 +11,7 @@ public enum ApiCodeEnum implements ResultCode {
     SYS_ERROR(100, "系统异常"),
     API_ERROR(101, "接口异常"),
 
-    SMS_PHONE_EXIST(201, "验证码已发送，请稍后再试"),
-    SMS_SEND_FAILURE(202, "验证码发送失败，请稍后再试"),
+
 
     ;
 

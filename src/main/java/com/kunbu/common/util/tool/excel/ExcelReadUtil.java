@@ -237,7 +237,7 @@ public class ExcelReadUtil {
         } else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
             return cell.getStringCellValue();
         } else {
-            return "";
+            return null;
         }
     }
 

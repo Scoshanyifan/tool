@@ -8,4 +8,5 @@ package com.kunbu.common.util.third.push;
 public class JPushUtil {
 
 
+
 }

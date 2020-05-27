@@ -34,12 +34,12 @@ public class ApiResult {
         return result;
     }
 
-    public static ApiResult fail(ResultCode apiCode) {
+    public static ApiResult fail(ResultCode code) {
         ApiResult result = new ApiResult();
         result.setSuccess(false);
-        if (apiCode != null) {
-            result.setCode(apiCode.getCode());
-            result.setMsg(apiCode.getMsg());
+        if (code != null) {
+            result.setCode(code.getCode());
+            result.setMsg(code.getMsg());
         }
         return result;
     }

@@ -9,6 +9,10 @@ public enum ServiceCodeEnum implements ResultCode {
     //
     SERVICE_ERROR(200, "服务异常"),
 
+    SMS_PHONE_EXIST(201, "验证码已发送，请稍后再试"),
+    SMS_CODE_ERROR(201, "验证码错误，请重试"),
+    SMS_SEND_FAILURE(202, "验证码发送失败，请稍后再试"),
+
     ;
 
     private Integer code;
@@ -21,11 +25,11 @@ public enum ServiceCodeEnum implements ResultCode {
 
     @Override
     public Integer getCode() {
-        return null;
+        return code;
     }
 
     @Override
     public String getMsg() {
-        return null;
+        return msg;
     }
 }

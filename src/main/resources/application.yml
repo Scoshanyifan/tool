@@ -1,17 +1,22 @@
 spring:
-
   redis:
-    database: 2
     host: localhost
-    password:
+    # Redis服务器连接端口
     port: 6379
+    password:
+    #默认是索引为0的数据库
+    database: 1
+    # 连接超时时间（毫秒）
+    timeout: 5000ms
     jedis:
       pool:
-        max-idle: 8
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: 100
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: 100000ms
+        # 连接池中的空闲连接
+        max-idle: 10
         min-idle: 0
-        max-active: 200
-        max-wait: -1
-    timeout: 2000
 
   data:
     mongodb:
@@ -55,6 +60,11 @@ server:
 
 logging:
   config: classpath:log4j2.xml
+
+#sms config
+sms:
+  appId: EUCP-EMY-SMS1-2XW5H
+  secretKey: 2020AEC0E3350FDA
 
 # mail 原生配置，需要手动读取并配置 JavaMailSenderImpl
 mail:

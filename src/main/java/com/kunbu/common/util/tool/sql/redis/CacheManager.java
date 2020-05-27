@@ -1,6 +1,7 @@
 package com.kunbu.common.util.tool.sql.redis;
 
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * 缓存管理类
@@ -81,6 +82,8 @@ public interface CacheManager {
      * @time 2019/8/27 14:25
      **/
     Long delKeys(String[] keys);
+
+    Set<String> getKeys(String pattern);
 
 
     /**

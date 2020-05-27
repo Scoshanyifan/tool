@@ -108,7 +108,7 @@ public class ExcelDemoController {
             List<ExcelEntity> beanList = Lists.newArrayList();
             Random random = new Random();
             // 测试大数据下OOM
-            for (int i = 1; i < 1000_0; i++) {
+            for (int i = 1; i < 1000_000; i++) {
                 ExcelEntity eb = new ExcelEntity(
                         random.nextInt(10000) + "小区",
                         random.nextBoolean() ? "待审核" : "审核通过",
