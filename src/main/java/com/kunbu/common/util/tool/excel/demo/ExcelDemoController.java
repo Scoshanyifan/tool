@@ -3,6 +3,7 @@ package com.kunbu.common.util.tool.excel.demo;
 import com.alibaba.fastjson.util.IOUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.kunbu.common.util.tool.excel.ExcelAnnotation;
 import com.kunbu.common.util.tool.excel.ExcelConst;
 import com.kunbu.common.util.tool.excel.ExcelExportUtil;
 import com.kunbu.common.util.tool.excel.ExcelReadUtil;
@@ -22,9 +23,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * https://www.cnblogs.com/liyafei/p/8146136.html
@@ -103,12 +104,13 @@ public class ExcelDemoController {
     @GetMapping("/export/data")
     @ResponseBody
     public void exportExcelData(HttpServletRequest request, HttpServletResponse response) {
+        long start = System.currentTimeMillis();
         try {
             // TODO 模拟获取业务数据
             List<ExcelEntity> beanList = Lists.newArrayList();
             Random random = new Random();
             // 测试大数据下OOM
-            for (int i = 1; i < 1000_000; i++) {
+            for (int i = 0; i < 1000_000; i++) {
                 ExcelEntity eb = new ExcelEntity(
                         random.nextInt(10000) + "小区",
                         random.nextBoolean() ? "待审核" : "审核通过",
@@ -117,32 +119,58 @@ public class ExcelDemoController {
                         "3302" + random.nextInt(10000),
                         random.nextBoolean() ? "男" : "女",
                         "1" + random.nextInt(10000),
-                        null);
+                        "这是备注的" + i);
                 beanList.add(eb);
             }
-            
+            LOGGER.info(">>> data from db:{}", System.currentTimeMillis() - start);
+
             // 将实体类转换成数据集合
             List<Map<String, Object>> dataList = Lists.newArrayList();
-            // 手动增加序号
-            int number = 1;
-            for (ExcelEntity eb : beanList) {
-                Map<String, Object> dataMap = Maps.newHashMap();
-                dataMap.put(exportKeys.get(0), number++);
-                dataMap.put(exportKeys.get(1), eb.getOrgName());
-                dataMap.put(exportKeys.get(2), eb.getAuditState());
-                dataMap.put(exportKeys.get(3), eb.getUserType());
-                dataMap.put(exportKeys.get(4), eb.getUserName());
-                dataMap.put(exportKeys.get(5), eb.getSex());
-                dataMap.put(exportKeys.get(6), eb.getIdCardNum());
-                dataMap.put(exportKeys.get(7), eb.getUserPhone());
-                dataMap.put(exportKeys.get(8), eb.getUserRemark());
-                dataList.add(dataMap);
-            }
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            // 导出2007格式
+
+            if (true) {
+                // TODO 动态选择导出字段
+                List<String> showFieldList = Lists.newArrayList("orgName", "userName", "idCardNum", "userPhone", "auditState");
+                List<String> headerList = Lists.newArrayList();
+
+                start = System.currentTimeMillis();
+                Map<String, String> field2MethodMap = getField2Method(ExcelEntity.class, showFieldList, headerList);
+                LOGGER.info(">>> get field:{}", System.currentTimeMillis() - start);
+
+                start = System.currentTimeMillis();
+                List<Map<String, Object>> dataMap = getExcelData(beanList, field2MethodMap);
+                LOGGER.info(">>> get data:{}", System.currentTimeMillis() - start);
+
+                start = System.currentTimeMillis();
+                ExcelExportUtil.exportExcelSimpleBigData(headerList, showFieldList, dataMap, baos);
+                LOGGER.info(">>> excel:{}", System.currentTimeMillis() - start);
+            } else {
+                // TODO 固定字段的填充数据
+                start = System.currentTimeMillis();
+                // 手动增加序号
+                int number = 1;
+                for (ExcelEntity eb : beanList) {
+                    Map<String, Object> dataMap = Maps.newHashMap();
+                    dataMap.put(exportKeys.get(0), number++);
+                    dataMap.put(exportKeys.get(1), eb.getOrgName());
+                    dataMap.put(exportKeys.get(2), eb.getAuditState());
+                    dataMap.put(exportKeys.get(3), eb.getUserType());
+                    dataMap.put(exportKeys.get(4), eb.getUserName());
+                    dataMap.put(exportKeys.get(5), eb.getSex());
+                    dataMap.put(exportKeys.get(6), eb.getIdCardNum());
+                    dataMap.put(exportKeys.get(7), eb.getUserPhone());
+                    dataMap.put(exportKeys.get(8), eb.getUserRemark());
+                    dataList.add(dataMap);
+                }
+                LOGGER.info(">>> excel:{}", System.currentTimeMillis() - start);
+
+                start = System.currentTimeMillis();
+                // 导出2007格式
 ///            ExcelExportUtil.exportExcelSimple2007(exportHeaders, exportKeys, dataList, baos);
-            // 测试大数据下导出（速度更快）
-            ExcelExportUtil.exportExcelSimpleBigData(exportHeaders, exportKeys, dataList, baos);
+                // 测试大数据下导出（速度更快）
+                ExcelExportUtil.exportExcelSimpleBigData(exportHeaders, exportKeys, dataList, baos);
+                LOGGER.info(">>> excel:{}", System.currentTimeMillis() - start);
+            }
 
             byte[] content = baos.toByteArray();
             String fileName = ExcelConst.EXCEL_EXPORT_FILE_NAME_PREFIX + System.currentTimeMillis();
@@ -151,6 +179,42 @@ public class ExcelDemoController {
             LOGGER.error(">>> exportExcelData fail", e);
         }
     }
+
+    private Map<String, String> getField2Method(Class clazz, List<String> showFields, List<String> headers) {
+        Map<String, String> field2MethodMap = Maps.newHashMap();
+
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            String fieldName = field.getName();
+            LOGGER.info(">>> fieldName:{}", fieldName);
+            if (showFields.contains(fieldName)) {
+                ExcelAnnotation annotation = field.getAnnotation(ExcelAnnotation.class);
+                if (annotation != null) {
+                    String getMethodName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+                    field2MethodMap.put(fieldName, getMethodName);
+                    LOGGER.info(">>> tile:{}", annotation.title());
+                    headers.add(fieldName);
+                }
+            }
+        }
+        return field2MethodMap;
+    }
+
+    private List<Map<String, Object>> getExcelData(List<ExcelEntity> all, Map<String, String> field2MethodMap) throws Exception {
+        List<Map<String, Object>> dataList = new ArrayList<>();
+        for (ExcelEntity entity : all) {
+            Map<String, Object> deviceData = new HashMap<>();
+            Class clazz = entity.getClass();
+            for (Map.Entry<String, String> entry : field2MethodMap.entrySet()) {
+                Method method = clazz.getMethod(entry.getValue());
+                deviceData.put(entry.getKey(), method.invoke(entity));
+            }
+            dataList.add(deviceData);
+        }
+        return dataList;
+    }
+
+
 
     /**
      * 导入excel（按照模板）
@@ -237,4 +301,5 @@ public class ExcelDemoController {
         
         return ApiResult.success(entity);
     }
+
 }
