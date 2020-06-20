@@ -228,13 +228,14 @@ public class ExcelDemoController {
     /**
      * 导入excel（按照模板）
      *
+     *
      * @param file
      * @param request
      * @return
      */
     @RequestMapping("/import/data")
     @ResponseBody
-    public ApiResult importExcelData(@RequestParam MultipartFile file, HttpServletRequest request) {
+    public ApiResult importExcelData(HttpServletRequest request, @RequestParam MultipartFile file)  {
         // TODO 业务判断，比如导入者必须是小区管理员，只能导入该小区下用户，因为小区id从session或token中拿到
         String orgId = request.getHeader("orgId");
         if (StringUtils.isBlank(orgId)) {

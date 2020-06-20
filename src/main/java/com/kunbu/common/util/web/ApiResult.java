@@ -62,7 +62,12 @@ public class ApiResult {
         if (serviceResult.isSuccess()) {
             return success(serviceResult.getData());
         } else {
-            return fail(serviceResult.getCode());
+            ResultCode resultCode = serviceResult.getCode();
+            if (resultCode != null) {
+                return fail(serviceResult.getCode());
+            } else {
+                return fail(serviceResult.getMsg());
+            }
         }
     }
 

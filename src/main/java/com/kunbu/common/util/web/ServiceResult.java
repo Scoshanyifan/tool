@@ -14,6 +14,8 @@ public class ServiceResult<T> implements Serializable {
     private boolean success;
     private T data;
     private ResultCode code;
+    @Deprecated
+    private String msg;
 
     public static ServiceResult success() {
         return success(null);
@@ -30,6 +32,14 @@ public class ServiceResult<T> implements Serializable {
     public static ServiceResult fail() {
         ServiceResult result = new ServiceResult();
         result.setSuccess(false);
+        return result;
+    }
+
+    @Deprecated
+    public static ServiceResult fail(String msg) {
+        ServiceResult result = new ServiceResult();
+        result.setSuccess(false);
+        result.setMsg(msg);
         return result;
     }
 
@@ -62,5 +72,13 @@ public class ServiceResult<T> implements Serializable {
 
     public void setCode(ResultCode code) {
         this.code = code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 }
