@@ -12,19 +12,20 @@ public class BeanUtilTest {
 
     public static void main(String[] args) {
 
-        Bean bean = new Bean();
-        bean.setI(1);
-        bean.setInte(23);
-        bean.setExt("ext");
-        bean.setStr("str");
+        Bean source = new Bean();
+        source.setI(1);
+        source.setInte(1);
+        source.setExt("ext");
+        source.setStr("source");
 
-        BeanDto dto = new BeanDto();
-        dto.setI(2222);
-        dto.setStr("new str");
+        BeanDto target = new BeanDto();
+        target.setI(3);
+        target.setStr("target");
 
-        BeanUtils.copyProperties(dto, bean);
-        System.out.println(bean);
-        System.out.println(dto);
+        // 如果target原先有内容，字段相同的会被覆盖
+        BeanUtils.copyProperties(source, target);
+        System.out.println(source);
+        System.out.println(target);
     }
 
 }
@@ -45,6 +46,7 @@ class BeanDto {
     private int i;
     private Integer inte;
     private String str;
+    private String dto;
 
 }
 

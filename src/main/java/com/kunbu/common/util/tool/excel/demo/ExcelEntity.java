@@ -1,6 +1,6 @@
 package com.kunbu.common.util.tool.excel.demo;
 
-import com.kunbu.common.util.tool.excel.ExcelAnnotation;
+import com.kunbu.common.util.tool.excel.common.ExcelAnnotation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ExcelEntity {
 
-    @ExcelAnnotation(title = "小区名")
+    @ExcelAnnotation(title = "小区名称")
     private String orgName;
 
     @ExcelAnnotation(title = "审核状态")
@@ -24,18 +24,22 @@ public class ExcelEntity {
     @ExcelAnnotation(title = "用户类型")
     private String userType;
 
-    @ExcelAnnotation(title = "用户名")
+    @ExcelAnnotation(title = "用户姓名")
     private String userName;
 
-    @ExcelAnnotation(title = "身份证")
+    @ExcelAnnotation(title = "身份证号")
     private String idCardNum;
 
     @ExcelAnnotation(title = "性别")
     private String sex;
 
-    @ExcelAnnotation(title = "手机")
+    @ExcelAnnotation(title = "手机号")
     private String userPhone;
 
     private String userRemark;
+
+    private String orgId;
+
+    private String index;
 
 }

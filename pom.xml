@@ -29,6 +29,8 @@
         <org.apache.mail.version>1.5</org.apache.mail.version>
         <commons-collections4.version>4.1</commons-collections4.version>
         <org.projectlombok.version>1.16.6</org.projectlombok.version>
+
+        <druid.spring.boot.version>1.1.9</druid.spring.boot.version>
     </properties>
 
     <dependencies>
@@ -79,6 +81,27 @@
             <version>1.5.3</version>
         </dependency>
 
+        <!-- mysql -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${druid.spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.2.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.1.0</version>
+        </dependency>
         <!-- mongo -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

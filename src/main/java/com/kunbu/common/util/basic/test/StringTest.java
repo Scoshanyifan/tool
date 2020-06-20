@@ -74,7 +74,19 @@ public class StringTest {
     }
 
 
-
+    public static String testIndexOfSubstring(String original, String indexStr) {
+        int start = original.indexOf(indexStr);
+        if (start >= 0) {
+            start += indexStr.length();
+            int end = original.indexOf("\n", start);
+            if (end >= 0) {
+                return original.substring(start, end);
+            } else {
+                return original.substring(start);
+            }
+        }
+        return original;
+    }
 
 
     /**
@@ -95,8 +107,11 @@ public class StringTest {
     }
 
 
-
-
+    public static void testReplace() {
+        String workTime = "12:23-14:31";
+        String executeTime = workTime.replace(":", "");
+        System.out.println(executeTime);
+    }
 
 
     /**
@@ -175,5 +190,13 @@ public class StringTest {
 
         System.out.println();
         testMessageFormat();
+
+        System.out.println();
+        System.out.println(testIndexOfSubstring("SHi-110，资产编号:123456\n，结束", "资产编号:"));
+
+        testReplace();
+
+        System.out.println("num：" + String.format("%03d", Integer.parseInt("23")));
+
     }
 }

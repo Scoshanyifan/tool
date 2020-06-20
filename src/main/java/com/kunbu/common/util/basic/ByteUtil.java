@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 /**
  * bit和 byte的转换
- * java byte = [-128,127]
- * 普通byte = [0, 255]
+ *      java byte = [-128,127]
+ *      普通byte = [0, 255]
  *
  * @see Byte
  * @author scosyf
@@ -159,16 +159,34 @@ public class ByteUtil {
         int i1 = b1;
         int i2 = b1 & 0xFF;
         System.out.println("(byte)-127的二进制形式：" + getBitString(b1));
+        System.out.println("(byte)-127的二进制形式：" + Integer.toBinaryString(b1));
         System.out.println("(int)-127的二进制形式：" + Integer.toBinaryString(i1));
         System.out.println("-127 & 0xFF的十进制形式：" + i2);
-        //高位省略了0
-        System.out.println("-127 & 0xFF的二进制形式：" + Integer.toBinaryString(i2));
+        System.out.println("-127 & 0xFF的二进制形式（高位省略了0）：" + Integer.toBinaryString(i2));
 
         byte[] hbs = new byte[]{17,2,7,111,-127};
         System.out.println(byteToHexString(hbs));
 
-
         System.out.println(hexString2Binary("20"));
+
+
+
+        //TODO 类似西奥，传进来的参数是无符号字节数组，如果要和java中的byte[]进行比较，需要转换
+        char[] bytesPlus = {151, 30, 170, 58};
+        byte[] bytes = {-105, 30, -86, 58};
+        int[] ints = new int[bytes.length];
+        for (int i = 0; i < bytes.length; i++) {
+            if (bytes[i] < 0) {
+                System.out.println(bytes[i] & 0xFF);
+            }
+            ints[i] = bytes[i] & 0xFF;
+        }
+        System.out.println(Arrays.toString(ints));
+
+
+
+
+
     }
 
 }

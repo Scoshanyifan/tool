@@ -1,3 +1,6 @@
+server:
+  port: 9999
+
 spring:
   redis:
     host: localhost
@@ -24,6 +27,27 @@ spring:
       port: 27017
       username: kunbu
       password: 123456
+      options:
+        min-connections-per-host: 20
+        max-connections-per-host: 20
+        threads-allowed-to-block-for-connection-multiplier: 5
+        server-selection-timeout: 30000
+        max-wait-time: 120000
+        max-connection-idel-time: 0
+        max-connection-life-time: 0
+        connect-timeout: 10000
+        socket-timeout: 0
+        socket-keep-alive: false
+        ssl-enabled: false
+        ssl-invalid-host-name-allowed: false
+        always-use-m-beans: false
+        heartbeat-socket-timeout: 20000
+        heartbeat-connect-timeout: 20000
+        min-heartbeat-frequency: 500
+        heartbeat-frequency: 10000
+        local-threshold: 15
+
+
 
   mail:
 #    host: smtp.qq.com
@@ -42,11 +66,13 @@ spring:
       mail.smtp.socketFactory.fallback: false
       mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
 
-# 上传文件大小限制，默认1M
   servlet:
+    # 上传文件大小限制，默认1M
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+
+
 
 exception:
   mail:
@@ -54,9 +80,6 @@ exception:
 
 img:
   sticker: demo/img/template.png
-
-server:
-  port: 9999
 
 logging:
   config: classpath:log4j2.xml
