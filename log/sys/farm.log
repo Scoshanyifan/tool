@@ -1,45 +1,29 @@
-2020-06-20 15:44:49 734 [main] INFO  ToolApplication:55 - Starting ToolApplication on DESKTOP-QA9ODS5 with PID 17264 (D:\kunbu\tool\target\classes started by mojun in D:\kunbu\tool)
-2020-06-20 15:44:49 747 [main] INFO  ToolApplication:651 - No active profile set, falling back to default profiles: default
-2020-06-20 15:44:50 354 [main] INFO  RepositoryConfigurationDelegate:246 - Multiple Spring Data modules found, entering strict repository configuration mode!
-2020-06-20 15:44:50 357 [main] INFO  RepositoryConfigurationDelegate:126 - Bootstrapping Spring Data repositories in DEFAULT mode.
-2020-06-20 15:44:50 375 [main] INFO  RepositoryConfigurationDelegate:184 - Finished Spring Data repository scanning in 14ms. Found 0 repository interfaces.
-2020-06-20 15:44:50 386 [main] INFO  RepositoryConfigurationDelegate:246 - Multiple Spring Data modules found, entering strict repository configuration mode!
-2020-06-20 15:44:50 387 [main] INFO  RepositoryConfigurationDelegate:126 - Bootstrapping Spring Data repositories in DEFAULT mode.
-2020-06-20 15:44:50 403 [main] INFO  RepositoryConfigurationDelegate:184 - Finished Spring Data repository scanning in 7ms. Found 0 repository interfaces.
-2020-06-20 15:44:50 489 [main] WARN  ClassPathMapperScanner:44 - No MyBatis mapper was found in '[com.kunbu.common.util]' package. Please check your configuration.
-2020-06-20 15:44:50 641 [main] INFO  PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-06-20 15:44:50 852 [main] INFO  TomcatWebServer:92 - Tomcat initialized with port(s): 9999 (http)
-2020-06-20 15:44:50 860 [main] INFO  Http11NioProtocol:173 - Initializing ProtocolHandler ["http-nio-9999"]
-2020-06-20 15:44:50 860 [main] INFO  StandardService:173 - Starting service [Tomcat]
-2020-06-20 15:44:50 861 [main] INFO  StandardEngine:173 - Starting Servlet engine: [Apache Tomcat/9.0.27]
-2020-06-20 15:44:51 050 [main] INFO  [/]:173 - Initializing Spring embedded WebApplicationContext
-2020-06-20 15:44:51 050 [main] INFO  ContextLoader:284 - Root WebApplicationContext: initialization completed in 1272 ms
-2020-06-20 15:44:51 935 [main] INFO  cluster:71 - Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
-2020-06-20 15:44:52 008 [cluster-ClusterId{value='5eedbe7348a5da6994c34d73', description='null'}-localhost:27017] INFO  connection:71 - Opened connection [connectionId{localValue:1, serverValue:1}] to localhost:27017
-2020-06-20 15:44:52 011 [cluster-ClusterId{value='5eedbe7348a5da6994c34d73', description='null'}-localhost:27017] INFO  cluster:71 - Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, version=ServerVersion{versionList=[3, 6, 12]}, minWireVersion=0, maxWireVersion=6, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=2441100}
-2020-06-20 15:44:52 043 [main] WARN  CustomConversions:207 - Registering converter from class java.time.LocalDateTime to class java.time.Instant as reading converter although it doesn't convert from a store-supported type! You might wanna check you annotation setup at the converter implementation.
-2020-06-20 15:44:52 043 [main] WARN  CustomConversions:207 - Registering converter from class java.time.Instant to class java.time.LocalDateTime as reading converter although it doesn't convert from a store-supported type! You might wanna check you annotation setup at the converter implementation.
-2020-06-20 15:44:52 118 [main] WARN  CustomConversions:207 - Registering converter from class java.time.LocalDateTime to class java.time.Instant as reading converter although it doesn't convert from a store-supported type! You might wanna check you annotation setup at the converter implementation.
-2020-06-20 15:44:52 119 [main] WARN  CustomConversions:207 - Registering converter from class java.time.Instant to class java.time.LocalDateTime as reading converter although it doesn't convert from a store-supported type! You might wanna check you annotation setup at the converter implementation.
-2020-06-20 15:44:52 158 [main] WARN  MongoPersistentEntityIndexCreator:72 - Automatic index creation will be disabled by default as of Spring Data MongoDB 3.x.
-	Please use 'MongoMappingContext#setAutoIndexCreation(boolean)' or override 'MongoConfigurationSupport#autoIndexCreation()' to be explicit.
-	However, we recommend setting up indices manually in an application ready block. You may use index derivation there as well.
-
-	> -----------------------------------------------------------------------------------------
-	> @EventListener(ApplicationReadyEvent.class)
-	> public void initIndicesAfterStartup() {
-	>
-	>     IndexOperations indexOps = mongoTemplate.indexOps(DomainType.class);
-	>
-	>     IndexResolver resolver = new MongoPersistentEntityIndexResolver(mongoMappingContext);
-	>     resolver.resolveIndexFor(DomainType.class).forEach(indexOps::ensureIndex);
-	> }
-	> -----------------------------------------------------------------------------------------
-
-2020-06-20 15:44:52 192 [main] INFO  connection:71 - Opened connection [connectionId{localValue:2, serverValue:2}] to localhost:27017
-2020-06-20 15:44:52 376 [main] INFO  ThreadPoolTaskExecutor:171 - Initializing ExecutorService 'applicationTaskExecutor'
-2020-06-20 15:44:52 513 [main] INFO  DruidDataSourceAutoConfigure:56 - Init DruidDataSource
-2020-06-20 15:44:52 735 [main] INFO  DruidDataSource:928 - {dataSource-1} inited
-2020-06-20 15:44:52 930 [main] INFO  Http11NioProtocol:173 - Starting ProtocolHandler ["http-nio-9999"]
-2020-06-20 15:44:52 948 [main] INFO  TomcatWebServer:204 - Tomcat started on port(s): 9999 (http) with context path ''
-2020-06-20 15:44:52 950 [main] INFO  ToolApplication:61 - Started ToolApplication in 3.592 seconds (JVM running for 5.524)
+2020-07-06 14:36:11 011 [http-nio-9999-exec-5] INFO  LogController:28 - >>> content:123
+2020-07-06 14:36:11 025 [http-nio-9999-exec-5] INFO  LogController:21 - >>> getRequestURL: http://localhost:9999/log/print
+2020-07-06 14:36:11 026 [http-nio-9999-exec-5] INFO  LogController:22 - >>> getRequestURI: /log/print
+2020-07-06 14:36:11 026 [http-nio-9999-exec-5] INFO  LogController:23 - >>> getRemoteAddr: 0:0:0:0:0:0:0:1
+2020-07-06 14:36:11 027 [http-nio-9999-exec-5] INFO  LogController:24 - >>> getRemoteHost: 0:0:0:0:0:0:0:1
+2020-07-06 14:36:11 027 [http-nio-9999-exec-5] INFO  LogController:25 - >>> getRemotePort: 13314
+2020-07-06 14:36:11 028 [http-nio-9999-exec-5] INFO  LogController:26 - >>> getLocalPort: 9999
+2020-07-06 14:36:11 028 [http-nio-9999-exec-5] INFO  LogController:27 - >>> getServerPort: 9999
+2020-07-06 14:36:11 029 [http-nio-9999-exec-5] INFO  LogController:28 - >>> getMethod: GET
+2020-07-06 14:36:11 029 [http-nio-9999-exec-5] INFO  LogController:29 - >>> getParameter : name
+2020-07-06 14:36:11 030 [http-nio-9999-exec-5] INFO  LogController:30 - >>> getParameterValues : name
+2020-07-06 14:36:11 030 [http-nio-9999-exec-5] INFO  LogController:31 - >>> getContextPath: 
+2020-07-06 14:36:11 030 [http-nio-9999-exec-5] INFO  LogController:33 - === param ===
+2020-07-06 14:36:11 030 [http-nio-9999-exec-5] INFO  LogController:37 - >>> param key:content, value:[123]
+2020-07-06 14:36:11 031 [http-nio-9999-exec-5] INFO  LogController:37 - >>> param key:key, value:[name]
+2020-07-06 14:36:11 031 [http-nio-9999-exec-5] INFO  LogController:41 - === header ===
+2020-07-06 14:36:11 031 [http-nio-9999-exec-5] INFO  LogController:46 - >>> header host: localhost:9999
+2020-07-06 14:36:11 031 [http-nio-9999-exec-5] INFO  LogController:46 - >>> header connection: keep-alive
+2020-07-06 14:36:11 031 [http-nio-9999-exec-5] INFO  LogController:46 - >>> header cache-control: max-age=0
+2020-07-06 14:36:11 031 [http-nio-9999-exec-5] INFO  LogController:46 - >>> header upgrade-insecure-requests: 1
+2020-07-06 14:36:11 031 [http-nio-9999-exec-5] INFO  LogController:46 - >>> header user-agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36
+2020-07-06 14:36:11 032 [http-nio-9999-exec-5] INFO  LogController:46 - >>> header accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+2020-07-06 14:36:11 032 [http-nio-9999-exec-5] INFO  LogController:46 - >>> header accept-encoding: gzip, deflate, br
+2020-07-06 14:36:11 032 [http-nio-9999-exec-5] INFO  LogController:46 - >>> header accept-language: zh-CN,zh;q=0.9
+2020-07-06 14:36:11 032 [http-nio-9999-exec-5] INFO  LogController:46 - >>> header cookie: JSESSIONID=EB8978FB14E38152E502B2BF5A106112
+2020-07-06 14:36:11 032 [http-nio-9999-exec-5] INFO  LogController:50 - === cookie ===
+2020-07-06 14:36:11 032 [http-nio-9999-exec-5] INFO  LogController:54 - >>> cookie, JSESSIONID: EB8978FB14E38152E502B2BF5A106112
+2020-07-06 14:36:11 033 [http-nio-9999-exec-5] INFO  LogController:58 - === session ===
+2020-07-06 14:36:11 033 [http-nio-9999-exec-5] INFO  LogController:61 - >>> session id: EB8978FB14E38152E502B2BF5A106112

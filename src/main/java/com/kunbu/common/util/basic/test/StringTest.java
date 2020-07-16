@@ -3,6 +3,7 @@ package com.kunbu.common.util.basic.test;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
@@ -73,24 +74,26 @@ public class StringTest {
         }
     }
 
-
+    /**
+     * 按照规则截取
+     */
     public static String testIndexOfSubstring(String original, String indexStr) {
         int start = original.indexOf(indexStr);
         if (start >= 0) {
             start += indexStr.length();
-            int end = original.indexOf("\n", start);
-            if (end >= 0) {
-                return original.substring(start, end);
-            } else {
-                return original.substring(start);
+            String target = original.substring(start);
+            if (StringUtils.isNotBlank(target)) {
+                // 分割：空格/' '/换行/回车
+                String[] arr = target.split("\\s| |\n|\r");
+                return arr[0];
             }
         }
-        return original;
+        return null;
     }
 
 
     /**
-     * 如果是：//// 然后使用String.split，会有bug，不能正确划分，会出现空数据情况（改用guava的Splitter）
+     * 如果是：'////' 然后使用String.split，会有bug，不能正确划分，会出现空数据情况（改用guava的Splitter）
      *
      **/
     public static void testSplit(String historyTemp) {
@@ -192,10 +195,12 @@ public class StringTest {
         testMessageFormat();
 
         System.out.println();
-        System.out.println(testIndexOfSubstring("SHi-110，资产编号:123456\n，结束", "资产编号:"));
+        System.out.println(testIndexOfSubstring("SHi-110，资产编号:123456 结束", "资产编号:"));
 
+        System.out.println();
         testReplace();
 
+        System.out.println();
         System.out.println("num：" + String.format("%03d", Integer.parseInt("23")));
 
     }

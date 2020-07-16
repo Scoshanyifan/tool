@@ -1,5 +1,6 @@
 package com.kunbu.common.util.basic;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,8 +14,12 @@ import java.util.List;
  * <br/> 3.Calendar.DAY_OF_MONTH 等价于 Calendar.DATE
  * <br/> 4.获取当前用get，获取最后用getActualMaximum
  *
+ * 用LocalDateTime
+ * @see java.time.LocalDateTime
+ *
  * @author scosyf
  */
+@Deprecated
 public class TimeUtil {
 
     /**

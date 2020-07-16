@@ -9,8 +9,8 @@ spring:
     druid:
       url: jdbc:mysql://localhost:3306/bucks?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai
       username: root
-      #      password: 930628
-      password:
+      password: 930628
+#      password:
       driver-class-name: com.mysql.cj.jdbc.Driver
       # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，wall用于防火墙
       filters: stat
