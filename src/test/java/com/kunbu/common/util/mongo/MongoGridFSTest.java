@@ -1,4 +1,4 @@
-package com.kunbu.common.util;
+package com.kunbu.common.util.mongo;
 
 /**
  * @project: kunbutool

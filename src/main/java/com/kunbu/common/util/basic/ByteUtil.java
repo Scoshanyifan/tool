@@ -100,8 +100,9 @@ public class ByteUtil {
          * 		return (pos < count) ? (buf[pos++] & 0xff) : -1;
          *  }
          */
-        //将int高24位全部变成0，低8位保持不变
+        //将int高24位全部变成0，低8位保持不变（以下两种方式均可）
         return ((int) b) & 0xff;
+//        return (int) b & 0xff;
     }
 
     /**
@@ -172,7 +173,7 @@ public class ByteUtil {
      * @param iv 1594885160
      * @return [95, 16, 4, 40]
      */
-    public static byte[] int2ByteArr(int iv) {
+    public static byte[] int2JavaByteArr(int iv) {
         byte[] byteArr = new byte[4];
         byteArr[3] = (byte) (iv & 0xff);
         byteArr[2] = (byte) (iv >> 8 & 0xff);
@@ -187,7 +188,7 @@ public class ByteUtil {
      * @param byteArr [0, 0, 1, 21]
      * @return 277
      */
-    public static int byteArr2Int(byte[] byteArr) {
+    public static int javaByteArr2Int(byte[] byteArr) {
         int res = 0;
         for (int i = 0; i < byteArr.length; i++) {
             res += (byteArr[i] & 0xff) << ((3 - i) * 8);
@@ -201,7 +202,7 @@ public class ByteUtil {
      * @param iv
      * @return
      */
-    public static byte[] int2ByteArrLow(int iv) {
+    public static byte[] int2JavaByteArrLow(int iv) {
         byte[] byteArr = new byte[4];
         byteArr[0] = (byte) (iv & 0xff);
         byteArr[1] = (byte) (iv >> 8 & 0xff);
@@ -216,7 +217,7 @@ public class ByteUtil {
      * @param byteArr
      * @return
      */
-    public static int byteArr2IntLow(byte[] byteArr) {
+    public static int javaByteArr2IntLow(byte[] byteArr) {
         int res = 0;
         for (int i = 0; i < byteArr.length; i++) {
             res += (byteArr[i] & 0xff) << (i * 8);
@@ -230,7 +231,7 @@ public class ByteUtil {
      * @param javaByteArr [95, 16, 5, -109]
      * @return [95, 16, 5, 147]
      */
-    public static int[] javaByteArr2Unsigned(byte[] javaByteArr) {
+    public static int[] javaByteArr2UnsignedByteArr(byte[] javaByteArr) {
         int[] unsignedArr = new int[javaByteArr.length];
         for (int i = 0; i < javaByteArr.length; i++) {
             if (javaByteArr[i] < 0) {
@@ -241,12 +242,12 @@ public class ByteUtil {
     }
 
     /**
-     * java字节数组转无符号
+     * in转无符号字节数组
      *
      * @param intValue 1594885523
      * @return [95, 16, 5, 147]
      */
-    public static int[] int2ByteArrUnsigned(int intValue) {
+    public static int[] int2UnsignedByteArr(int intValue) {
         int[] unsignedArr = new int[4];
         for (int i = 0; i < 4; i++) {
             unsignedArr[4 - i - 1] = intValue >> i * 8 & 0xff;
@@ -278,9 +279,9 @@ public class ByteUtil {
         System.out.println();
 
         int i = 284;
-        byte[] byteArr = int2ByteArr(i);
+        byte[] byteArr = int2JavaByteArr(i);
         System.out.println("int转字节数组：" + i + " >>> " + Arrays.toString(byteArr));
-        System.out.println("字节数组转int：" + Arrays.toString(byteArr) + " >>> " + byteArr2Int(byteArr));
+        System.out.println("字节数组转int：" + Arrays.toString(byteArr) + " >>> " + javaByteArr2Int(byteArr));
         System.out.println("int转16进制字符串：" + i + " >>> " + int2HexString(i));
         System.out.println("16进制字符串转int：" + int2HexString(i) + " >>> " + hexString2Int(int2HexString(i)));
         System.out.println("字节数组转二进制表示：" + Arrays.toString(byteArr) + " >>> " + javaByteArr2BitString(byteArr, true));
@@ -295,9 +296,9 @@ public class ByteUtil {
 
         //TODO 类似西奥，传出去的要求是无符号字节数组，java中的byte[]要转换成int[]
         int intValue = (int) (System.currentTimeMillis() / 1000);
-        byte[] signedArr = int2ByteArr(intValue);
-        System.out.println("字节数组转无符号：" + Arrays.toString(signedArr) + " >>> " + Arrays.toString(javaByteArr2Unsigned(signedArr)));
-        System.out.println("int转无符号字节数组：" + intValue + " >>> " + Arrays.toString(int2ByteArrUnsigned(intValue)));
+        byte[] signedArr = int2JavaByteArr(intValue);
+        System.out.println("字节数组转无符号：" + Arrays.toString(signedArr) + " >>> " + Arrays.toString(javaByteArr2UnsignedByteArr(signedArr)));
+        System.out.println("int转无符号字节数组：" + intValue + " >>> " + Arrays.toString(int2UnsignedByteArr(intValue)));
         System.out.println();
 
     }

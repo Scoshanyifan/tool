@@ -1,4 +1,4 @@
-package com.kunbu.common.util.tool.mail.demo;
+package com.kunbu.common.util.web.controller;
 
 import com.google.common.base.Splitter;
 import com.kunbu.common.util.web.ApiResult;

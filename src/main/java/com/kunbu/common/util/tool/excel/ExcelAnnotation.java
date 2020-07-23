@@ -1,4 +1,4 @@
-package com.kunbu.common.util.tool.excel.common;
+package com.kunbu.common.util.tool.excel;
 
 import java.lang.annotation.*;
 

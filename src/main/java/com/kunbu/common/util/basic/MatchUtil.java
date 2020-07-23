@@ -17,9 +17,11 @@ public class MatchUtil {
     /** 新能源车牌号 */
     public static final Pattern REGEX_NEWCAR = Pattern.compile("^[A-Z][D,F][\\d]{5}$");
     /** 手机号 */
-    public static final Pattern REGEX_PHONE = Pattern.compile("^1(3|4|5|7|8)\\d{9}$");
-    /**  回车空格制表换行 */
+    public static final Pattern REGEX_MOBILE_PHONE = Pattern.compile("^1(3|4|5|7|8)\\d{9}$");
+    /** 回车空格制表换行 */
     public static final Pattern REGEX_WHITE_BLANK = Pattern.compile("\"\\\\s*|\\t|\\r|\\n\"");
+    /** 国内固定电话 */
+    public static final Pattern REGEX_SOLID_INNER_PHONE = Pattern.compile("^(0\\d{2,3})\\-([1-9]\\d{6,7})$");
 
     /**
      * 0-9 a-z A-Z
@@ -49,6 +51,19 @@ public class MatchUtil {
             return m.replaceAll("");
         }
         return "";
+    }
+
+    /**
+     * 验证正则
+     *
+     * @param str
+     * @param regex
+     */
+    public static boolean checkRegex(String str, String regex) {
+        if (str.matches(regex)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -124,7 +139,25 @@ public class MatchUtil {
         return false;
     }
 
+    /**
+     * 分组
+     */
+    public static void testGroup() {
+
+        Matcher m = REGEX_SOLID_INNER_PHONE.matcher("010-12345678");
+        if (m.matches()) {
+            System.out.println("group count: " + m.groupCount());
+            // 等价于group(0)，即返回全部
+            System.out.println("group : " + m.group());
+            System.out.println("group 1: " + m.group(1));
+        }
+
+    }
+
     public static void main(String[] args) {
+
+        testGroup();
+
         String name = " 一二三四五六七八九十 一十二十三十四  ".trim();
         if (!checkStringCount(name, 8, 36)) {
             System.out.println("chaochu;");

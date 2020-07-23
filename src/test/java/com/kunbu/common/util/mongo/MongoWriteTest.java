@@ -1,4 +1,4 @@
-package com.kunbu.common.util;
+package com.kunbu.common.util.mongo;
 
 import com.kunbu.common.util.tool.sql.mongo.demo.entity.Order;
 import org.junit.Test;

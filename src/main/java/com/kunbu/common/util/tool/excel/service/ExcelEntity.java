@@ -1,6 +1,6 @@
-package com.kunbu.common.util.tool.excel.demo;
+package com.kunbu.common.util.tool.excel.service;
 
-import com.kunbu.common.util.tool.excel.common.ExcelAnnotation;
+import com.kunbu.common.util.tool.excel.ExcelAnnotation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

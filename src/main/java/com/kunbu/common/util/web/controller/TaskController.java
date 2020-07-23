@@ -1,4 +1,4 @@
-package com.kunbu.common.util.tool.task;
+package com.kunbu.common.util.web.controller;
 
 import com.kunbu.common.util.tool.task.mysql.TaskMysqlService;
 import org.slf4j.Logger;

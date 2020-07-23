@@ -17,7 +17,7 @@ import java.util.concurrent.Executor;
 public class AsyncTaskConfig {
 
     /**
-     *   此处成员变量应该使用@Value从配置中读取，此处仅为演示目的
+     *   此处成员变量应该从配置中读取，此处仅为演示目的
      */
     private static final int corePoolSize = 5;
     private static final int maxPoolSize = 10;

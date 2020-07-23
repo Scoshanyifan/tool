@@ -1,4 +1,4 @@
-package com.kunbu.common.util.tool.sql.redis;
+package com.kunbu.common.util.tool.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
