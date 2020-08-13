@@ -1,40 +1,7 @@
-2020-07-23 13:38:00 085 [main] INFO  InitData:55 - Starting InitData on Think-PC with PID 10452 (started by Think in E:\gitHub\tool)
-2020-07-23 13:38:00 092 [main] INFO  InitData:651 - No active profile set, falling back to default profiles: default
-2020-07-23 13:38:00 976 [main] INFO  RepositoryConfigurationDelegate:246 - Multiple Spring Data modules found, entering strict repository configuration mode!
-2020-07-23 13:38:00 980 [main] INFO  RepositoryConfigurationDelegate:126 - Bootstrapping Spring Data repositories in DEFAULT mode.
-2020-07-23 13:38:01 007 [main] INFO  RepositoryConfigurationDelegate:184 - Finished Spring Data repository scanning in 20ms. Found 0 repository interfaces.
-2020-07-23 13:38:01 025 [main] INFO  RepositoryConfigurationDelegate:246 - Multiple Spring Data modules found, entering strict repository configuration mode!
-2020-07-23 13:38:01 026 [main] INFO  RepositoryConfigurationDelegate:126 - Bootstrapping Spring Data repositories in DEFAULT mode.
-2020-07-23 13:38:01 048 [main] INFO  RepositoryConfigurationDelegate:184 - Finished Spring Data repository scanning in 11ms. Found 0 repository interfaces.
-2020-07-23 13:38:01 607 [main] INFO  PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-07-23 13:38:02 734 [main] INFO  cluster:71 - Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
-2020-07-23 13:38:02 820 [cluster-ClusterId{value='5f19223ab8151131a71b15c7', description='null'}-localhost:27017] INFO  connection:71 - Opened connection [connectionId{localValue:1, serverValue:19}] to localhost:27017
-2020-07-23 13:38:02 824 [cluster-ClusterId{value='5f19223ab8151131a71b15c7', description='null'}-localhost:27017] INFO  cluster:71 - Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, version=ServerVersion{versionList=[3, 4, 17]}, minWireVersion=0, maxWireVersion=5, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=null, roundTripTimeNanos=1612618}
-2020-07-23 13:38:02 901 [main] WARN  CustomConversions:207 - Registering converter from class java.time.LocalDateTime to class java.time.Instant as reading converter although it doesn't convert from a store-supported type! You might wanna check you annotation setup at the converter implementation.
-2020-07-23 13:38:02 902 [main] WARN  CustomConversions:207 - Registering converter from class java.time.Instant to class java.time.LocalDateTime as reading converter although it doesn't convert from a store-supported type! You might wanna check you annotation setup at the converter implementation.
-2020-07-23 13:38:03 034 [main] WARN  CustomConversions:207 - Registering converter from class java.time.LocalDateTime to class java.time.Instant as reading converter although it doesn't convert from a store-supported type! You might wanna check you annotation setup at the converter implementation.
-2020-07-23 13:38:03 035 [main] WARN  CustomConversions:207 - Registering converter from class java.time.Instant to class java.time.LocalDateTime as reading converter although it doesn't convert from a store-supported type! You might wanna check you annotation setup at the converter implementation.
-2020-07-23 13:38:03 122 [main] WARN  MongoPersistentEntityIndexCreator:72 - Automatic index creation will be disabled by default as of Spring Data MongoDB 3.x.
-	Please use 'MongoMappingContext#setAutoIndexCreation(boolean)' or override 'MongoConfigurationSupport#autoIndexCreation()' to be explicit.
-	However, we recommend setting up indices manually in an application ready block. You may use index derivation there as well.
-
-	> -----------------------------------------------------------------------------------------
-	> @EventListener(ApplicationReadyEvent.class)
-	> public void initIndicesAfterStartup() {
-	>
-	>     IndexOperations indexOps = mongoTemplate.indexOps(DomainType.class);
-	>
-	>     IndexResolver resolver = new MongoPersistentEntityIndexResolver(mongoMappingContext);
-	>     resolver.resolveIndexFor(DomainType.class).forEach(indexOps::ensureIndex);
-	> }
-	> -----------------------------------------------------------------------------------------
-
-2020-07-23 13:38:03 175 [main] INFO  connection:71 - Opened connection [connectionId{localValue:2, serverValue:20}] to localhost:27017
-2020-07-23 13:38:03 348 [main] INFO  DruidDataSourceAutoConfigure:56 - Init DruidDataSource
-2020-07-23 13:38:03 824 [main] INFO  DruidDataSource:928 - {dataSource-1} inited
-2020-07-23 13:38:04 114 [main] INFO  ThreadPoolTaskExecutor:171 - Initializing ExecutorService
-2020-07-23 13:38:04 126 [main] INFO  ThreadPoolTaskExecutor:171 - Initializing ExecutorService 'taskExecutor'
-2020-07-23 13:38:05 537 [main] INFO  InitData:61 - Started InitData in 5.782 seconds (JVM running for 7.739)
-2020-07-23 13:38:07 246 [SpringContextShutdownHook] INFO  ThreadPoolTaskExecutor:208 - Shutting down ExecutorService 'taskExecutor'
-2020-07-23 13:38:07 258 [SpringContextShutdownHook] INFO  DruidDataSource:1823 - {dataSource-1} closed
-2020-07-23 13:38:07 261 [SpringContextShutdownHook] INFO  connection:71 - Closed connection [connectionId{localValue:2, serverValue:20}] to localhost:27017 because the pool has been closed.
+2020-08-13 10:47:00 003 [taskExecutor-4] INFO  TaskController:35 - Current Thread : taskExecutor-4
+2020-08-13 10:47:00 019 [taskExecutor-4] INFO  TaskController:36 - >>> ====================== task start =======================
+2020-08-13 10:47:00 021 [taskExecutor-4] INFO  TaskController:39 - >>> task:ORDER, lock:TaskLock{id=1, code='ORDER', name='订单处理', status=0, createTime=Thu Aug 13 02:13:01 CST 2020, version=15}
+2020-08-13 10:47:00 027 [taskExecutor-4] INFO  TaskController:43 - >>> task:ORDER is running
+2020-08-13 10:47:00 033 [taskExecutor-4] INFO  TaskController:39 - >>> task:LOG, lock:TaskLock{id=2, code='LOG', name='日志处理', status=0, createTime=Thu Aug 13 02:13:30 CST 2020, version=15}
+2020-08-13 10:47:00 036 [taskExecutor-4] INFO  TaskController:43 - >>> task:LOG is running
+2020-08-13 10:47:00 040 [taskExecutor-4] INFO  TaskController:56 - >>> ====================== task end =======================

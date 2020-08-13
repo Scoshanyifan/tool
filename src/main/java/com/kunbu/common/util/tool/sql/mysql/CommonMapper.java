@@ -1,7 +1,5 @@
 package com.kunbu.common.util.tool.sql.mysql;
 
-import com.github.pagehelper.Page;
-import com.kunbu.common.util.tool.task.mysql.TaskLock;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
@@ -17,17 +15,31 @@ import java.util.Map;
 @Mapper
 public interface CommonMapper {
 
-    String SQL = "`id_card`,`city`,`name`,`age`,`addr`, `create_time`";
+    String SQL = "`id_card`,`city`,`account`,`name`,`age`,`address`,`phone`,`create_time`";
+    String SQL2 = "`id_card`,`account`,`detail`";
+
+    @Select({
+            "select * from citizen limit #{count}"
+    })
+    List<Map<String, Object>> selectCtizenList(@Param("count") Integer count);
 
     @Insert({
             "<script>",
             "insert into citizen (" + SQL + ") values",
             "<foreach collection='list' item='item' separator=',' >",
-            "(#{item.idCard},#{item.city},#{item.name},#{item.age},#{item.addr},#{item.createTime})",
+            "(#{item.idCard},#{item.city},#{item.account},#{item.name},#{item.age},#{item.address},#{item.phone},#{item.createTime})",
             "</foreach>",
             "</script>",
     })
     int batchInsertCitizen(@Param("list") List<Map<String, Object>> list);
 
-
+    @Insert({
+            "<script>",
+            "insert into citizen_detail (" + SQL2 + ") values",
+            "<foreach collection='list' item='item' separator=',' >",
+            "(#{item.idCard},#{item.account},#{item.detail})",
+            "</foreach>",
+            "</script>",
+    })
+    int batchInsertCitizenDetail(@Param("list") List<Map<String, Object>> list);
 }

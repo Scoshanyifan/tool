@@ -10,8 +10,8 @@ import java.util.Date;
  **/
 public class TaskLock implements Serializable {
 
-    public static final int STATUS_FREE          = 0;
-    public static final int STATUS_RUNNING       = 1;
+    public static final int STATUS_FREE             = 0;
+    public static final int STATUS_RUNNING          = 1;
 
     private Integer id;
     private String code;
@@ -66,5 +66,17 @@ public class TaskLock implements Serializable {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    @Override
+    public String toString() {
+        return "TaskLock{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", status=" + status +
+                ", createTime=" + createTime +
+                ", version=" + version +
+                '}';
     }
 }
