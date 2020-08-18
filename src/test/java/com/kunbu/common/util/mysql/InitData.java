@@ -3,8 +3,6 @@ package com.kunbu.common.util.mysql;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.kunbu.common.util.mongo.MongoReadTest;
-import com.kunbu.common.util.tool.sql.mongo.demo.entity.Good;
-import com.kunbu.common.util.tool.sql.mongo.demo.entity.Order;
 import com.kunbu.common.util.tool.sql.mysql.CommonMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;

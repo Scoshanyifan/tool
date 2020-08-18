@@ -22,7 +22,7 @@ public class NetTest {
                 0,
                 0));
 
-        String url = "http://xiao-demo.yunext.com/cloud-lift-base/community/list";
+        String url = "http://xiao-common.yunext.com/cloud-lift-base/community/list";
 
         Map<String, Object> params = new HashMap<>();
         params.put("province", "");

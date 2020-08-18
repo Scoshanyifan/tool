@@ -1,10 +1,10 @@
-package com.kunbu.common.util.tool.sql.mongo.demo;
+package com.kunbu.common.util.web.controller;
 
 import com.kunbu.common.util.web.PageResult;
 import com.kunbu.common.util.web.ApiResult;
 import com.kunbu.common.util.basic.DateFormatUtil;
 import com.kunbu.common.util.tool.sql.mongo.MongoCriteriaUtil;
-import com.kunbu.common.util.tool.sql.mongo.demo.entity.Order;
+import com.kunbu.common.util.tool.sql.mongo.common.Order;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;

@@ -1,5 +1,5 @@
 server:
-  port: 9999
+  port: 9998
 
 spring:
 
@@ -40,8 +40,8 @@ spring:
     host: localhost
     # Redis服务器连接端口
     port: 6379
-    password:
-    #默认是索引为0的数据库
+    password: redis
+    # 默认是索引为0的数据库
     database: 1
     # 连接超时时间（毫秒）
     timeout: 5000ms
@@ -57,10 +57,12 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://localhost/tool
-      port: 27017
-      username: kunbu
-      password: 123456
+      uri: mongodb://tool:tool@localhost:27017/tool
+#      uri: mongodb://tool:tool@172.31.10.64:27017/tool
+#      uri: mongodb://localhost/tool
+#      port: 27017
+#      username: kunbu
+#      password: 123456
       options:
         min-connections-per-host: 20
         max-connections-per-host: 20
@@ -113,7 +115,7 @@ exception:
     to: 1274462659@qq.com,syf1274462659@163.com
 
 img:
-  sticker: demo/img/template.png
+  sticker: common/img/template.png
 
 logging:
   config: classpath:log4j2.xml

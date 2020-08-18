@@ -357,8 +357,8 @@ public class ImgUtil {
     public static void main(String[] args) {
         FileOutputStream fos = null;
         try {
-            BufferedImage outImg = ImageIO.read(new File("demo/img/qr.png"));
-            BufferedImage qrImgOld = ImageIO.read(new File("demo/img/cat.png"));
+            BufferedImage outImg = ImageIO.read(new File("common/img/qr.png"));
+            BufferedImage qrImgOld = ImageIO.read(new File("common/img/cat.png"));
             BufferedImage qrImg = ImgUtil.scaleImg(qrImgOld, (int) (qrImgOld.getWidth() * 0.9), (int) (qrImgOld.getHeight() * 0.9));
 
             // 二维码居中
@@ -379,7 +379,7 @@ public class ImgUtil {
                 bytes = bos.toByteArray();
             }
 
-            File file = new File("demo/img/demo.png");
+            File file = new File("common/img/common.png");
             if (!file.exists()) {
                 file.createNewFile();
             }

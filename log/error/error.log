@@ -35,3 +35,17 @@ Caused by: java.io.UnsupportedEncodingException: utf8mb4
 	at com.mysql.cj.conf.DefaultPropertySet.initializeProperties(DefaultPropertySet.java:231) ~[mysql-connector-java-8.0.18.jar:8.0.18]
 	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:398) ~[mysql-connector-java-8.0.18.jar:8.0.18]
 	... 8 more
+2020-08-13 12:05:47 [main] ERROR LoggingFailureAnalysisReporter:40 - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 9999 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 9999 or configure this application to listen on another port.
+

@@ -1,7 +1,7 @@
-2020-08-13 10:47:00 003 [taskExecutor-4] INFO  TaskController:35 - Current Thread : taskExecutor-4
-2020-08-13 10:47:00 019 [taskExecutor-4] INFO  TaskController:36 - >>> ====================== task start =======================
-2020-08-13 10:47:00 021 [taskExecutor-4] INFO  TaskController:39 - >>> task:ORDER, lock:TaskLock{id=1, code='ORDER', name='订单处理', status=0, createTime=Thu Aug 13 02:13:01 CST 2020, version=15}
-2020-08-13 10:47:00 027 [taskExecutor-4] INFO  TaskController:43 - >>> task:ORDER is running
-2020-08-13 10:47:00 033 [taskExecutor-4] INFO  TaskController:39 - >>> task:LOG, lock:TaskLock{id=2, code='LOG', name='日志处理', status=0, createTime=Thu Aug 13 02:13:30 CST 2020, version=15}
-2020-08-13 10:47:00 036 [taskExecutor-4] INFO  TaskController:43 - >>> task:LOG is running
-2020-08-13 10:47:00 040 [taskExecutor-4] INFO  TaskController:56 - >>> ====================== task end =======================
+2020-08-17 10:11:00 003 [taskExecutor-2] INFO  TaskController:35 - Current Thread : taskExecutor-2
+2020-08-17 10:11:00 021 [taskExecutor-2] INFO  TaskController:36 - >>> ====================== task start =======================
+2020-08-17 10:11:00 025 [taskExecutor-2] INFO  TaskController:39 - >>> task:ORDER, lock:TaskLock{id=1, code='ORDER', name='订单处理', status=0, createTime=Thu Aug 13 02:13:01 CST 2020, version=23}
+2020-08-17 10:11:00 063 [taskExecutor-2] INFO  TaskController:43 - >>> task:ORDER is running
+2020-08-17 10:11:00 114 [taskExecutor-2] INFO  TaskController:39 - >>> task:LOG, lock:TaskLock{id=2, code='LOG', name='日志处理', status=0, createTime=Thu Aug 13 02:13:30 CST 2020, version=23}
+2020-08-17 10:11:00 131 [taskExecutor-2] INFO  TaskController:43 - >>> task:LOG is running
+2020-08-17 10:11:00 155 [taskExecutor-2] INFO  TaskController:56 - >>> ====================== task end =======================

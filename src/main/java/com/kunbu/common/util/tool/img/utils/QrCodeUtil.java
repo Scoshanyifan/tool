@@ -111,11 +111,11 @@ public class QrCodeUtil {
         try {
             String qrContent = "https://xiao-2020-test.yunext.com/speedy/#/scanCode?id=f74c06a7aa804957ac34465b5fd81889";
             String qrText = "乘梯二维码A11";
-            String logoPath = "demo/img/logo.png";
+            String logoPath = "common/img/logo.png";
 
             byte[] bytes = createQrCode(qrContent, qrText, logoPath);
 
-            File file = new File("demo/img/qrCode.png");
+            File file = new File("common/img/qrCode.png");
             if (!file.exists()) {
                 file.createNewFile();
             }

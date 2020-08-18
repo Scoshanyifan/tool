@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <properties>
-        <property name="LOG_SYS_PATH">log/sys</property>
-        <property name="LOG_ERROR_PATH">log/error</property>
+        <property name="LOG_SYS_PATH">/root/logs/tool/sys</property>
+        <property name="LOG_ERROR_PATH">/root/logs/tool/error</property>
     </properties>
 
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %msg%n" />
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss SSS} [%t] %-5p %c{1}:%L - %msg%n" />
         </Console>
         <!-- filePattern 切割文件的文件名规则，结尾一定要用 %i -->
         <RollingFile name="SysFile" filename="${LOG_SYS_PATH}/farm.log" filePattern="${LOG_SYS_PATH}/farm-%d{yyyy-MM-dd-HH-mm}-%i.log">
@@ -15,9 +15,9 @@
             <Policies>
                 <!--下面任一条件为真就触发分隔文件(压缩文件需改成xxx.log.gz）-->
                 <!--1-按照时间分隔-->
-                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <TimeBasedTriggeringPolicy interval="60" modulate="true"/>
                 <!--2-按照文件大小分隔-->
-                <SizeBasedTriggeringPolicy size="10 KB"/>
+                <SizeBasedTriggeringPolicy size="1 MB"/>
             </Policies>
             <!-- 删除策略 -->
             <DefaultRolloverStrategy>
@@ -37,7 +37,7 @@
         <RollingFile name="ErrorFile" filename="${LOG_ERROR_PATH}/error.log" filePattern="${LOG_ERROR_PATH}/error-%d{yyyy-MM-dd-HH-mm}-%i.log">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %msg%n" />
             <Policies>
-                <SizeBasedTriggeringPolicy size="10 KB" />
+                <SizeBasedTriggeringPolicy size="1 MB" />
             </Policies>
             <DefaultRolloverStrategy>
                 <Delete basePath="${LOG_ERROR_PATH}" maxDepth="1">

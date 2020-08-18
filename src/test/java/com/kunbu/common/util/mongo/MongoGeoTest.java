@@ -1,7 +1,7 @@
 package com.kunbu.common.util.mongo;
 
 import com.google.common.collect.Lists;
-import com.kunbu.common.util.tool.sql.mongo.demo.entity.DeviceLocation;
+import com.kunbu.common.util.tool.sql.mongo.common.DeviceLocation;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;

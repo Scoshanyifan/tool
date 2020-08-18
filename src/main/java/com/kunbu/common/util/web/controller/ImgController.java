@@ -30,7 +30,7 @@ public class ImgController {
     @GetMapping("/qr")
     public void getQrCode(HttpServletRequest request, HttpServletResponse response, @RequestParam String text) {
         String qrContent = "https://xiao-2020-test.yunext.com/speedy/#/scanCode?id=f74c06a7aa804957ac34465b5fd81889";
-        String logoPath = "demo/img/logo.png";
+        String logoPath = "common/img/logo.png";
 
         byte[] qrBytes = QrCodeUtil.createQrCode(qrContent, text, logoPath);
         FileDTO fileDTO = FileDTO.of("qrCode.png", qrBytes);

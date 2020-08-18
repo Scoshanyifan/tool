@@ -10,6 +10,7 @@
     </parent>
     <groupId>com.kunbu.common.util</groupId>
     <artifactId>kunbutool</artifactId>
+    <packaging>war</packaging>
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>
@@ -28,13 +29,13 @@
         <com.alibaba.version>1.2.49</com.alibaba.version>
         <org.apache.mail.version>1.5</org.apache.mail.version>
         <commons-collections4.version>4.1</commons-collections4.version>
-        <org.projectlombok.version>1.16.6</org.projectlombok.version>
+        <org.projectlombok.version>1.18.4</org.projectlombok.version>
 
         <druid.spring.boot.version>1.1.9</druid.spring.boot.version>
     </properties>
 
     <dependencies>
-        <!-- log4j2 start -->
+        <!-- log4j2 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -58,8 +59,8 @@
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
         </dependency>
-        <!-- log4j2 end -->
 
+        <!-- spring boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -93,25 +94,28 @@
             <version>${druid.spring.boot.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>1.2.12</version>
-        </dependency>
-        <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>2.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.2.12</version>
+        </dependency>
+
         <!-- mongo -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
+
         <!-- redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
+
         <!-- mail -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -122,6 +126,12 @@
             <artifactId>mail</artifactId>
             <version>${javax.mail.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-email</artifactId>
+            <version>${org.apache.mail.version}</version>
+        </dependency>
+
         <!--zxing-->
         <dependency>
             <groupId>com.google.zxing</groupId>
@@ -133,6 +143,7 @@
             <artifactId>javase</artifactId>
             <version>${zxing.version}</version>
         </dependency>
+
         <!-- excel -->
         <dependency>
             <groupId>org.apache.poi</groupId>
@@ -144,7 +155,8 @@
             <artifactId>poi-ooxml</artifactId>
             <version>${poi.ooxml.version}</version>
         </dependency>
-        <!--    basic   -->
+
+        <!-- basic -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -171,11 +183,6 @@
             <version>${com.alibaba.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-email</artifactId>
-            <version>${org.apache.mail.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${org.projectlombok.version}</version>
@@ -185,6 +192,19 @@
 
     <build>
         <plugins>
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-compiler-plugin</artifactId>-->
+                <!--<configuration>-->
+                    <!--<source>${java.version}</source>-->
+                    <!--<target>${java.version}</target>-->
+                    <!--<encoding>UTF-8</encoding>-->
+                    <!--<compilerArguments>-->
+                        <!--<verbose/>-->
+                        <!--<bootclasspath>${java.home}\jre\lib\rt.jar;${java.home}\jre\lib\jce.jar</bootclasspath>-->
+                    <!--</compilerArguments>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>

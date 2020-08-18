@@ -1,8 +1,8 @@
 package com.kunbu.common.util.tool.img;
 
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
+//import com.sun.image.codec.jpeg.JPEGCodec;
+//import com.sun.image.codec.jpeg.JPEGEncodeParam;
+//import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import org.w3c.dom.Element;
 
 import javax.imageio.*;
@@ -19,6 +19,7 @@ import java.util.Iterator;
  * https://blog.csdn.net/wxh_xdk/article/details/79145726
  *
  */
+@Deprecated
 public class DpiUtil {
     
     /** 1英寸是2.54里面 */
@@ -105,14 +106,14 @@ public class DpiUtil {
      */
     @Deprecated
     public static void handleDpi(BufferedImage image, OutputStream os, int xDensity, int yDensity) throws Exception{
-        JPEGImageEncoder jpegEncoder = JPEGCodec.createJPEGEncoder(os);
-        JPEGEncodeParam jpegEncodeParam = jpegEncoder.getDefaultJPEGEncodeParam(image);
-        jpegEncodeParam.setDensityUnit(JPEGEncodeParam.DENSITY_UNIT_DOTS_INCH);
-        jpegEncoder.setJPEGEncodeParam(jpegEncodeParam);
-        jpegEncodeParam.setQuality(1f, false);
-        jpegEncodeParam.setXDensity(xDensity);
-        jpegEncodeParam.setYDensity(yDensity);
-        jpegEncoder.encode(image, jpegEncodeParam);
-        image.flush();
+//        JPEGImageEncoder jpegEncoder = JPEGCodec.createJPEGEncoder(os);
+//        JPEGEncodeParam jpegEncodeParam = jpegEncoder.getDefaultJPEGEncodeParam(image);
+//        jpegEncodeParam.setDensityUnit(JPEGEncodeParam.DENSITY_UNIT_DOTS_INCH);
+//        jpegEncoder.setJPEGEncodeParam(jpegEncodeParam);
+//        jpegEncodeParam.setQuality(1f, false);
+//        jpegEncodeParam.setXDensity(xDensity);
+//        jpegEncodeParam.setYDensity(yDensity);
+//        jpegEncoder.encode(image, jpegEncodeParam);
+//        image.flush();
     }
 }

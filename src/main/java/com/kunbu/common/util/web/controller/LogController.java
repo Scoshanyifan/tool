@@ -1,5 +1,6 @@
 package com.kunbu.common.util.web.controller;
 
+import com.kunbu.common.util.basic.IpUtil;
 import com.kunbu.common.util.web.ApiResult;
 import com.kunbu.common.util.basic.HttpRequestUtil;
 import org.slf4j.Logger;
@@ -27,6 +28,8 @@ public class LogController {
 
         LOGGER.info(">>> content:{}", content);
         HttpRequestUtil.printHttpRequest(request, LOGGER);
+
+        LOGGER.info(">>> ip:{}", IpUtil.getIp(request));
 
         return ApiResult.success();
     }

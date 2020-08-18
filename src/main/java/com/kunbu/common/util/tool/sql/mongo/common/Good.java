@@ -1,4 +1,4 @@
-package com.kunbu.common.util.tool.sql.mongo.demo.entity;
+package com.kunbu.common.util.tool.sql.mongo.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

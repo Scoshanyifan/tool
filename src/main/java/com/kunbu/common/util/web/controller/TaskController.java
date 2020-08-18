@@ -36,20 +36,21 @@ public class TaskController {
         logger.info(">>> ====================== task start =======================");
         for (TaskTypeEnum task : TaskTypeEnum.values()) {
             TaskLock taskLock = taskMysqlService.findByCode(task.name());
-            logger.info(">>> task:{}, lock:{}", task.name(), taskLock);
+            logger.info(">>> taskLock:{}", taskLock);
             if (taskLock != null && taskLock.getStatus() == TaskLock.STATUS_FREE) {
-                try {
-                    if (taskMysqlService.requireLock(taskLock)) {
+                if (taskMysqlService.requireLock(taskLock)) {
+                    try {
                         logger.info(">>> task:{} is running", task.name());
-                    } else {
-                        logger.warn(">>> task:{} require lock failure", task.name());
+                        Thread.sleep(10000);
+                    } catch (Exception e) {
+                        logger.error(">>> task:{} error, {}", task.name(), e);
+                    } finally {
+                        if (!taskMysqlService.releaseLock(taskLock)) {
+                            logger.error(">>> task:{} release lock failure", task.name());
+                        }
                     }
-                } catch (Exception e) {
-                    logger.error(">>> task:{} error, {}", task.name(), e);
-                } finally {
-                    if (!taskMysqlService.releaseLock(taskLock)) {
-                        logger.error(">>> task:{} release failure, {}", task.name());
-                    }
+                } else {
+                    logger.warn(">>> task:{} require lock failure", task.name());
                 }
             }
         }
