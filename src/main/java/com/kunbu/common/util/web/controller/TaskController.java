@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
+
 /**
  * @project: kunbutool
  * @author: kunbu
@@ -29,33 +31,79 @@ public class TaskController {
      * 每分钟
      *
      **/
+//    @Scheduled(cron = "0 * * * * ?")
+//    @Async
+//    public void schedule() {
+//        logger.info("Current Thread : {}", Thread.currentThread().getName());
+//        logger.info(">>> ====================== task start =======================");
+//        for (TaskTypeEnum task : TaskTypeEnum.values()) {
+//            TaskLock taskLock = taskMysqlService.findByCode(task.name());
+//            logger.info(">>> taskLock:{}", taskLock);
+//            if (taskLock != null && taskLock.getStatus() == TaskLock.STATUS_FREE) {
+//
+//
+//                if (taskMysqlService.requireLock(taskLock)) {
+//                    try {
+//                        logger.info(">>> task:{} is running", task.name());
+//                        Thread.sleep(10000);
+//                    } catch (Exception e) {
+//                        logger.error(">>> task:{} error, {}", task.name(), e);
+//                    } finally {
+//                        if (!taskMysqlService.releaseLock(taskLock)) {
+//                            logger.error(">>> task:{} release lock failure", task.name());
+//                        }
+//                    }
+//                } else {
+//                    logger.warn(">>> task:{} require lock failure", task.name());
+//                }
+//            }
+//        }
+//        logger.info(">>> ====================== task end =======================");
+//    }
+
+    /**
+     * 每分钟
+     *
+     **/
     @Scheduled(cron = "0 * * * * ?")
     @Async
-    public void schedule() {
+    public void scheduleOrder() {
+        TaskTypeEnum task = TaskTypeEnum.ORDER;
+        logger.info(">>> ====================== task {} start =======================", task.name());
         logger.info("Current Thread : {}", Thread.currentThread().getName());
-        logger.info(">>> ====================== task start =======================");
-        for (TaskTypeEnum task : TaskTypeEnum.values()) {
-            TaskLock taskLock = taskMysqlService.findByCode(task.name());
-            logger.info(">>> taskLock:{}", taskLock);
-            if (taskLock != null && taskLock.getStatus() == TaskLock.STATUS_FREE) {
-                if (taskMysqlService.requireLock(taskLock)) {
-                    try {
-                        logger.info(">>> task:{} is running", task.name());
-                        Thread.sleep(10000);
-                    } catch (Exception e) {
-                        logger.error(">>> task:{} error, {}", task.name(), e);
-                    } finally {
-                        if (!taskMysqlService.releaseLock(taskLock)) {
-                            logger.error(">>> task:{} release lock failure", task.name());
-                        }
-                    }
-                } else {
-                    logger.warn(">>> task:{} require lock failure", task.name());
-                }
-            }
-        }
-        logger.info(">>> ====================== task end =======================");
+        schedule(task);
+        logger.info(">>> ====================== task {} end =======================", task.name());
     }
 
+    @Scheduled(cron = "0 * * * * ?")
+    @Async
+    public void scheduleLog() {
+        TaskTypeEnum task = TaskTypeEnum.LOG;
+        logger.info(">>> ====================== task {} start =======================", task.name());
+        logger.info("Current Thread : {}", Thread.currentThread().getName());
+        schedule(task);
+        logger.info(">>> ====================== task {} end =======================", task.name());
+    }
+
+    private  void schedule(TaskTypeEnum task) {
+        TaskLock taskLock = taskMysqlService.findByCode(task.name());
+        logger.info(">>> taskLock:{}", taskLock);
+        if (taskLock != null && taskLock.getStatus() == TaskLock.STATUS_FREE) {
+            if (taskMysqlService.requireLock(taskLock)) {
+                try {
+                    logger.info(">>> task:{} is running", task.name());
+                    Thread.sleep(10000);
+                } catch (Exception e) {
+                    logger.error(">>> task:{} error, {}", task.name(), e);
+                } finally {
+                    if (!taskMysqlService.releaseLock(taskLock)) {
+                        logger.error(">>> task:{} release lock failure", task.name());
+                    }
+                }
+            } else {
+                logger.warn(">>> task:{} require lock failure", task.name());
+            }
+        }
+    }
 
 }

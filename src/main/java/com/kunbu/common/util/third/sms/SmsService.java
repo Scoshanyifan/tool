@@ -29,7 +29,7 @@ public class SmsService {
     private static final long SMS_CODE_EXPIRE_TIME = 60 * 5L;
     private static final long SMS_PHONE_EXPIRE_TIME = 60;
 
-    private static final String SMS_CONTENT_PREFIX = "【昆布】";
+    private static final String SMS_CONTENT_PREFIX = "【测试】";
 
     @Autowired
     private RedisManager redisManager;

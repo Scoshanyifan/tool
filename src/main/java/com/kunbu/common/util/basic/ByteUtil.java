@@ -17,6 +17,7 @@ import java.util.Arrays;
  * @see Integer#toBinaryString(int)
  * @see Integer#toHexString(int)
  *
+ *
  * https://www.jianshu.com/p/058b46fef220
  */
 public class ByteUtil {
@@ -69,24 +70,6 @@ public class ByteUtil {
     }
 
     /**
-     * 字节数组的二进制表示
-     *
-     * @param byteArr [95, 15, -6, -20]
-     * @param appendSpace
-     * @return 01011111 00001111 11111010 11101100
-     */
-    public static String javaByteArr2BitString(byte[] byteArr, boolean appendSpace) {
-        StringBuilder bitStr = new StringBuilder();
-        for (byte b : byteArr) {
-            bitStr.append(javaByte2BitString(b));
-            if (appendSpace) {
-                bitStr.append(" ");
-            }
-        }
-        return bitStr.toString();
-    }
-
-    /**
      * 有符号byte转成无符号
      * @see Byte#toUnsignedInt(byte x)
      *
@@ -106,12 +89,30 @@ public class ByteUtil {
     }
 
     /**
+     * 字节数组的二进制表示
+     *
+     * @param byteArr [95, 15, -6, -20]
+     * @param appendSpace
+     * @return 01011111 00001111 11111010 11101100
+     */
+    public static String javaByteArr2BitString(byte[] byteArr, boolean appendSpace) {
+        StringBuilder bitStr = new StringBuilder();
+        for (byte b : byteArr) {
+            bitStr.append(javaByte2BitString(b));
+            if (appendSpace) {
+                bitStr.append(" ");
+            }
+        }
+        return bitStr.toString();
+    }
+
+    /**
      * 字节数组转16进制字符串
      *
      * @param byteArr [95, 16, 3, -69]
      * @return 5f1003bb
      */
-    public static String javaByte2HexString(byte[] byteArr) {
+    public static String javaByteArr2HexString(byte[] byteArr, boolean upperCase) {
         StringBuilder hexStr = new StringBuilder();
         for (int i = 0; i < byteArr.length; i++) {
             if (byteArr[i] == 0) {
@@ -139,90 +140,10 @@ public class ByteUtil {
             }
             hexStr.append(hv);
         }
+        if (upperCase) {
+            return hexStr.toString().toUpperCase();
+        }
         return hexStr.toString();
-    }
-
-    /**
-     * int转16进制
-     *
-     * @param iv 284
-     * @return 011c
-     */
-    public static String int2HexString(int iv) {
-        String hexStr = Integer.toHexString(iv);
-        if (hexStr.length() % 2 != 0) {
-            hexStr = "0" + hexStr;
-        }
-        return hexStr;
-    }
-
-    /**
-     * 16进制字符串转int
-     *
-     * @param hexStr
-     * @return
-     */
-    public static int hexString2Int(String hexStr) {
-
-        return Integer.parseInt(hexStr, 16);
-    }
-
-    /**
-     * int转4位字节数组
-     *
-     * @param iv 1594885160
-     * @return [95, 16, 4, 40]
-     */
-    public static byte[] int2JavaByteArr(int iv) {
-        byte[] byteArr = new byte[4];
-        byteArr[3] = (byte) (iv & 0xff);
-        byteArr[2] = (byte) (iv >> 8 & 0xff);
-        byteArr[1] = (byte) (iv >> 16 & 0xff);
-        byteArr[0] = (byte) (iv >> 24 & 0xff);
-        return byteArr;
-    }
-
-    /**
-     * 4位字节数组转int
-     *
-     * @param byteArr [0, 0, 1, 21]
-     * @return 277
-     */
-    public static int javaByteArr2Int(byte[] byteArr) {
-        int res = 0;
-        for (int i = 0; i < byteArr.length; i++) {
-            res += (byteArr[i] & 0xff) << ((3 - i) * 8);
-        }
-        return res;
-    }
-
-    /**
-     * int转字节数组（低字节序）
-     *
-     * @param iv
-     * @return
-     */
-    public static byte[] int2JavaByteArrLow(int iv) {
-        byte[] byteArr = new byte[4];
-        byteArr[0] = (byte) (iv & 0xff);
-        byteArr[1] = (byte) (iv >> 8 & 0xff);
-        byteArr[2] = (byte) (iv >> 16 & 0xff);
-        byteArr[3] = (byte) (iv >> 24 & 0xff);
-        return byteArr;
-    }
-
-    /**
-     * 字节数组转int（低字节序）
-     *
-     * @param byteArr
-     * @return
-     */
-    public static int javaByteArr2IntLow(byte[] byteArr) {
-        int res = 0;
-        for (int i = 0; i < byteArr.length; i++) {
-            res += (byteArr[i] & 0xff) << (i * 8);
-        }
-        return res;
     }
 
     /**
@@ -242,7 +163,82 @@ public class ByteUtil {
     }
 
     /**
-     * in转无符号字节数组
+     * 4位字节数组转int
+     *
+     * @param byteArr [0, 0, 1, 21]
+     * @return 277
+     */
+    public static int javaByteArr2Int(byte[] byteArr) {
+        int res = 0;
+        for (int i = 0; i < byteArr.length; i++) {
+            res += (byteArr[i] & 0xff) << ((3 - i) * 8);
+        }
+        return res;
+    }
+
+    /**
+     * 字节数组转int（低字节序）
+     *
+     * @param byteArr
+     * @return
+     */
+    public static int javaByteArr2IntLow(byte[] byteArr) {
+        int res = 0;
+        for (int i = 0; i < byteArr.length; i++) {
+            res += (byteArr[i] & 0xff) << (i * 8);
+        }
+        return res;
+    }
+
+    /**
+     * int转16进制
+     *
+     * @param iv 284
+     * @return 011c
+     */
+    public static String int2HexString(int iv, boolean upperCase) {
+        String hexStr = Integer.toHexString(iv);
+        if (hexStr.length() % 2 != 0) {
+            hexStr = "0" + hexStr;
+        }
+        if (upperCase) {
+            return hexStr.toUpperCase();
+        }
+        return hexStr;
+    }
+
+    /**
+     * int转4位字节数组
+     *
+     * @param iv 1594885160
+     * @return [95, 16, 4, 40]
+     */
+    public static byte[] int2JavaByteArr(int iv) {
+        byte[] byteArr = new byte[4];
+        byteArr[3] = (byte) (iv & 0xff);
+        byteArr[2] = (byte) (iv >> 8 & 0xff);
+        byteArr[1] = (byte) (iv >> 16 & 0xff);
+        byteArr[0] = (byte) (iv >> 24 & 0xff);
+        return byteArr;
+    }
+
+    /**
+     * int转字节数组（低字节序）
+     *
+     * @param iv
+     * @return
+     */
+    public static byte[] int2JavaByteArrLow(int iv) {
+        byte[] byteArr = new byte[4];
+        byteArr[0] = (byte) (iv & 0xff);
+        byteArr[1] = (byte) (iv >> 8 & 0xff);
+        byteArr[2] = (byte) (iv >> 16 & 0xff);
+        byteArr[3] = (byte) (iv >> 24 & 0xff);
+        return byteArr;
+    }
+
+    /**
+     * int转无符号字节数组
      *
      * @param intValue 1594885523
      * @return [95, 16, 5, 147]
@@ -255,6 +251,31 @@ public class ByteUtil {
         return unsignedArr;
     }
 
+    /**
+     * int转16进制字符串数组
+     *
+     * @param intValue 1594885523
+     * @return [AF, C9, 59, 5F]
+     */
+    public static String[] int2HexStringArr(int intValue, boolean upperCase) {
+        String[] arrStr = new String[4];
+        for (int i = 0; i < 4; i++) {
+            String s = int2HexString(intValue >> i * 8 & 0xff, upperCase);
+            arrStr[4 - i - 1] = s.toUpperCase();
+        }
+        return arrStr;
+    }
+
+    /**
+     * 16进制字符串转int
+     *
+     * @param hexStr
+     * @return
+     */
+    public static int hexString2Int(String hexStr) {
+
+        return Integer.parseInt(hexStr, 16);
+    }
 
     public static void testJavaAPI() {
         int b = 284;
@@ -262,7 +283,7 @@ public class ByteUtil {
         System.out.println("API：" + Integer.toHexString(b));
 
         System.out.println(javaByte2BitString((byte) b));
-        System.out.println(int2HexString(b));
+        System.out.println(int2HexString(b, true));
         System.out.println();
     }
 
@@ -282,10 +303,10 @@ public class ByteUtil {
         byte[] byteArr = int2JavaByteArr(i);
         System.out.println("int转字节数组：" + i + " >>> " + Arrays.toString(byteArr));
         System.out.println("字节数组转int：" + Arrays.toString(byteArr) + " >>> " + javaByteArr2Int(byteArr));
-        System.out.println("int转16进制字符串：" + i + " >>> " + int2HexString(i));
-        System.out.println("16进制字符串转int：" + int2HexString(i) + " >>> " + hexString2Int(int2HexString(i)));
+        System.out.println("int转16进制字符串：" + i + " >>> " + int2HexString(i, true));
+        System.out.println("16进制字符串转int：" + int2HexString(i, true) + " >>> " + hexString2Int(int2HexString(i, true)));
         System.out.println("字节数组转二进制表示：" + Arrays.toString(byteArr) + " >>> " + javaByteArr2BitString(byteArr, true));
-        System.out.println("字节数组转16进制字符串：" + Arrays.toString(byteArr) + " >>> " + javaByte2HexString(byteArr));
+        System.out.println("字节数组转16进制字符串：" + Arrays.toString(byteArr) + " >>> " + javaByteArr2HexString(byteArr, true));
         System.out.println();
 
         System.out.println(b + "的二进制形式（byte）：" + javaByte2BitString(b));
@@ -299,6 +320,7 @@ public class ByteUtil {
         byte[] signedArr = int2JavaByteArr(intValue);
         System.out.println("字节数组转无符号：" + Arrays.toString(signedArr) + " >>> " + Arrays.toString(javaByteArr2UnsignedByteArr(signedArr)));
         System.out.println("int转无符号字节数组：" + intValue + " >>> " + Arrays.toString(int2UnsignedByteArr(intValue)));
+        System.out.println("int转16进制字符串数组：" + intValue + " >>> " + Arrays.toString(int2HexStringArr(intValue, true)));
         System.out.println();
 
     }

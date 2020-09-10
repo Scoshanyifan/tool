@@ -245,4 +245,11 @@ public class RedisManager implements CacheManager {
         return (String) stringRedisTemplate.opsForValue().getAndSet(key, value);
     }
 
+
+    //============================== TODO set ===================================
+
+    public Long sAdd(String key, String... value) {
+        return stringRedisTemplate.opsForSet().add(key, value);
+    }
+
 }
