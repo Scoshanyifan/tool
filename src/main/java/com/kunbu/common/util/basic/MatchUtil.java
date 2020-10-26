@@ -23,6 +23,12 @@ public class MatchUtil {
     /** 国内固定电话 */
     public static final Pattern REGEX_SOLID_INNER_PHONE = Pattern.compile("^(0\\d{2,3})\\-([1-9]\\d{6,7})$");
 
+    /** 1-500数字 */
+    public static final Pattern REGEX_BETWEEN_NUM = Pattern.compile("^(500|[1-4]{0,1}\\d{0,1}\\d)$");
+
+    /** 手机和邮箱 */
+    public static final Pattern REGEX_PHONE_EMAIL = Pattern.compile("^(1[3456789]\\d{9})|([a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+)$");
+
     /**
      * 0-9 a-z A-Z
      */
@@ -174,7 +180,12 @@ public class MatchUtil {
         System.out.println(b);
         System.out.println(b2);
 
+        String sn = "dsade111";
+        if (!sn.matches("^[A-Za-z0-9]+$")) {
+            System.out.print("failure");
+        }
 
+        System.out.println("check phone and email: " + checkRegex("1880990009xx", REGEX_PHONE_EMAIL));
     }
 
 }

@@ -1,0 +1,140 @@
+server:
+  port: 9998
+
+spring:
+
+  # db
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      url: jdbc:mysql://localhost:3306/scosyf?useUnicode=true&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&useAffectedRows=true
+      username: root
+      password: 930628
+#      password:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，wall用于防火墙
+      filters: stat
+      # 慢SQL日志
+      filter:
+        stat:
+        enabled: true
+        log-slow-sql: true
+        slow-sql-millis: 1
+      initial-size: 10
+      log-abandoned: true
+      max-active: 30
+      max-open-prepared-statements: 20
+      max-wait: 60000
+      min-evictable-idle-time-millis: 30000
+      min-idle: 10
+      remove-abandoned: true
+      remove-abandoned-timeout: 1800
+      test-on-borrow: false
+      tst-on-return: false
+      test-while-idle: true
+      time-between-eviction-runs-millis: 60000
+      # 验证数据库连接的查询语句
+      validation-query: SELECT 1
+
+  redis:
+    host: localhost
+    # Redis服务器连接端口
+    port: 6379
+    password: redis
+    # 默认是索引为0的数据库
+    database: 1
+    # 连接超时时间（毫秒）
+    timeout: 5000ms
+    jedis:
+      pool:
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: 100
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: 100000ms
+        # 连接池中的空闲连接
+        max-idle: 10
+        min-idle: 0
+
+  data:
+    mongodb:
+      uri: mongodb://tool:tool@localhost:27017/tool
+#      uri: mongodb://tool:tool@172.31.10.64:27017/tool
+#      uri: mongodb://localhost/tool
+#      port: 27017
+#      username: kunbu
+#      password: 123456
+      options:
+        min-connections-per-host: 20
+        max-connections-per-host: 20
+        threads-allowed-to-block-for-connection-multiplier: 5
+        server-selection-timeout: 30000
+        max-wait-time: 120000
+        max-connection-idel-time: 0
+        max-connection-life-time: 0
+        connect-timeout: 10000
+        socket-timeout: 0
+        socket-keep-alive: false
+        ssl-enabled: false
+        ssl-invalid-host-name-allowed: false
+        always-use-m-beans: false
+        heartbeat-socket-timeout: 20000
+        heartbeat-connect-timeout: 20000
+        min-heartbeat-frequency: 500
+        heartbeat-frequency: 10000
+        local-threshold: 15
+
+
+
+  mail:
+#    host: smtp.qq.com
+    host: smtp.163.com
+    username: 18806719815@163.com
+    password: syf930628
+    port: 465
+    default-encoding: utf-8
+#    protocol: smtp
+    properties:
+#      mail.debug: true
+      mail.smtp.auth: true
+      mail.smtp.timeout: 25000
+      mail.smtp.ssl.enable: true
+      mail.smtp.starttls.enable: false
+      mail.smtp.socketFactory.fallback: false
+      mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+
+  servlet:
+    # 上传文件大小限制，默认1M
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+
+
+exception:
+  mail:
+    to: 1274462659@qq.com,syf1274462659@163.com
+
+img:
+  sticker: common/img/template.png
+
+logging:
+  config: classpath:log4j2.xml
+
+#sms config
+sms:
+  appId: EUCP-EMY-SMS1-2XW5H
+  secretKey: 2020AEC0E3350FDA
+
+# mail 原生配置，需要手动读取并配置 JavaMailSenderImpl
+mail:
+  host: smtp.163.com
+  username: 18806719815@163.com
+  password: syf930628
+  port: 465
+  properties:
+    mail.smtp.auth: true
+    mail.smtp.timeout: 25000
+    mail.smtp.ssl.enable: true
+    mail.smtp.starttls.enable: false
+    mail.smtp.socketFactory.fallback: false
+    mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
