@@ -134,6 +134,7 @@ public class StringTest {
          * '('    若参数是负数，则结果中不添加负号而是用圆括号把数字括起来（同‘+’具有同样的限制）
          *
          **/
+        System.out.println("num：" + String.format("%03d", 22));
         System.out.println("num：" + String.format("%06d", -233));
         System.out.println("num：" + String.format("%6d", -233));
         System.out.println("num：" + String.format("%-6d", -233));
@@ -174,7 +175,26 @@ public class StringTest {
 //        Set<String> result4 = Sets.symmetricDifference(set1, set2);//相对差集 1中有2中没有  2中有1中没有的 取出来做结果
     }
 
-
+    public static Integer handleVersion(String version) {
+        // 1.0.2_233, 4.3.0, 2.3.1_2
+        StringBuilder builder = new StringBuilder();
+        if (version.indexOf("_") > 0) {
+            String[] parts = version.split("\\_");
+            String[] verNums = parts[0].split("\\.");
+            for (String ver : verNums) {
+                builder.append(ver);
+            }
+            String smallNum = String.format("%03d", Integer.parseInt(parts[1]));
+            builder.append(smallNum);
+        } else {
+            String[] verNums = version.split("\\.");
+            for (String ver : verNums) {
+                builder.append(ver);
+            }
+            builder.append("000");
+        }
+        return Integer.parseInt(builder.toString());
+    }
 
     public static void main(String[] args) {
 
@@ -185,6 +205,7 @@ public class StringTest {
 
         testSplit("////");
         testSplit("2/-5///");
+        testSplit("/0f1300/1328171140476178432r/ota/device/inform");
         testGuavaSplitter("////");
         testGuavaSplitter("2/-5///");
 
@@ -202,6 +223,10 @@ public class StringTest {
 
         System.out.println();
         System.out.println("num：" + String.format("%03d", Integer.parseInt("23")));
+
+        System.out.println();
+        System.out.println(handleVersion("1.0.2_22"));
+        System.out.println(handleVersion("3.1.2"));
 
     }
 }

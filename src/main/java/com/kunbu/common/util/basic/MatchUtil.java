@@ -28,6 +28,7 @@ public class MatchUtil {
 
     /** 手机和邮箱 */
     public static final Pattern REGEX_PHONE_EMAIL = Pattern.compile("^(1[3456789]\\d{9})|([a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+)$");
+    public static final Pattern REGEX_VERSION = Pattern.compile("^(\\d\\.\\d\\.\\d)(\\_[\\d]{1,3})?$");
 
     /**
      * 0-9 a-z A-Z
@@ -186,6 +187,7 @@ public class MatchUtil {
         }
 
         System.out.println("check phone and email: " + checkRegex("1880990009xx", REGEX_PHONE_EMAIL));
+        System.out.println("version: " + checkRegex("1.0.2_23", REGEX_VERSION));
     }
 
 }
