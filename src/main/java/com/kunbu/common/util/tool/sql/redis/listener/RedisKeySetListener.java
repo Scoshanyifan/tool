@@ -22,13 +22,13 @@ public class RedisKeySetListener extends KeyspaceEventMessageListener implements
 
     private static final Logger logger = LoggerFactory.getLogger(RedisKeySetListener.class);
 
+    /**
+     * 如果需要指定数据库，可以自定义规则
+     **/
     private static final Topic KEYEVENT_SET_TOPIC = new PatternTopic("__keyevent@*__:set");
 
     private ApplicationEventPublisher publisher;
 
-    /**
-     * Creates new {@link MessageListener} for {@code __keyevent@*__:expired} messages.
-     **/
     public RedisKeySetListener(RedisMessageListenerContainer listenerContainer) {
         super(listenerContainer);
     }
@@ -38,6 +38,9 @@ public class RedisKeySetListener extends KeyspaceEventMessageListener implements
         logger.info(">>> key set, body:【{}】, channel:【{}】, pattern:【{}】",
                 new String(message.getBody()), new String(message.getChannel()), new String(pattern));
     }
+
+
+    /** 以为照写expired */
 
     @Override
     protected void doRegister(RedisMessageListenerContainer container) {

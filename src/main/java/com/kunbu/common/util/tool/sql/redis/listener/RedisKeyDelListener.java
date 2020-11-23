@@ -5,29 +5,29 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.data.redis.connection.Message;
-import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.core.RedisKeyExpiredEvent;
 import org.springframework.data.redis.listener.KeyspaceEventMessageListener;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.Topic;
+import org.springframework.stereotype.Component;
 
 /**
  * @author kunbu
  * @date 2020/11/19 17:40
  **/
-//@Component
+@Component
 public class RedisKeyDelListener extends KeyspaceEventMessageListener implements ApplicationEventPublisherAware {
 
     private static final Logger logger = LoggerFactory.getLogger(RedisKeyDelListener.class);
 
-    private static final Topic KEYEVENT_DELETE_TOPIC = new PatternTopic("__keyevent@*__:del");
+    /**
+     * 如果需要指定数据库，可以自定义规则，此处只监听db-1
+     **/
+    private static final Topic KEYEVENT_DELETE_TOPIC = new PatternTopic("__keyevent@1__:del");
 
     private ApplicationEventPublisher publisher;
 
-    /**
-     * Creates new {@link MessageListener} for {@code __keyevent@*__:expired} messages.
-     **/
     public RedisKeyDelListener(RedisMessageListenerContainer listenerContainer) {
         super(listenerContainer);
     }
@@ -37,6 +37,9 @@ public class RedisKeyDelListener extends KeyspaceEventMessageListener implements
         logger.info(">>> key delete, body:【{}】, channel:【{}】, pattern:【{}】",
                 new String(message.getBody()), new String(message.getChannel()), new String(pattern));
     }
+
+
+    /** 以为照写expired */
 
     @Override
     protected void doRegister(RedisMessageListenerContainer container) {
@@ -52,11 +55,11 @@ public class RedisKeyDelListener extends KeyspaceEventMessageListener implements
         if (this.publisher != null) {
             this.publisher.publishEvent(event);
         }
-
     }
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
         this.publisher = applicationEventPublisher;
     }
+
 }

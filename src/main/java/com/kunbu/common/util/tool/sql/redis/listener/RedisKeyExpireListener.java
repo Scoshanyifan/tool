@@ -14,12 +14,14 @@ import org.springframework.stereotype.Component;
  * @author kunbu
  * @date 2020/11/19 17:40
  **/
-//@Component
+@Component
 public class RedisKeyExpireListener extends KeyExpirationEventMessageListener {
 
     private static final Logger logger = LoggerFactory.getLogger(RedisKeyExpireListener.class);
 
     /**
+     * 默认监听所有数据库下的过期事件，即*表示所有
+     *
      * Creates new {@link MessageListener} for {@code __keyevent@*__:expired} messages.
      **/
     public RedisKeyExpireListener(RedisMessageListenerContainer listenerContainer) {

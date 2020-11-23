@@ -19,7 +19,7 @@ import java.util.Date;
  * @author: kunbu
  * @create: 2020-06-20 13:46
  **/
-@Component
+//@Component
 public class TaskController {
 
     private static final Logger logger = LoggerFactory.getLogger(TaskController.class);

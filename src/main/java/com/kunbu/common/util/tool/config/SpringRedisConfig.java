@@ -41,15 +41,13 @@ public class SpringRedisConfig {
     private static final Logger logger = LoggerFactory.getLogger(SpringRedisConfig.class);
 
     /**
-     * 配置监听容器
+     * 配置事件监听容器（用于key的过期，设置，删除事件通知）
      *
      **/
     @Bean
     RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        // 监听指定数据库，默认是监听全部
-//        container.addMessageListener(new RedisKeyListener(RedisKeyActionEnum.set), new PatternTopic("__keyevent@0__:set"));
         return container;
     }
 
