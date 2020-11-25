@@ -17,7 +17,6 @@ import org.springframework.data.redis.connection.lettuce.LettuceClientConfigurat
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -36,12 +35,14 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  *
  **/
 @Configuration
-public class SpringRedisConfig {
+public class RedisConfig {
 
-    private static final Logger logger = LoggerFactory.getLogger(SpringRedisConfig.class);
+    private static final Logger logger = LoggerFactory.getLogger(RedisConfig.class);
 
     /**
      * 配置事件监听容器（用于key的过期，设置，删除事件通知）
+     *
+     * http://redisdoc.com/topic/notification.html
      *
      **/
     @Bean
@@ -69,7 +70,7 @@ public class SpringRedisConfig {
      */
     @Bean
     @ConfigurationProperties(prefix = "spring.redis")
-    public RedisStandaloneConfiguration redisConfig() {
+    public RedisStandaloneConfiguration redisConfiguration() {
         return new RedisStandaloneConfiguration();
     }
 
@@ -81,9 +82,9 @@ public class SpringRedisConfig {
      **/
     @Bean("factory")
     @Primary
-    public LettuceConnectionFactory factory(GenericObjectPoolConfig config, RedisStandaloneConfiguration redisConfig) {
+    public LettuceConnectionFactory factory(GenericObjectPoolConfig config, RedisStandaloneConfiguration redisConfiguration) {
         LettuceClientConfiguration clientConfiguration = LettucePoolingClientConfiguration.builder().poolConfig(config).build();
-        return new LettuceConnectionFactory(redisConfig, clientConfiguration);
+        return new LettuceConnectionFactory(redisConfiguration, clientConfiguration);
     }
 
     /**
@@ -123,20 +124,21 @@ public class SpringRedisConfig {
         redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
         redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
 
+        // 不加这句，redis配置成功，但是get时，nativeConnection报空指针
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
 
     @Bean
     @ConfigurationProperties(prefix = "spring.redis2")
-    public RedisStandaloneConfiguration redisConfig2() {
+    public RedisStandaloneConfiguration redisConfiguration2() {
         return new RedisStandaloneConfiguration();
     }
 
     @Bean("factory2")
-    public LettuceConnectionFactory factory2(GenericObjectPoolConfig config, RedisStandaloneConfiguration redisConfig2) {
+    public LettuceConnectionFactory factory2(GenericObjectPoolConfig config, RedisStandaloneConfiguration redisConfiguration2) {
         LettuceClientConfiguration clientConfiguration = LettucePoolingClientConfiguration.builder().poolConfig(config).build();
-        return new LettuceConnectionFactory(redisConfig2, clientConfiguration);
+        return new LettuceConnectionFactory(redisConfiguration2, clientConfiguration);
     }
 
     @Bean("redisTemplate2")
