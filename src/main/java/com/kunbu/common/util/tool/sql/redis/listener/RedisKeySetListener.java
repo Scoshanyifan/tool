@@ -40,7 +40,7 @@ public class RedisKeySetListener extends KeyspaceEventMessageListener implements
     }
 
 
-    /** 以为照写expired */
+    /** 照写expired */
 
     @Override
     protected void doRegister(RedisMessageListenerContainer container) {

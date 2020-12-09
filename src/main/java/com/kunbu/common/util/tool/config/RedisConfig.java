@@ -129,6 +129,8 @@ public class RedisConfig {
         return redisTemplate;
     }
 
+    /** 配置多数据源 */
+
     @Bean
     @ConfigurationProperties(prefix = "spring.redis2")
     public RedisStandaloneConfiguration redisConfiguration2() {
