@@ -2,10 +2,10 @@ package com.kunbu.common.util.biz.scene.entity.bean;
 
 import com.alibaba.fastjson.JSONObject;
 import com.kunbu.common.util.biz.scene.constant.SceneActionTypeEnum;
-import com.kunbu.common.util.biz.scene.entity.action.SceneActionBase;
-import com.kunbu.common.util.biz.scene.entity.action.DelaySceneAction;
-import com.kunbu.common.util.biz.scene.entity.action.DeviceSceneAction;
-import com.kunbu.common.util.biz.scene.entity.action.NotifySceneAction;
+import com.kunbu.common.util.biz.scene.entity.dto.action.SceneActionBase;
+import com.kunbu.common.util.biz.scene.entity.dto.action.DelaySceneAction;
+import com.kunbu.common.util.biz.scene.entity.dto.action.DeviceSceneAction;
+import com.kunbu.common.util.biz.scene.entity.dto.action.NotifySceneAction;
 import lombok.Data;
 
 import java.util.Date;
@@ -27,6 +27,7 @@ public class SceneAction {
 
     private String deviceUuid;
 
+    /** 1-延时 2-设备属性 3-通知*/
     private Integer actionType;
 
     private Integer sort;

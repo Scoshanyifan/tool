@@ -1,4 +1,4 @@
-package com.kunbu.common.util.biz.scene.entity.log;
+package com.kunbu.common.util.biz.scene.entity.bean;
 
 import lombok.Data;
 

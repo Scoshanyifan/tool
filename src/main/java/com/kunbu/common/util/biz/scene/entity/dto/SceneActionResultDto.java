@@ -1,6 +1,6 @@
-package com.kunbu.common.util.biz.scene.handler;
+package com.kunbu.common.util.biz.scene.entity.dto;
 
-import com.kunbu.common.util.biz.scene.entity.action.SceneActionBase;
+import com.kunbu.common.util.biz.scene.entity.dto.action.SceneActionBase;
 import lombok.Data;
 
 /**
@@ -8,7 +8,7 @@ import lombok.Data;
  * @date 2020/12/8 11:32
  **/
 @Data
-public class SceneActionResult {
+public class SceneActionResultDto {
 
     private Boolean success;
 

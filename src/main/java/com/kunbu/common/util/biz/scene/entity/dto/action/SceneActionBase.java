@@ -1,4 +1,4 @@
-package com.kunbu.common.util.biz.scene.entity.action;
+package com.kunbu.common.util.biz.scene.entity.dto.action;
 
 import com.kunbu.common.util.biz.scene.constant.SceneActionTypeEnum;
 

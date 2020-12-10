@@ -1,7 +1,6 @@
-package com.kunbu.common.util.biz.scene.entity.condition;
+package com.kunbu.common.util.biz.scene.entity.dto.condition;
 
 import com.kunbu.common.util.biz.scene.constant.SceneConditionTypeEnum;
-import com.kunbu.common.util.biz.scene.entity.condition.SceneConditionBase;
 import lombok.Data;
 
 /**

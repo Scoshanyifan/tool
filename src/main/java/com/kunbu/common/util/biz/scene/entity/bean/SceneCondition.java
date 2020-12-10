@@ -2,9 +2,9 @@ package com.kunbu.common.util.biz.scene.entity.bean;
 
 import com.alibaba.fastjson.JSONObject;
 import com.kunbu.common.util.biz.scene.constant.SceneConditionTypeEnum;
-import com.kunbu.common.util.biz.scene.entity.condition.SceneConditionBase;
-import com.kunbu.common.util.biz.scene.entity.condition.CronCondition;
-import com.kunbu.common.util.biz.scene.entity.condition.DeviceAttributeCondition;
+import com.kunbu.common.util.biz.scene.entity.dto.condition.SceneConditionBase;
+import com.kunbu.common.util.biz.scene.entity.dto.condition.CronCondition;
+import com.kunbu.common.util.biz.scene.entity.dto.condition.DeviceAttributeCondition;
 import lombok.Data;
 
 import java.util.Date;
@@ -20,6 +20,10 @@ public class SceneCondition {
 
     private Long sceneId;
 
+    /** 节点类型：1-trigger 2-condition */
+    private Integer nodeType;
+
+    /** 1-cron 2-设备属性 */
     private Integer conditionType;
 
     private String userUuid;

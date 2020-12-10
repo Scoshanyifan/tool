@@ -4,8 +4,8 @@ import com.kunbu.common.util.biz.scene.entity.bean.DeviceMqtt;
 import com.kunbu.common.util.biz.scene.constant.SceneCompareTypeEnum;
 import com.kunbu.common.util.biz.scene.constant.SceneConditionTypeEnum;
 import com.kunbu.common.util.biz.scene.entity.bean.SceneCondition;
-import com.kunbu.common.util.biz.scene.entity.condition.CronCondition;
-import com.kunbu.common.util.biz.scene.entity.condition.DeviceAttributeCondition;
+import com.kunbu.common.util.biz.scene.entity.dto.condition.CronCondition;
+import com.kunbu.common.util.biz.scene.entity.dto.condition.DeviceAttributeCondition;
 import org.quartz.CronExpression;
 
 import java.util.Date;

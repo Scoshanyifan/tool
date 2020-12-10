@@ -1,4 +1,4 @@
-package com.kunbu.common.util.biz.scene.entity.device;
+package com.kunbu.common.util.biz.scene.entity.vo;
 
 import lombok.Data;
 

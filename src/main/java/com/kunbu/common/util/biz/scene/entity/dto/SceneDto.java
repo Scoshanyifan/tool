@@ -1,6 +1,7 @@
 package com.kunbu.common.util.biz.scene.entity.dto;
 
 import com.kunbu.common.util.biz.scene.entity.bean.SceneCondition;
+import com.kunbu.common.util.biz.scene.entity.dto.SceneActionDto;
 
 import java.io.Serializable;
 import java.util.List;

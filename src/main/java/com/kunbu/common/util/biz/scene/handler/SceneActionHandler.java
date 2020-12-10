@@ -1,9 +1,9 @@
 package com.kunbu.common.util.biz.scene.handler;
 
-import com.kunbu.common.util.biz.scene.entity.action.SceneActionBase;
-import com.kunbu.common.util.biz.scene.entity.action.DelaySceneAction;
-import com.kunbu.common.util.biz.scene.entity.action.DeviceSceneAction;
-import com.kunbu.common.util.biz.scene.entity.action.NotifySceneAction;
+import com.kunbu.common.util.biz.scene.entity.dto.action.SceneActionBase;
+import com.kunbu.common.util.biz.scene.entity.dto.action.DelaySceneAction;
+import com.kunbu.common.util.biz.scene.entity.dto.action.DeviceSceneAction;
+import com.kunbu.common.util.biz.scene.entity.dto.action.NotifySceneAction;
 
 import java.util.ArrayList;
 import java.util.List;
