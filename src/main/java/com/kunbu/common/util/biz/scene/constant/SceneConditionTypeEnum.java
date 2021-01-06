@@ -2,9 +2,10 @@ package com.kunbu.common.util.biz.scene.constant;
 
 public enum SceneConditionTypeEnum {
 
-    CRON(1),
-    DEVICE_ATTR(2),
-
+    TIME_POINT(1),
+    TIME_RANGE(2),
+    DEVICE_ATTR(3),
+    WEATHER(4),
     ;
 
     private Integer conditionType;

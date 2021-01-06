@@ -44,7 +44,8 @@ public class StringTest {
      *
      **/
     public static String testStringBuilder(List<String> items, String delimiter, String prefix, String suffix) {
-        StringBuilder builder = new StringBuilder(prefix);
+        StringBuilder builder = new StringBuilder();
+        builder.append(prefix);
         if (!CollectionUtils.isEmpty(items)) {
             items.stream().forEach(x -> builder.append(x).append(delimiter));
             //去除最后一个逗号
@@ -199,7 +200,7 @@ public class StringTest {
     public static void main(String[] args) {
 
         System.out.println(testStringBuilder(AREA_LIST, SPLITTER, PREFIX, SUFFIX));
-        System.out.println(testStringJoiner(AREA_LIST, SPLITTER, PREFIX, SUFFIX));
+        System.out.println(testStringJoiner(AREA_LIST, SPLITTER, "", ""));
         System.out.println(testCollectorsJoining(null, SPLITTER, PREFIX, SUFFIX));
 
 

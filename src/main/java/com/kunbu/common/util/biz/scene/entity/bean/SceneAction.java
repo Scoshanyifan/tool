@@ -1,11 +1,5 @@
 package com.kunbu.common.util.biz.scene.entity.bean;
 
-import com.alibaba.fastjson.JSONObject;
-import com.kunbu.common.util.biz.scene.constant.SceneActionTypeEnum;
-import com.kunbu.common.util.biz.scene.entity.dto.action.SceneActionBase;
-import com.kunbu.common.util.biz.scene.entity.dto.action.DelaySceneAction;
-import com.kunbu.common.util.biz.scene.entity.dto.action.DeviceSceneAction;
-import com.kunbu.common.util.biz.scene.entity.dto.action.NotifySceneAction;
 import lombok.Data;
 
 import java.util.Date;
@@ -17,42 +11,40 @@ import java.util.Date;
 @Data
 public class SceneAction {
 
+    public static final Integer DELAY_MIN = 1;
+    public static final Integer DELAY_MAX = 3600;
+
     private Long id;
 
     private Long sceneId;
 
     private String userUuid;
 
-    private String productKey;
-
-    private String deviceUuid;
+    private Integer sort;
 
     /** 1-延时 2-设备属性 3-通知*/
     private Integer actionType;
 
-    private Integer sort;
+    /** 1-3600 */
+    private Integer delaySecond;
 
-    private String actionJson;
+    private String content;
+
+    private String productKey;
+
+    private String deviceUuid;
+
+    private Long sceneAttributeId;
+
+    private String attributeKey;
+
+    private String expectValue;
+
+    private Integer dataType;
 
     private Date createTime;
 
     private Date updateTime;
 
-    public SceneActionBase getAction() {
-        SceneActionTypeEnum sceneActionTypeEnum = SceneActionTypeEnum.of(actionType);
-        switch (sceneActionTypeEnum) {
-            case DEVICE_ATTR:
-                DeviceSceneAction deviceAction = JSONObject.parseObject(this.actionJson, DeviceSceneAction.class);
-                return deviceAction;
-            case DELAY:
-                DelaySceneAction delayActionItem = JSONObject.parseObject(this.actionJson, DelaySceneAction.class);
-                return delayActionItem;
-            case NOTIFY:
-                NotifySceneAction notifyActionItem = JSONObject.parseObject(this.actionJson, NotifySceneAction.class);
-                return notifyActionItem;
-            default:
-                return null;
-        }
-    }
 
 }

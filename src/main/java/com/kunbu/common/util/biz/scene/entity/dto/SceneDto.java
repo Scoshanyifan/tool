@@ -19,8 +19,8 @@ public class SceneDto implements Serializable {
     private String sceneName;
     /** 场景描述 */
     private String sceneDesc;
-    /** 是否开启 0-关 1-开 */
-    private Integer sceneSwitch;
+    /** 自动化开关 0-关 1-开 */
+    private Integer autoSwitch;
     /** 场景图标 */
     private String sceneIcon;
 
@@ -28,12 +28,13 @@ public class SceneDto implements Serializable {
 
     /** true-同时满足才触发 */
     private Boolean triggerAll;
-    private List<SceneCondition> triggerList;
+    private List<SceneConditionDto> triggerList;
 
     /** true-同时满足条件才执行 */
     private Boolean conditionAll;
-    private List<SceneCondition> conditionList;
+    private List<SceneConditionDto> conditionList;
 
     private List<SceneActionDto> actionList;
+
 
 }

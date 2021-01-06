@@ -172,3 +172,9 @@ mail:
     mail.smtp.starttls.enable: false
     mail.smtp.socketFactory.fallback: false
     mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+
+qiniu:
+  accessKey: SHbatWUfOdBBbR_Nzk_0NcAtFhU84bs9V_x-EMGU
+  secretKey: 0Tye20o0GShSIhbNOWY7bQyeb8s19DsuksuroCQq
+  bucket: xj-yun-bucket
+  url: s.y.xiaojiang.cc

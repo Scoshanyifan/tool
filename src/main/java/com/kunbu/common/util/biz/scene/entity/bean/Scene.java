@@ -12,19 +12,22 @@ import java.util.Date;
 @Data
 public class Scene implements Serializable {
 
+    public static final Integer SCENE_TYPE_MANUL = 0;
+    public static final Integer SCENE_TYPE_AUTO = 1;
+
     private Long id;
+
     /** 0-手动 1-自动 */
     private Integer sceneType;
-    /** 场景名称 */
+
     private String sceneName;
-    /** 场景描述 */
-    private String sceneDesc;
-    /** 是否开启 0-关 1-开 */
-    private Integer sceneSwitch;
-    /** 场景图标 */
+
     private String sceneIcon;
 
-    private Integer sort;
+    private String sceneDesc;
+
+    /** 是否开启 0-关 1-开 */
+    private Integer autoSwitch;
 
     /** 1-同时满足才触发 */
     private Integer triggerAll;
@@ -34,9 +37,7 @@ public class Scene implements Serializable {
 
     private String userUuid;
 
-    private String deviceUuid;
-
-    private String productKey;
+    private Integer sort;
 
     private Date createTime;
 

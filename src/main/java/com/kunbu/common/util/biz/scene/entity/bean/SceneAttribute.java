@@ -38,6 +38,10 @@ public class SceneAttribute {
     /** 原始属性id */
     private Long attributeId;
 
+    private String attributeKey;
+
+    private String attributeName;
+
     /**
      * 布尔/枚举类型：选择具体item作为单独条件
      *      布尔：{"0":"关闭"} / {"0":"关闭","1":"打开"}
@@ -58,6 +62,7 @@ public class SceneAttribute {
      **/
     private String attributeValue;
 
+    /** 自动化属性状态，0-删除，1-使用，2-停用 */
     private Integer state;
 
     private Date createTime;

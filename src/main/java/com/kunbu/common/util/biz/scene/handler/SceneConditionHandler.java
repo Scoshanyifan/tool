@@ -1,12 +1,11 @@
 package com.kunbu.common.util.biz.scene.handler;
 
+import com.kunbu.common.util.basic.CronUtil;
+import com.kunbu.common.util.biz.scene.constant.SceneConditionTypeEnum;
 import com.kunbu.common.util.biz.scene.entity.bean.DeviceMqtt;
 import com.kunbu.common.util.biz.scene.constant.SceneCompareTypeEnum;
-import com.kunbu.common.util.biz.scene.constant.SceneConditionTypeEnum;
 import com.kunbu.common.util.biz.scene.entity.bean.SceneCondition;
-import com.kunbu.common.util.biz.scene.entity.dto.condition.CronCondition;
 import com.kunbu.common.util.biz.scene.entity.dto.condition.DeviceAttributeCondition;
-import org.quartz.CronExpression;
 
 import java.util.Date;
 import java.util.List;
@@ -28,10 +27,6 @@ public class SceneConditionHandler {
                 case DEVICE_ATTR:
                     DeviceAttributeCondition deviceAttributeCondition = (DeviceAttributeCondition) sceneCondition.getCondition();
                     check = checkDeviceAttribute(deviceMqtt.getData(), deviceAttributeCondition);
-                    break;
-                case CRON:
-                    CronCondition cronCondition = (CronCondition) sceneCondition.getCondition();
-                    check = checkCronExpression(new Date(), cronCondition);
                     break;
                 default:
                     check = false;
@@ -84,26 +79,5 @@ public class SceneConditionHandler {
         return false;
     }
 
-    /**
-     * 校验时间条件
-     *
-     * @param date
-     * @param cronCondition
-     **/
-    private static boolean checkCronExpression(Date date, CronCondition cronCondition) {
-        try {
-            CronExpression cronExpression = new CronExpression(cronCondition.getCronStr());
-            return cronExpression.isSatisfiedBy(date);
-        } catch (Exception e) {
-            // TODO ERROR
-        }
-        return false;
-    }
-
-    public static void main(String[] args) throws Exception {
-        CronCondition cronCondition = new CronCondition();
-        cronCondition.setCronStr("* * 9-10 * * ?");
-        System.out.println(checkCronExpression(new Date(), cronCondition));
-    }
 
 }
