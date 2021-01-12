@@ -70,6 +70,45 @@ public class TimeUtil {
     }
 
     /**
+     * 计算指定范围0点到24点
+     *
+     * @param day
+     * @param type 1-1天，2-7天，3-30天
+     * @return
+     */
+    public static List<Date> getRangeBeginEnd(Date day, Integer type) {
+        Calendar calendar = Calendar.getInstance();
+        if (day != null) {
+            calendar.setTime(day);
+        }
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        Date end = calendar.getTime();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        Date begin = calendar.getTime();
+        if (type == 1) {
+
+        } else if (type == 2) {
+            calendar.add(Calendar.DATE, -6);
+            begin = calendar.getTime();
+        } else if (type == 3) {
+            calendar.add(Calendar.DATE, -29);
+            begin = calendar.getTime();
+        } else {
+
+        }
+        List<Date> beginEndList = new ArrayList<>();
+        beginEndList.add(begin);
+        beginEndList.add(end);
+        return beginEndList;
+    }
+
+    /**
      * 计算指定月份第一天0点或最后一天24点（不传year和month默认获取当前月）
      *
      * @param year
@@ -198,6 +237,11 @@ public class TimeUtil {
         System.out.println("-----------------getDayBeginOrEnd-------------------");
         System.out.println("day 0': " + getDayBeginOrEnd(new Date(), true));
         System.out.println("day 24': " + getDayBeginOrEnd(null, false));
+
+        System.out.println("-----------------getRangeBeginEnd-------------------");
+        System.out.println("1: " + getRangeBeginEnd(new Date(), 1));
+        System.out.println("7: " + getRangeBeginEnd(new Date(), 2));
+        System.out.println("30': " + getRangeBeginEnd(new Date(), 3));
 
         System.out.println("-----------------printCalendarInfo----------------------");
         Calendar calendar = Calendar.getInstance();

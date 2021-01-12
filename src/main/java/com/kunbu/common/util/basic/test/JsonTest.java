@@ -30,5 +30,9 @@ public class JsonTest {
         System.out.println(jsonMap.toJSONString());
 
 
+        String mapJsonStr = JSONObject.toJSONString(map);
+        System.out.println(mapJsonStr);
+        Map<String, Object> mapRes = JSONObject.parseObject(mapJsonStr, Map.class);
+        System.out.println(mapRes);
     }
 }
