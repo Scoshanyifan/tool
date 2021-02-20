@@ -129,6 +129,9 @@ public class BigDecimalUtil {
         return div(value1, value2, scale, DEFAULT_ROUND_MODE);
     }
 
+    /**
+     * 如果计算百分比，需要 * BigDecimal(100)再doubleValue()
+     **/
     public static double div(double value1, double value2, int scale, int roundMode) {
         BigDecimal b1 = new BigDecimal(Double.toString(value1));
         BigDecimal b2 = new BigDecimal(Double.toString(value2));
@@ -220,7 +223,7 @@ public class BigDecimalUtil {
         System.out.println("整数除" + div(2, 3, 2));
 
         System.out.println("小数除" + div(20.00, 0.01, 0));
-        System.out.println("除法返回double" + div(1500, 100, 3));
+        System.out.println("除法返回double" + div(4, 29, 2));
         // 如果要15.000这种效果，把doubleValue()改成toString()
         System.out.println("除法返回string" + div2Str(1500, 100, 3));
 

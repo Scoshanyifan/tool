@@ -9,8 +9,10 @@ server:
 spring:
   data:
     mongodb:
+      # 如果uri最后不跟具体的db，则这个账号表示admin下（source=admin）
       uri: mongodb://tool:tool@localhost:27017/tool
 #            uri: mongodb://tool:tool@172.31.10.64:27017/tool
+
 #            uri: mongodb://localhost/tool
 #            port: 27017
 #            username: kunbu

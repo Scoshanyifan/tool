@@ -302,23 +302,6 @@ public class ByteUtil {
         return Integer.parseInt(hexStr, 16);
     }
 
-    public static int[] hexString2IntArr(String hexStr) {
-        int[] all = new int[hexStr.length() * 2];
-        char[] crs = hexStr.toCharArray();
-        for (int i = 0; i < crs.length; i++) {
-            String hex = new String(new char[]{crs[i]});
-            System.out.println(hex);
-            if (hex.equals("0")) {
-                all[i] = 0;
-            } else {
-                int b = Integer.parseInt(hex, 16) & 0xff;
-                System.out.println(b);
-                all[i] = b;
-            }
-        }
-        System.out.println(Arrays.toString(all));
-        return null;
-    }
 
     public static void testJavaAPI() {
         int b = 284;
@@ -381,6 +364,10 @@ public class ByteUtil {
 
 
         System.out.println(unsigned2javaByte(129));
+
+        System.out.println(hexString2Int("00026be1"));
+        System.out.println(hexString2Int("7a270d16"));
+        System.out.println(hexString2Int("8bfdc82c"));
     }
 
 }

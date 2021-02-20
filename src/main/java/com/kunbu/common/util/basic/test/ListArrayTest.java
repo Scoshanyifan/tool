@@ -1,5 +1,7 @@
 package com.kunbu.common.util.basic.test;
 
+import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,6 +22,7 @@ public class ListArrayTest {
 
         testArray2List();
         testList2Array();
+        listSub();
     }
 
     public static void testArray2List() {
@@ -51,6 +54,11 @@ public class ListArrayTest {
         //2. list.toArray(T[])  不能用list.toArray()，返回的是Object[]数组
         String[] array =  list.toArray(new String[list.size()]);
         System.out.println(Arrays.toString(array));
+    }
+
+    public static void listSub() {
+        List<String> list = Lists.newArrayList("apple", "pear", "watermelon", "orange");
+        System.out.println(list.subList(0,2));
     }
 
 }

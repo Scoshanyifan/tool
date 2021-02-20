@@ -20,7 +20,7 @@ import java.util.List;
  * @author scosyf
  */
 @Deprecated
-public class TimeUtil {
+public class DateUtil {
 
     /**
      * 计算指定月份天数（不传year,和month默认获取当前月份现有天数）
@@ -73,10 +73,10 @@ public class TimeUtil {
      * 计算指定范围0点到24点
      *
      * @param day
-     * @param type 1-1天，2-7天，3-30天
+     * @param beforeDay 往前推几天：1天，7天，30天
      * @return
      */
-    public static List<Date> getRangeBeginEnd(Date day, Integer type) {
+    public static List<Date> getRangeBeginEnd(Date day, Integer beforeDay) {
         Calendar calendar = Calendar.getInstance();
         if (day != null) {
             calendar.setTime(day);
@@ -91,16 +91,9 @@ public class TimeUtil {
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         Date begin = calendar.getTime();
-        if (type == 1) {
-
-        } else if (type == 2) {
-            calendar.add(Calendar.DATE, -6);
+        if (beforeDay != null) {
+            calendar.add(Calendar.DATE, 1 - beforeDay);
             begin = calendar.getTime();
-        } else if (type == 3) {
-            calendar.add(Calendar.DATE, -29);
-            begin = calendar.getTime();
-        } else {
-
         }
         List<Date> beginEndList = new ArrayList<>();
         beginEndList.add(begin);
@@ -240,14 +233,19 @@ public class TimeUtil {
 
         System.out.println("-----------------getRangeBeginEnd-------------------");
         System.out.println("1: " + getRangeBeginEnd(new Date(), 1));
-        System.out.println("7: " + getRangeBeginEnd(new Date(), 2));
-        System.out.println("30': " + getRangeBeginEnd(new Date(), 3));
+        System.out.println("7: " + getRangeBeginEnd(new Date(), 7));
+        System.out.println("30': " + getRangeBeginEnd(new Date(), 30));
 
         System.out.println("-----------------printCalendarInfo----------------------");
         Calendar calendar = Calendar.getInstance();
         System.out.println("current time: " + calendar.getTime());
         System.out.println("current year: " + calendar.get(Calendar.YEAR));
         System.out.println("current month: " + (calendar.get(Calendar.MONTH) + 1));
+        System.out.println("current day: " + calendar.get(Calendar.DATE));
+        System.out.println("day of the month: " + calendar.get(Calendar.DAY_OF_MONTH));
+        System.out.println("max day of the month: " + calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+        calendar.set(Calendar.MONTH, 1);
         System.out.println("current day: " + calendar.get(Calendar.DATE));
         System.out.println("day of the month: " + calendar.get(Calendar.DAY_OF_MONTH));
         System.out.println("max day of the month: " + calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
