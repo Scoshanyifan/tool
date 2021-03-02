@@ -1,6 +1,5 @@
 package com.kunbu.common.util.tool.sql.mongo;
 
-import com.kunbu.common.util.basic.DateUtil;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
@@ -140,8 +139,8 @@ public class MongoCriteriaUtil {
     public static Criteria dateCompare(String field, Date start, Date end, boolean plus8Hours) {
         if (start != null && end != null) {
             if (plus8Hours) {
-                return Criteria.where(field).gte(DateUtil.plusHours(start, 8))
-                        .andOperator(Criteria.where(field).lte(DateUtil.plusHours(end, 8)));
+                return Criteria.where(field).gte(new Date(start.getTime() + 24 * 3600 * 1000L))
+                        .andOperator(Criteria.where(field).lte(new Date(end.getTime() + 24 * 3600 * 1000L)));
             } else {
                 return Criteria.where(field).gte(start)
                         .andOperator(Criteria.where(field).lte(end));

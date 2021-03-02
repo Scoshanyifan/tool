@@ -114,7 +114,7 @@ public class CronUtil {
             cronItemArr[2] = hourMinuteEnd[0];
             cronItemArr[1] = "0" + CRON_INTERVAL_SPLITTER + hourMinuteEnd[1];
             cronList.add(convertCronItemArr(cronItemArr));
-        } else if (hourDelta == 1){
+        } else if (hourDelta == 1) {
             // 08:23 - 09:47
             cronItemArr[2] = hourMinuteStart[0];
             cronItemArr[1] = hourMinuteStart[1] + CRON_INTERVAL_SPLITTER + "59";
@@ -122,11 +122,13 @@ public class CronUtil {
             cronItemArr[2] = hourMinuteEnd[0];
             cronItemArr[1] = "0" + CRON_INTERVAL_SPLITTER + hourMinuteEnd[1];
             cronList.add(convertCronItemArr(cronItemArr));
-        } else {
+        } else if (hourDelta == 0) {
             // 08:23 - 08:47
             cronItemArr[2] = hourMinuteStart[0];
             cronItemArr[1] = hourMinuteStart[1] + CRON_INTERVAL_SPLITTER + hourMinuteEnd[1];
             cronList.add(convertCronItemArr(cronItemArr));
+        } else {
+            throw new RuntimeException("bad time params");
         }
         return cronList;
     }

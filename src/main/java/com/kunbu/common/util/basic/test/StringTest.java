@@ -197,6 +197,7 @@ public class StringTest {
         return Integer.parseInt(builder.toString());
     }
 
+
     public static void main(String[] args) {
 
         System.out.println(testStringBuilder(AREA_LIST, SPLITTER, PREFIX, SUFFIX));
@@ -228,6 +229,7 @@ public class StringTest {
         System.out.println();
         System.out.println(handleVersion("1.0.2_22"));
         System.out.println(handleVersion("3.1.2"));
+
 
     }
 }

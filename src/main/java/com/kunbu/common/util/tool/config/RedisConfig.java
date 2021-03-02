@@ -7,6 +7,7 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,16 +41,14 @@ public class RedisConfig {
     private static final Logger logger = LoggerFactory.getLogger(RedisConfig.class);
 
     /**
-     * 配置事件监听容器（用于key的过期，设置，删除事件通知）
+     * 配置数据源
      *
-     * http://redisdoc.com/topic/notification.html
-     *
-     **/
+     * @return
+     */
     @Bean
-    RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory) {
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        return container;
+    @ConfigurationProperties(prefix = "spring.redis")
+    public RedisStandaloneConfiguration redisConfiguration() {
+        return new RedisStandaloneConfiguration();
     }
 
     /**
@@ -61,17 +60,6 @@ public class RedisConfig {
     @ConfigurationProperties(prefix = "spring.redis.lettuce.pool")
     public GenericObjectPoolConfig redisPool() {
         return new GenericObjectPoolConfig<>();
-    }
-
-    /**
-     * 配置数据源
-     *
-     * @return
-     */
-    @Bean
-    @ConfigurationProperties(prefix = "spring.redis")
-    public RedisStandaloneConfiguration redisConfiguration() {
-        return new RedisStandaloneConfiguration();
     }
 
     /**
@@ -146,6 +134,20 @@ public class RedisConfig {
     @Bean("redisTemplate2")
     public RedisTemplate<String, Object> redisTemplate2(@Qualifier("factory2") RedisConnectionFactory factory2) {
         return createRedisTemplate(factory2);
+    }
+
+
+    /**
+     * 配置事件监听容器（用于key的过期，设置，删除事件通知）
+     *
+     * http://redisdoc.com/topic/notification.html
+     *
+     **/
+    @Bean
+    RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        return container;
     }
 
 }

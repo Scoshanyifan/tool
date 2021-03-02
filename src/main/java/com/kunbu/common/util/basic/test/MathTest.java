@@ -80,5 +80,11 @@ public class MathTest {
         System.out.println(Math.round(-10.51)); //-11
         System.out.println(Math.round(-10.6));  //-11
         System.out.println(Math.round(-10.2));  //-10
+
+
+
+        System.out.println(10 % 3);
+        System.out.println(10 / 3);
+
     }
 }
