@@ -26,13 +26,12 @@ public class ExecutorUtil {
             new ThreadFactoryBuilder().setNameFormat("kunbu-pool-%d").build(),
             // 拒绝策略，这里是丢弃
             new ThreadPoolExecutor.AbortPolicy()) {
-
-        @Override
-        protected void afterExecute(Runnable r, Throwable t) {
-            if (t instanceof RejectedExecutionException) {
-                LOGGER.error(">>> ExecutorUtil reject task, r:{}, t:{}", r.toString(), t.getLocalizedMessage(), t);
-            }
-        }
+                @Override
+                protected void afterExecute(Runnable r, Throwable t) {
+                    if (t instanceof RejectedExecutionException) {
+                        LOGGER.error(">>> ExecutorUtil reject task, r:{}, t:{}", r.toString(), t.getLocalizedMessage(), t);
+                    }
+                }
     };
 
     /**
@@ -47,5 +46,18 @@ public class ExecutorUtil {
     public static Future submitTask(Runnable runnable) {
 
         return pool.submit(runnable);
+    }
+
+    public static ExecutorService generatePool(String poolName, int corePoolSize, int maximumPoolSize) {
+        return new ThreadPoolExecutor(
+                corePoolSize,
+                maximumPoolSize,
+                0L,
+                TimeUnit.MILLISECONDS,
+                new LinkedBlockingDeque<>(1024),
+                new ThreadFactoryBuilder().setNameFormat(poolName + "-%d").build(),
+                // 拒绝策略，这里是丢弃
+                new ThreadPoolExecutor.AbortPolicy()
+        );
     }
 }

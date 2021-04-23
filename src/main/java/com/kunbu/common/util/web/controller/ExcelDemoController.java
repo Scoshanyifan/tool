@@ -79,7 +79,8 @@ public class ExcelDemoController {
     @ResponseBody
     public void exportExcelTemplate(HttpServletRequest request, HttpServletResponse response) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ExcelExportUtil.exportExcelTemplate(importHeaders, baos);
+//        ExcelExportUtil.exportExcelTemplate(importHeaders, baos);
+        ExcelExportUtil.exportExcelTemplate(exportHeaders, baos);
         byte[] content = baos.toByteArray();
         FileUtil.download(request, response, content, EXCEL_TEMPLATE_FILENAME + "." + ExcelConst.EXCEL_XLSX_2007);
     }

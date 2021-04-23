@@ -94,7 +94,8 @@ public class MongoCriteriaUtil {
         if (field != null && regex != null) {
             return Criteria.where(field).regex(regex);
         } else {
-            return new Criteria();
+//            return new Criteria();
+            return null;
         }
     }
 
@@ -109,7 +110,8 @@ public class MongoCriteriaUtil {
         if (field != null && value != null) {
             return Criteria.where(field).is(value);
         } else {
-            return new Criteria();
+//            return new Criteria();
+            return null;
         }
     }
 
@@ -124,7 +126,8 @@ public class MongoCriteriaUtil {
         if (field != null && value != null) {
             return Criteria.where(field).is(value);
         } else {
-            return new Criteria();
+//            return new Criteria();
+            return null;
         }
     }
 
@@ -146,7 +149,8 @@ public class MongoCriteriaUtil {
                         .andOperator(Criteria.where(field).lte(end));
             }
         } else {
-            return new Criteria();
+//            return new Criteria();
+            return null;
         }
     }
 
@@ -162,7 +166,8 @@ public class MongoCriteriaUtil {
         if (min != null && max != null) {
             return Criteria.where(name).gte(min).andOperator(Criteria.where(name).lte(max));
         } else {
-            return new Criteria();
+//            return new Criteria();
+            return null;
         }
     }
 

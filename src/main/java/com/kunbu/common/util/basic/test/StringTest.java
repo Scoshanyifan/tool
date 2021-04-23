@@ -231,5 +231,16 @@ public class StringTest {
         System.out.println(handleVersion("3.1.2"));
 
 
+
+
+        String topic = "/up_raw_reply/ctt293/AJO2XXylRN1ZzZEd3SdC";
+        String topic2 = "/ctt293/AJO2XXylRN1ZzZEd3SdC/up_raw_reply";
+        String topic3 = "/ctt293/AJO2XXylRN1ZzZEd3SdC/up_raw";
+        System.out.println(topic.startsWith("/up_raw"));
+        System.out.println(topic.startsWith("/up_raw/"));
+        System.out.println(topic2.endsWith("/up_raw"));
+        System.out.println(topic3.endsWith("/up_raw"));
+
+
     }
 }

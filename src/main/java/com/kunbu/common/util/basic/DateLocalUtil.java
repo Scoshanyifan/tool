@@ -1,9 +1,12 @@
 package com.kunbu.common.util.basic;
 
+import com.google.common.collect.Lists;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * @author kunbu
@@ -43,5 +46,14 @@ public class DateLocalUtil {
         System.out.println(endLocalTime);
 
         splitHourMin("22:30-06:30");
+
+
+        List<LocalDateTime> dates = Lists.newArrayList();
+        LocalDateTime current = LocalDateTime.now();
+        for (int i = 0; i < 4; i++) {
+            current = current.plusMinutes(60);
+            dates.add(current);
+        }
+        System.out.println(dates);
     }
 }

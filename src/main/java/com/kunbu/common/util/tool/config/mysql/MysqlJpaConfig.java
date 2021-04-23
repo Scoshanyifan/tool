@@ -1,4 +1,4 @@
-package com.kunbu.common.util.tool.config;
+package com.kunbu.common.util.tool.config.mysql;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import org.springframework.boot.autoconfigure.quartz.QuartzDataSource;
@@ -10,23 +10,25 @@ import org.springframework.context.annotation.Primary;
 import javax.sql.DataSource;
 
 /**
+ * 简单形式的多数据源配置，jpa和quartz
+ *
  * @author kunbu
  * @date 2020/12/4 11:32
+ *
  **/
 @Configuration
-public class MysqlConfig {
+public class MysqlJpaConfig {
 
-    private static final String DATASOURCE_NAME = "dbDataSource";
+    private static final String DATASOURCE_NAME_JPA = "jpaDataSource";
 
     /**
      * 数据源配置的前缀，必须与application.properties中配置的对应数据源的前缀一致
      */
-    private static final String BIZ_DATASOURCE_PREFIX = "spring.datasource.druid.biz";
+    private static final String BIZ_DATASOURCE_PREFIX = "spring.datasource.druid.jpa";
 
     private static final String QUARTZ_DATASOURCE_PREFIX = "spring.datasource.druid.quartz";
 
-    @Primary
-    @Bean(name = DATASOURCE_NAME)
+    @Bean(name = DATASOURCE_NAME_JPA)
     @ConfigurationProperties(prefix = BIZ_DATASOURCE_PREFIX)
     public DruidDataSource druidDataSource() {
         return new DruidDataSource();

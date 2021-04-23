@@ -39,14 +39,30 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
+# 以下是mybatis-plus双数据源
       biz:
         url: jdbc:mysql://127.0.0.1:3306/scosyf?useUnicode=true&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&useAffectedRows=true
+#        url: jdbc:log4jdbc:mysql://127.0.0.1:3306/scosyf?useUnicode=true&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&useAffectedRows=true
+        username: root
+        password: 930628
+#        password:
+#        driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+        driver-class-name: com.mysql.cj.jdbc.Driver
+      mybatis:
+        url: jdbc:mysql://127.0.0.1:3306/mybatis?useUnicode=true&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&useAffectedRows=true
+        username: root
+        password: 930628
+#        password:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+# 以下是jpa双数据源
+      quartz:
+        url: jdbc:mysql://127.0.0.1:3306/quartz?useUnicode=true&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&useAffectedRows=true
         username: root
         password: 930628
         #      password:
         driver-class-name: com.mysql.cj.jdbc.Driver
-      quartz:
-        url: jdbc:mysql://127.0.0.1:3306/quartz?useUnicode=true&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&useAffectedRows=true
+      jpa:
+        url: jdbc:mysql://127.0.0.1:3306/jpa?useUnicode=true&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&useAffectedRows=true
         username: root
         password: 930628
         #      password:
@@ -77,6 +93,8 @@ spring:
         enabled: true
         log-slow-sql: true
         slow-sql-millis: 1
+
+# redis双数据源
   redis:
 #    host: 127.0.0.1 # RedisProperties
     hostName: 127.0.0.1 # RedisStandaloneConfiguration
