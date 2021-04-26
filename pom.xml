@@ -23,7 +23,7 @@
         <zxing.version>3.1.0</zxing.version>
         <javax.mail.version>1.4.7</javax.mail.version>
 
-        <commons-io.version>2.6</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <commons-lang3.version>3.7</commons-lang3.version>
         <guava.version>24.1-jre</guava.version>
         <com.alibaba.version>1.2.49</com.alibaba.version>
