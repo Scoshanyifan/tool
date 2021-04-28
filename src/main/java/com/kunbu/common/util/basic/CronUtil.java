@@ -27,6 +27,22 @@ public class CronUtil {
 
     private static final String HOUR_MINUTE_SPLITTER = ":";
 
+    private static final String ZERO = "0";
+
+    private static final String HOUR_23 = "23";
+
+    private static final String MINUTE_00 = "00";
+
+    private static final String MINUTE_59 = "59";
+
+    private static final String MINUTE_0_59 = "0-59";
+
+    private static final String CRON_WEEK_WEEKEND = "1,7";
+    private static final String CRON_WEEK_WORKDAY = "2,3,4,5,6";
+    private static final String CRON_WEEK_EVERYDAY = "*";
+
+
+
     public static String date2Cron(Date date) {
         if (date != null) {
             return new SimpleDateFormat(CRON_DATE_PATTERN).format(date);
@@ -70,7 +86,7 @@ public class CronUtil {
     /**
      * 时间点转cron
      *
-     * 08:23 执行一次                 >>> * 23 08 19 12 ? 2020
+     * 08:23 执行一次(2020.12.19)     >>> * 23 08 19 12 ? 2020
      * 08:23 工作日                   >>> * 23 08 ? * 2,3,4,5,6 *
      * 08:23 周末                     >>> * 23 08 ? * 1,7 *
      * 08:23 每天                     >>> * 23 08 * * ? *
@@ -82,11 +98,27 @@ public class CronUtil {
         String[] hourMinute = pointTime.split(HOUR_MINUTE_SPLITTER);
         cronItemArr[2] = hourMinute[0];
         cronItemArr[1] = hourMinute[1];
-        return convertCronItemArr(cronItemArr);
+        return convertCronArr2String(cronItemArr);
     }
 
     /**
      * 时间段转cron
+     *
+     * 每天8:15 - 8:40
+     *       * 15-40 8 * * ? *
+     * 周末8:15 - 9:30
+     *       * 15-59 8 ? * 1,7 *
+     *       * 0-30 9 ? * 1,7 *
+     * 4.28号8:15 - 12:15
+     *       * 15-59 8 28 4 ? 2020
+     *       * 0-59 9-11 28 4 ? 2020
+     *       * 0-15 12 28 4 ? 2020
+     * 每月1号22:30 - 05:15
+     *       * 30-59 22 1 * ? *
+     *       * 0-59 23 1 * ? *
+     *       * 0-59 0-4 * ? *
+     *       * 0-15 5 1 * ? *
+     *
      **/
     public static List<String> timeRange2Cron(String startTime, String endTime, Integer timeType, List<Integer> dayOfWeek) {
         List<String> cronList = new ArrayList<>();
@@ -97,43 +129,59 @@ public class CronUtil {
         int hourEnd = Integer.parseInt(hourMinuteEnd[0]);
         int hourDelta = hourEnd - hourStart;
         if (hourDelta > 2) {
-            /**
-             * 08:23 - 12:23
-             *
-             * >>> * 23-59 08 19 12 ? 2020
-             * >>> * 0-59 9-11 19 12 ? 2020
-             * >>> * 0-23 12 19 12 ? 2020
-             *
-             **/
             cronItemArr[2] = hourMinuteStart[0];
-            cronItemArr[1] = hourMinuteStart[1] + CRON_INTERVAL_SPLITTER + "59";
-            cronList.add(convertCronItemArr(cronItemArr));
+            cronItemArr[1] = convertMinuteStartEnd(hourMinuteStart[1], MINUTE_59);
+            cronList.add(convertCronArr2String(cronItemArr));
             cronItemArr[2] = Integer.toString(hourStart + 1) + CRON_INTERVAL_SPLITTER + Integer.toString(hourEnd - 1);
-            cronItemArr[1] = "0-59";
-            cronList.add(convertCronItemArr(cronItemArr));
+            cronItemArr[1] = MINUTE_0_59;
+            cronList.add(convertCronArr2String(cronItemArr));
             cronItemArr[2] = hourMinuteEnd[0];
-            cronItemArr[1] = "0" + CRON_INTERVAL_SPLITTER + hourMinuteEnd[1];
-            cronList.add(convertCronItemArr(cronItemArr));
+            cronItemArr[1] = convertMinuteStartEnd(ZERO, hourMinuteEnd[1]);
+            cronList.add(convertCronArr2String(cronItemArr));
         } else if (hourDelta == 1) {
             // 08:23 - 09:47
             cronItemArr[2] = hourMinuteStart[0];
-            cronItemArr[1] = hourMinuteStart[1] + CRON_INTERVAL_SPLITTER + "59";
-            cronList.add(convertCronItemArr(cronItemArr));
+            cronItemArr[1] = convertMinuteStartEnd(hourMinuteStart[1], MINUTE_59);
+            cronList.add(convertCronArr2String(cronItemArr));
             cronItemArr[2] = hourMinuteEnd[0];
-            cronItemArr[1] = "0" + CRON_INTERVAL_SPLITTER + hourMinuteEnd[1];
-            cronList.add(convertCronItemArr(cronItemArr));
+            cronItemArr[1] = convertMinuteStartEnd(ZERO, hourMinuteEnd[1]);
+            cronList.add(convertCronArr2String(cronItemArr));
         } else if (hourDelta == 0) {
             // 08:23 - 08:47
             cronItemArr[2] = hourMinuteStart[0];
-            cronItemArr[1] = hourMinuteStart[1] + CRON_INTERVAL_SPLITTER + hourMinuteEnd[1];
-            cronList.add(convertCronItemArr(cronItemArr));
+            cronItemArr[1] = convertMinuteStartEnd(hourMinuteStart[1], hourMinuteEnd[1]);
+            cronList.add(convertCronArr2String(cronItemArr));
         } else {
-            throw new RuntimeException("bad time params");
+            // 22:30 - 05:15
+            int frontHour = 24 - hourStart;
+            // 23:15 - 23:59 或者 是第一段时间的分钟，必有
+            cronItemArr[2] = hourMinuteStart[0];
+            cronItemArr[1] = convertMinuteStartEnd(hourMinuteStart[1], MINUTE_59);
+            cronList.add(convertCronArr2String(cronItemArr));
+            if (frontHour > 2) {
+                // 17:30 - 23:59
+                cronItemArr[2] = Integer.toString(hourStart + 1) + CRON_INTERVAL_SPLITTER + HOUR_23;
+                cronItemArr[1] = MINUTE_0_59;
+                cronList.add(convertCronArr2String(cronItemArr));
+            } else if (frontHour == 2) {
+                // 22:30 - 23:59
+                cronItemArr[2] = Integer.toString(hourStart + 1);
+                cronItemArr[1] = MINUTE_0_59;
+                cronList.add(convertCronArr2String(cronItemArr));
+            }
+            // 0:00 - 05:15
+            cronItemArr[2] = ZERO + CRON_INTERVAL_SPLITTER + Integer.toString(hourEnd - 1);
+            cronItemArr[1] = MINUTE_0_59;
+            cronList.add(convertCronArr2String(cronItemArr));
+            cronItemArr[2] = hourMinuteEnd[0];
+            cronItemArr[1] = convertMinuteStartEnd(ZERO, hourMinuteEnd[1]);
+            cronList.add(convertCronArr2String(cronItemArr));
         }
         return cronList;
     }
 
     private static String[] cronItemArr(String pointTime, String startTime, String endTime, Integer timeType, List<Integer> dayOfWeek) {
+        // 日期和星期几的默认是?，只能同时存在一个
         String[] cronItemArr = {"*", "*", "*", "?", "*", "?", "*"};
         SceneTimeTypeEnum timeTypeEnum = SceneTimeTypeEnum.of(timeType);
         switch (timeTypeEnum) {
@@ -158,13 +206,13 @@ public class CronUtil {
                 }
                 break;
             case WORK_DAY:
-                cronItemArr[5] = "2,3,4,5,6";
+                cronItemArr[5] = CRON_WEEK_WORKDAY;
                 break;
             case WEEKEND:
-                cronItemArr[5] = "1,7";
+                cronItemArr[5] = CRON_WEEK_WEEKEND;
                 break;
             case EVERYDAY:
-                cronItemArr[3] = "*";
+                cronItemArr[3] = CRON_WEEK_EVERYDAY;
                 break;
             case DAY_OF_WEEK:
                 if (CollectionUtils.isNotEmpty(dayOfWeek)) {
@@ -178,7 +226,17 @@ public class CronUtil {
         return cronItemArr;
     }
 
-    private static String convertCronItemArr(String[] cronItemArr) {
+    private static String convertMinuteStartEnd(String minuteStart, String minuteEnd) {
+        if (ZERO.equals(minuteEnd) || MINUTE_00.equals(minuteEnd)) {
+            return ZERO;
+        } else if (MINUTE_59.equals(minuteStart)) {
+            return MINUTE_59;
+        } else {
+            return minuteStart + CRON_INTERVAL_SPLITTER + minuteEnd;
+        }
+    }
+
+    private static String convertCronArr2String(String[] cronItemArr) {
         StringJoiner joiner = new StringJoiner(" ", "", "");
         for (String cronItem : cronItemArr) {
             joiner.add(cronItem);
@@ -212,6 +270,7 @@ public class CronUtil {
         System.out.println(timePoint2Cron("08:23", 3, null));
         System.out.println(timePoint2Cron("08:23", 4, null));
         System.out.println(timePoint2Cron("08:23", 5, Lists.newArrayList(1,2,3)));
+
         List<String> cronListOnce = timeRange2Cron("08:23", "17:23", 1, null);
         System.out.println(cronListOnce);
         System.out.println(checkDateByCron(new Date(), cronListOnce));
@@ -219,7 +278,13 @@ public class CronUtil {
         System.out.println(timeRange2Cron("08:23", "12:23", 3, null));
         List<String> cronList = timeRange2Cron("08:23", "16:23", 4, null);
         System.out.println(cronList);
+        System.out.println(checkDateByCron(new Date(), cronList));
         System.out.println(timeRange2Cron("08:23", "12:23", 5, Lists.newArrayList(1,2,3)));
+
+        System.out.println(timeRange2Cron("19:23", "06:23", 4, null));
+        System.out.println(timeRange2Cron("23:23", "07:23", 4, null));
+        System.out.println(timeRange2Cron("22:23", "05:23", 4, null));
+        System.out.println(timeRange2Cron("22:59", "05:00", 4, null));
     }
 }
 
