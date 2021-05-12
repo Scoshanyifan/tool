@@ -71,7 +71,7 @@ public class TestConcurrency {
             System.out.println(System.currentTimeMillis() + " [" + Thread.currentThread().getName() + "] - atomic delRes: " + delRes);
             int count = commonMapper.countByCondition(citizenBean.getIdCard(), citizenBean.getAccount());
             System.out.println(System.currentTimeMillis() + " [" + Thread.currentThread().getName() + "] - atomic count: " + count);
-            int saveRes = commonMapper.insertByCheck(citizenBean.getIdCard(), citizenBean.getCity(), citizenBean.getAccount(), citizenBean.getName(),
+            int saveRes = commonMapper.insertByNotExistsNormalField(citizenBean.getIdCard(), citizenBean.getCity(), citizenBean.getAccount(), citizenBean.getName(),
                     citizenBean.getAge(), citizenBean.getAddress(), citizenBean.getPhone(), citizenBean.getCreateTime());
             System.out.println(System.currentTimeMillis() + " [" + Thread.currentThread().getName() + "] - atomic saveRes: " + saveRes);
         }

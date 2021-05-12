@@ -23,6 +23,7 @@ public class ListArrayTest {
         testArray2List();
         testList2Array();
         listSub();
+        testDoubleArray();
     }
 
     public static void testArray2List() {
@@ -59,6 +60,13 @@ public class ListArrayTest {
     public static void listSub() {
         List<String> list = Lists.newArrayList("apple", "pear", "watermelon", "orange");
         System.out.println(list.subList(0,2));
+    }
+
+    public static void testDoubleArray() {
+        int[][] doubleArr = {{1,2,3},{4,5}};
+        System.out.println(Arrays.toString(doubleArr));
+        System.out.println(doubleArr[0][1]);
+
     }
 
 }
