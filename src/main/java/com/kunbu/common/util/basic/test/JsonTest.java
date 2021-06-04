@@ -1,6 +1,7 @@
 package com.kunbu.common.util.basic.test;
 
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.kunbu.common.util.web.ApiResult;
@@ -39,6 +40,20 @@ public class JsonTest {
         System.out.println(mapRes);
     }
 
+    public static void saveMultiLanguageContent(JSONObject lanJson, String bizName, String lanKey, String lanContent) {
+        if (lanContent != null) {
+            Object lanItemObj = lanJson.get(bizName);
+            JSONObject lanItem;
+            if (lanItemObj != null) {
+                lanItem = (JSONObject) JSONObject.toJSON(lanItemObj);
+            } else {
+                lanItem = new JSONObject();
+                lanJson.put(bizName, lanItem);
+            }
+            lanItem.put(lanKey, lanContent);
+        }
+    }
+
     public static void main(String[] args) {
 
 //        testJsonDataType();
@@ -62,6 +77,15 @@ public class JsonTest {
         AttrStructDto dto = JSONUtil.toBean(dataValue, AttrStructDto.class);
         dto.getItems().forEach(System.out::println);
         System.out.println("dto: " + dto);
+
+
+        JSONObject json = new JSONObject();
+        saveMultiLanguageContent(json, "productName", "EN", "light");
+        System.out.println("json: " + json);
+        saveMultiLanguageContent(json, "brandName", "CH", "品牌");
+        System.out.println("json: " + json);
+        saveMultiLanguageContent(json, "brandName", "EN", "brand");
+        System.out.println("json: " + json);
     }
 }
 

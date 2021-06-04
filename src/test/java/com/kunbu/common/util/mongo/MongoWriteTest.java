@@ -95,11 +95,16 @@ public class MongoWriteTest {
     @Test
     public void testUpdateEmbedList() {
         UpdateResult result = mongoTemplate.updateFirst(
-                new Query(Criteria.where("items.goodCode").is("push")),
-                new Update().set("items.$.price", 3.33).set("items.$.quantity", 1999),
+                new Query(Criteria.where("_id").is("601921d7024bfd6c7fab2e50").and("items.goodCode").is("push")),
+                new Update().set("items.$.price", 3.63).set("items.$.quantity", 5999),
                 Order.class
         );
         logger.info(">>> testUpdateEmbedList:{}", result);
+        Order order = mongoTemplate.findOne(
+                new Query(Criteria.where("_id").is("601921d7024bfd6c7fab2e50")),
+                Order.class
+        );
+        logger.info(">>> order:{}", order);
     }
 
     @Test
