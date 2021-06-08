@@ -121,8 +121,8 @@ public class MD5Util {
     }
 
     public static void main(String[] args) {
-        System.out.println(getMD5("100160003200410095"));
-        System.out.println(encodeMD5("10016", "key"));
+        System.out.println(getMD5("100160005200810001"));
+        System.out.println(encodeMD5("100160005200810001", "LIFT"));
 
 
     }
