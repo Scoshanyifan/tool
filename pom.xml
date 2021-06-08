@@ -18,8 +18,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
 
-        <poi.version>3.9</poi.version>
-        <poi.ooxml.version>3.9</poi.ooxml.version>
+        <poi.version>3.17</poi.version>
+        <poi.ooxml.version>3.17</poi.ooxml.version>
         <zxing.version>3.1.0</zxing.version>
         <javax.mail.version>1.4.7</javax.mail.version>
 
@@ -32,6 +32,10 @@
         <org.projectlombok.version>1.18.4</org.projectlombok.version>
 
         <druid.spring.boot.version>1.1.9</druid.spring.boot.version>
+
+        <qiniu.version>[7.2.0, 7.2.99]</qiniu.version>
+
+        <hutool.version>5.4.6</hutool.version>
     </properties>
 
     <dependencies>
@@ -94,14 +98,25 @@
             <version>${druid.spring.boot.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.2.12</version>
+        </dependency>
+        <!-- mybatis -->
+        <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>2.1.0</version>
         </dependency>
         <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>1.2.12</version>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.1.2</version>
+        </dependency>
+        <!-- jpa -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
         <!-- mongo -->
@@ -114,6 +129,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.9.0</version>
         </dependency>
 
         <!-- mail -->
@@ -188,6 +208,52 @@
             <version>${org.projectlombok.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
+        <!--七牛云存储-->
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+            <version>${qiniu.version}</version>
+        </dependency>
+        <!-- netty / quartz -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-common</artifactId>
+            <version>4.1.48.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>org.quartz-scheduler</groupId>-->
+            <!--<artifactId>quartz</artifactId>-->
+            <!--<version>2.2.1</version>-->
+            <!--&lt;!&ndash; Quartz默认需要slf4j支持。springboot中，提供了更高版本的slf4j &ndash;&gt;-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<artifactId>slf4j-api</artifactId>-->
+                    <!--<groupId>org.slf4j</groupId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.quartz-scheduler</groupId>-->
+            <!--<artifactId>quartz</artifactId>-->
+            <!--<version>2.3.2</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.quartz-scheduler</groupId>-->
+            <!--<artifactId>quartz-jobs</artifactId>-->
+            <!--<version>2.3.2</version>-->
+        <!--</dependency>-->
+
     </dependencies>
 
     <build>

@@ -108,13 +108,13 @@ public class RedisManager implements CacheManager {
             if (value instanceof String) {
                 stringRedisTemplate.opsForValue().set(key, (String) value, expire, TimeUnit.SECONDS);
             } else {
-//                stringRedisTemplate.opsForValue().set(key, value, expire, TimeUnit.SECONDS);
+                redisTemplate.opsForValue().set(key, value, expire, TimeUnit.SECONDS);
             }
         } else {
             if (value instanceof String) {
                 stringRedisTemplate.opsForValue().set(key, (String) value);
             } else {
-//                stringRedisTemplate.opsForValue().set(key, value);
+                redisTemplate.opsForValue().set(key, value);
             }
         }
         return true;

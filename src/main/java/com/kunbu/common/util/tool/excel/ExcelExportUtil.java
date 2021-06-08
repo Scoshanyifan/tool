@@ -54,21 +54,21 @@ public class ExcelExportUtil {
             CellStyle style = workbook.createCellStyle();
             DataFormat format = workbook.createDataFormat();
             style.setDataFormat(format.getFormat("@"));
-            style.setAlignment(CellStyle.ALIGN_LEFT);
+            style.setAlignment(HorizontalAlignment.LEFT);
             // 先设置首行
             setHeader(sheet, headers, style);
             // 在首行后面的行设置单元格为文本（默认填充30行，在导入时需要对每行做空检查，因为此时的行是有数据的，即空字符串）
             int headerSize = headers.size();
-            for (int column = 1; column <= ExcelConst.DEFAULT_TEMPLATE_STRING_CELL_ROW; column++) {
-                //从第二行开始
-                Row row = sheet.createRow(column);
-                for (int i = 0; i < headerSize; i++) {
-                    Cell cell = row.createCell(i);
-                    //style和type需要同时设置才能生效
-                    cell.setCellStyle(style);
-                    cell.setCellType(Cell.CELL_TYPE_STRING);
-                }
-            }
+//            for (int column = 1; column <= ExcelConst.DEFAULT_TEMPLATE_STRING_CELL_ROW; column++) {
+//                //从第二行开始
+//                Row row = sheet.createRow(column);
+//                for (int i = 0; i < headerSize; i++) {
+//                    Cell cell = row.createCell(i);
+//                    //style和type需要同时设置才能生效
+//                    cell.setCellStyle(style);
+//                    cell.setCellType(Cell.CELL_TYPE_STRING);
+//                }
+//            }
             try {
                 workbook.write(out);
                 out.flush();
@@ -106,7 +106,7 @@ public class ExcelExportUtil {
             Sheet sheet = workbook.createSheet("sheet");
             //设置样式
             CellStyle style = workbook.createCellStyle();
-            style.setAlignment(CellStyle.ALIGN_LEFT);
+            style.setAlignment(HorizontalAlignment.LEFT);
             //设置默认width
             sheet.setDefaultColumnWidth(30);
             //设置首行
@@ -174,7 +174,7 @@ public class ExcelExportUtil {
             Sheet sheet = workbook.createSheet("sheet");
             //设置样式
             CellStyle style = workbook.createCellStyle();
-            style.setAlignment(CellStyle.ALIGN_LEFT);
+            style.setAlignment(HorizontalAlignment.LEFT);
             //设置默认width
             sheet.setDefaultColumnWidth(20);
             //设置首行

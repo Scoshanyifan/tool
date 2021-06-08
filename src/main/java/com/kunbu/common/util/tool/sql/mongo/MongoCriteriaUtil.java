@@ -1,6 +1,5 @@
 package com.kunbu.common.util.tool.sql.mongo;
 
-import com.kunbu.common.util.basic.TimeUtil;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
@@ -95,7 +94,8 @@ public class MongoCriteriaUtil {
         if (field != null && regex != null) {
             return Criteria.where(field).regex(regex);
         } else {
-            return new Criteria();
+//            return new Criteria();
+            return null;
         }
     }
 
@@ -110,7 +110,8 @@ public class MongoCriteriaUtil {
         if (field != null && value != null) {
             return Criteria.where(field).is(value);
         } else {
-            return new Criteria();
+//            return new Criteria();
+            return null;
         }
     }
 
@@ -125,7 +126,8 @@ public class MongoCriteriaUtil {
         if (field != null && value != null) {
             return Criteria.where(field).is(value);
         } else {
-            return new Criteria();
+//            return new Criteria();
+            return null;
         }
     }
 
@@ -140,14 +142,15 @@ public class MongoCriteriaUtil {
     public static Criteria dateCompare(String field, Date start, Date end, boolean plus8Hours) {
         if (start != null && end != null) {
             if (plus8Hours) {
-                return Criteria.where(field).gte(TimeUtil.plusHours(start, 8))
-                        .andOperator(Criteria.where(field).lte(TimeUtil.plusHours(end, 8)));
+                return Criteria.where(field).gte(new Date(start.getTime() + 24 * 3600 * 1000L))
+                        .andOperator(Criteria.where(field).lte(new Date(end.getTime() + 24 * 3600 * 1000L)));
             } else {
                 return Criteria.where(field).gte(start)
                         .andOperator(Criteria.where(field).lte(end));
             }
         } else {
-            return new Criteria();
+//            return new Criteria();
+            return null;
         }
     }
 
@@ -163,7 +166,8 @@ public class MongoCriteriaUtil {
         if (min != null && max != null) {
             return Criteria.where(name).gte(min).andOperator(Criteria.where(name).lte(max));
         } else {
-            return new Criteria();
+//            return new Criteria();
+            return null;
         }
     }
 

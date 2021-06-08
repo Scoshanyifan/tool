@@ -3,7 +3,7 @@ package com.kunbu.common.util.mysql;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.kunbu.common.util.mongo.MongoReadTest;
-import com.kunbu.common.util.tool.sql.mysql.CommonMapper;
+import com.kunbu.common.util.tool.sql.mysql.mybatis.biz.CitizenMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -18,7 +18,7 @@ import java.util.*;
 @SpringBootTest
 public class InitData {
 
-    private static final Logger logger = LoggerFactory.getLogger(MongoReadTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(InitData.class);
 
     private static final String[] cityArr = {"上海", "济南", "海口", "天津", "宁波", "武汉", "成都",
             "温州", "长春", "舟山", "南京", "扬州", "厦门", "德清", "广州", "深圳", "常德", "贵阳"};
@@ -30,7 +30,7 @@ public class InitData {
             "蓝莓", "橘子", "火龙果", "椰子", "草莓"};
 
     @Autowired
-    private CommonMapper commonMapper;
+    private CitizenMapper commonMapper;
 
     @Test
     public void initData() {
@@ -57,7 +57,7 @@ public class InitData {
 
     @Test
     public void initDataDetail() {
-        List<Map<String, Object>> citizenList = commonMapper.selectCtizenList(10000);
+        List<Map<String, Object>> citizenList = commonMapper.selectCitizenList(10000);
         Random r = new Random();
         List<Map<String, Object>> citizenDetailList = new ArrayList<>();
         for (int i = 0; i < citizenList.size(); i++) {

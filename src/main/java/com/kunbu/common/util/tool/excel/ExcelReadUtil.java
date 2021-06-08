@@ -1,5 +1,7 @@
 package com.kunbu.common.util.tool.excel;
 
+import cn.hutool.poi.excel.ExcelReader;
+import cn.hutool.poi.excel.sax.Excel07SaxReader;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -239,6 +241,15 @@ public class ExcelReadUtil {
         } else {
             return null;
         }
+//        if (cell.getCellType() == Cell.CELL_TYPE_BOOLEAN) {
+//            return Boolean.toString(cell.getBooleanCellValue());
+//        } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+//            return Double.toString(cell.getNumericCellValue());
+//        } else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+//            return cell.getStringCellValue();
+//        } else {
+//            return null;
+//        }
     }
 
 }
