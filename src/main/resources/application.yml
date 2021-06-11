@@ -7,10 +7,23 @@ server:
       max-request-size: 100MB
 
 spring:
+# rabbitmq
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+#    publisher-confirms: true
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    # 虚拟host 可以不设置,使用server默认host
+#    virtual-host: /rabbitmq-demo
+
   data:
     mongodb:
       # 如果uri最后不跟具体的db，则这个账号表示admin下（source=admin）
-      uri: mongodb://tool:tool@127.0.0.1:27017/tool
+      uri: mongodb://127.0.0.1:27017/tool
+#      uri: mongodb://tool:tool@127.0.0.1:27017/tool
 #            uri: mongodb://tool:tool@172.31.10.64:27017/tool
 
 #            uri: mongodb://127.0.0.1/tool
@@ -99,7 +112,8 @@ spring:
 #    host: 127.0.0.1 # RedisProperties
     hostName: 127.0.0.1 # RedisStandaloneConfiguration
     port: 6379
-    password: #redis
+#    password: #redis
+    password: '123456'
     # 默认是索引为0的数据库
     database: 1
     # 连接池最大阻塞等待时间（使用负值表示没有限制）
@@ -117,7 +131,8 @@ spring:
   redis2:
     hostName: 127.0.0.1
     port: 6379
-    password: #redis
+#    password: #redis
+    password: '123456'
     database: 2
 
   quartz:
@@ -125,6 +140,7 @@ spring:
     job-store-type: JDBC
     #初始化表结构
     jdbc:
+#      initialize-schema: always
       initialize-schema: never
     # 相关属性配置
     properties:
@@ -136,7 +152,7 @@ spring:
           jobStore:
             class: org.quartz.impl.jdbcjobstore.JobStoreTX
             driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
-            tablePrefix: QRTZ_
+            tablePrefix: qrtz_
             isClustered: false
             clusterCheckinInterval: 10000
             useProperties: false
