@@ -16,8 +16,8 @@ spring:
 #    publisher-confirms: true
     publisher-confirm-type: correlated
     publisher-returns: true
-    # 虚拟host 可以不设置,使用server默认host
-#    virtual-host: /rabbitmq-demo
+    # 虚拟host，需要控制台配置
+    virtual-host: /rabbitmq_demo
 
   data:
     mongodb:

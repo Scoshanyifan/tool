@@ -1,4 +1,4 @@
-package com.kunbu.common.util.biz.rabbitmq;
+package com.kunbu.common.util.biz.rabbitmq.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.kunbu.common.util.biz.rabbitmq.bean.RabbitmqEvent;

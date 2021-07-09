@@ -1,10 +1,12 @@
-package com.kunbu.common.util.biz.rabbitmq;
+package com.kunbu.common.util.biz.rabbitmq.web;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
+import com.kunbu.common.util.biz.rabbitmq.mq.RabbitmqConstant;
+import com.kunbu.common.util.biz.rabbitmq.service.RabbitmqEventService;
 import com.kunbu.common.util.biz.rabbitmq.bean.RabbitmqDto;
-import com.kunbu.common.util.biz.rabbitmq.config.RabbitmqConstant;
 import com.kunbu.common.util.web.ApiResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
@@ -56,7 +58,7 @@ public class RabbitmqProduceController {
         rabbitmqEventService.saveEvent(JSONUtil.toJsonStr(rabbitmqDto), rabbitmqDto.getCorrelationId());
         rabbitTemplate.convertAndSend(
                 RabbitmqConstant.EXCHANGE,
-                RabbitmqConstant.QUEUE_VEHICLE,
+                RabbitmqConstant.ROUTING_KEY_VEHICLE,
                 JSONUtil.toJsonStr(rabbitmqDto),
                 message -> message,
                 new CorrelationData(rabbitmqDto.getCorrelationId())
@@ -81,7 +83,7 @@ public class RabbitmqProduceController {
         rabbitmqEventService.saveEvent(JSONUtil.toJsonStr(rabbitmqDto), rabbitmqDto.getCorrelationId());
         rabbitTemplate.convertAndSend(
                 RabbitmqConstant.EXCHANGE,
-                RabbitmqConstant.QUEUE_CAR,
+                RabbitmqConstant.ROUTING_KEY_CAR,
                 JSONUtil.toJsonStr(rabbitmqDto),
                 message -> message,
                 new CorrelationData(rabbitmqDto.getCorrelationId())
@@ -117,7 +119,7 @@ public class RabbitmqProduceController {
     @PostMapping("/save")
     public ApiResult save(@RequestBody RabbitmqDto dto) {
         log.info(">>> dto:{}", dto);
-
+        log.info("进场:{}",JSON.toJSONString(dto));
         return ApiResult.success();
     }
 }

@@ -3,6 +3,7 @@ package com.kunbu.common.util.tool.excel;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.sax.Excel07SaxReader;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -17,8 +18,10 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 读取excel
@@ -99,10 +102,34 @@ public class ExcelReadUtil {
      *
      * @param in 输入流
      * @param originalFileName 文件原始名
+     * @param clazz 通过注解来读取字段
+     * @see ExcelAnnotation
+     * @author kunbu
+     * @date 2019/11/8 10:30
+     **/
+    public static List<List<String>> readExcelSimpleWithEntityHeader(InputStream in, String originalFileName, Class clazz) {
+        List<String> headers = Lists.newArrayList();
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            ExcelAnnotation annotation = field.getAnnotation(ExcelAnnotation.class);
+            if (annotation != null) {
+                headers.add(annotation.title());
+            }
+        }
+        return readExcelSimpleWithHeader(in, originalFileName, headers);
+    }
+
+
+    /**
+     * 简单读取excel（单sheet）
+     *
+     * @param in 输入流
+     * @param originalFileName 文件原始名
      * @param headers 若不为空，则会跳过头行返回数据；若headers为null，会顺带返回首行
      * @author kunbu
      * @date 2019/11/8 10:30
      **/
+    @Deprecated
     public static List<List<String>> readExcelSimpleWithHeader(InputStream in, String originalFileName, List<String> headers) {
         try {
             Workbook workbook;

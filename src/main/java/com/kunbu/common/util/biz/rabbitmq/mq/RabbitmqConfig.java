@@ -1,7 +1,5 @@
-package com.kunbu.common.util.biz.rabbitmq.config;
+package com.kunbu.common.util.biz.rabbitmq.mq;
 
-import com.kunbu.common.util.biz.rabbitmq.callback.RabbitmqConfirmCallBack;
-import com.kunbu.common.util.biz.rabbitmq.callback.RabbitmqReturnCallBack;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -68,12 +66,12 @@ public class RabbitmqConfig {
 
     @Bean
     public Binding bindingVehicle() {
-        return BindingBuilder.bind(queueVehicle()).to(exchangeBiz()).with(RabbitmqConstant.QUEUE_VEHICLE);
+        return BindingBuilder.bind(queueVehicle()).to(exchangeBiz()).with(RabbitmqConstant.ROUTING_KEY_VEHICLE);
     }
 
     @Bean
     public Binding bindingCar() {
-        return BindingBuilder.bind(queueCar()).to(exchangeBiz()).with(RabbitmqConstant.QUEUE_CAR);
+        return BindingBuilder.bind(queueCar()).to(exchangeBiz()).with(RabbitmqConstant.ROUTING_KEY_CAR);
     }
 
     /**

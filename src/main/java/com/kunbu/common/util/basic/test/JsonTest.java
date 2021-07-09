@@ -3,10 +3,14 @@ package com.kunbu.common.util.basic.test;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.core.JsonParser;
 import com.google.common.collect.Lists;
 import com.kunbu.common.util.web.ApiResult;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +21,18 @@ import java.util.Map;
  * @create: 2019-12-07 14:48
  **/
 public class JsonTest {
+
+    public static void testLocalDateTime() {
+        LocalDateDto localDateDto = new LocalDateDto();
+        localDateDto.setName("localDateTime");
+        localDateDto.setCreateTime(LocalDateTime.now());
+        localDateDto.setLocalDateTime(LocalDateTime.now());
+
+        String fastJson = JSON.toJSONString(localDateDto);
+        System.out.println("fastJson: " + fastJson);
+        String hutoolJson = JSONUtil.toJsonStr(localDateDto);
+        System.out.println("hutoolJson: " + hutoolJson);
+    }
 
     public static void testJsonDataType() {
         Object result = ApiResult.success();
@@ -57,6 +73,8 @@ public class JsonTest {
     public static void main(String[] args) {
 
 //        testJsonDataType();
+
+        testLocalDateTime();
 
 
         AttrStructDto structDto = new AttrStructDto();
@@ -112,4 +130,16 @@ class AttrStructDto {
     private String attrKey;
     private String attrName;
     private List<AttrDto> items;
+}
+
+@Data
+class LocalDateDto {
+    private String name;
+
+    private LocalDateTime createTime;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime localDateTime;
+
 }

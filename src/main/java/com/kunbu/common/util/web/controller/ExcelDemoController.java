@@ -53,11 +53,14 @@ public class ExcelDemoController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExcelDemoController.class);
 
     /** 导出 */
+    @Deprecated
     private static List<String> exportHeaders =
             Lists.newArrayList("序号", "小区名称", "审核状态", "用户类型", "用户名称", "性别", "身份证号", "手机号", "备注");
+    @Deprecated
     private static List<String> exportKeys =
             Lists.newArrayList("number", "orgName", "auditState", "userType", "userName", "sex", "idCardNum", "userPhone", "userRemark");
     /** 导入（模板） */
+    @Deprecated
     private static List<String> importHeaders =
             Lists.newArrayList("用户类型(业主，租户)", "用户姓名", "性别(男，女)", "身份证号", "手机号", "备注");
 
@@ -141,7 +144,7 @@ public class ExcelDemoController {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
             if (true) {
-                // TODO 动态选择导出字段
+                // TODO 1-动态选择导出字段
                 List<String> showFieldList = Lists.newArrayList("orgName", "userName", "idCardNum", "userPhone", "auditState");
                 List<String> headerList = Lists.newArrayList();
 
@@ -157,21 +160,24 @@ public class ExcelDemoController {
                 ExcelExportUtil.exportExcelSimpleBigData(headerList, showFieldList, dataMap, baos);
                 LOGGER.info(">>> export excel:{}", System.currentTimeMillis() - start);
             } else {
-                // TODO 固定字段的填充数据
+                // TODO 2-固定字段的填充数据
                 start = System.currentTimeMillis();
                 // 手动增加序号
                 int number = 1;
+                // 常量形式过时
+//                List<String> keys = exportKeys;
+                List<String> keys = getExcelHeader(ExcelEntity.class);
                 for (ExcelEntity eb : beanList) {
                     Map<String, Object> dataMap = Maps.newHashMap();
-                    dataMap.put(exportKeys.get(0), number++);
-                    dataMap.put(exportKeys.get(1), eb.getOrgName());
-                    dataMap.put(exportKeys.get(2), eb.getAuditState());
-                    dataMap.put(exportKeys.get(3), eb.getUserType());
-                    dataMap.put(exportKeys.get(4), eb.getUserName());
-                    dataMap.put(exportKeys.get(5), eb.getSex());
-                    dataMap.put(exportKeys.get(6), eb.getIdCardNum());
-                    dataMap.put(exportKeys.get(7), eb.getUserPhone());
-                    dataMap.put(exportKeys.get(8), eb.getUserRemark());
+                    dataMap.put(keys.get(0), number++);
+                    dataMap.put(keys.get(1), eb.getOrgName());
+                    dataMap.put(keys.get(2), eb.getAuditState());
+                    dataMap.put(keys.get(3), eb.getUserType());
+                    dataMap.put(keys.get(4), eb.getUserName());
+                    dataMap.put(keys.get(5), eb.getSex());
+                    dataMap.put(keys.get(6), eb.getIdCardNum());
+                    dataMap.put(keys.get(7), eb.getUserPhone());
+                    dataMap.put(keys.get(8), eb.getUserRemark());
                     dataList.add(dataMap);
                 }
                 LOGGER.info(">>> excel:{}", System.currentTimeMillis() - start);
@@ -190,6 +196,18 @@ public class ExcelDemoController {
         } catch (Exception e) {
             LOGGER.error(">>> exportExcelData fail", e);
         }
+    }
+
+    private List<String> getExcelHeader(Class clazz) {
+        List<String> headers = Lists.newArrayList();
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            ExcelAnnotation annotation = field.getAnnotation(ExcelAnnotation.class);
+            if (annotation != null) {
+                headers.add(annotation.title());
+            }
+        }
+        return headers;
     }
 
     private Map<String, String> getField2Method(Class clazz, List<String> showFields, List<String> headers) {
@@ -226,7 +244,10 @@ public class ExcelDemoController {
         return dataList;
     }
 
-    
+    /**
+     * 改用实体类中的注解
+     */
+    @Deprecated
     private static final List<String> headers = Lists.newArrayList("序号", "订单编号", "资产编号", "产品条码", "RFID",
             "模块IMEI号", "SIM卡号", "模块IMSI号", "WiFi设备号", "蓝牙设备号", "品牌", "型号", "发货日期");
 
@@ -252,7 +273,8 @@ public class ExcelDemoController {
         List<List<String>> dataList = null;
         try {
             input = file.getInputStream();
-            dataList = ExcelReadUtil.readExcelSimpleWithHeader(input, file.getOriginalFilename(), headers);
+//            dataList = ExcelReadUtil.readExcelSimpleWithHeader(input, file.getOriginalFilename(), headers);
+            dataList = ExcelReadUtil.readExcelSimpleWithEntityHeader(input, file.getOriginalFilename(), ExcelEntity.class);
         } catch (Exception e) {
             LOGGER.error(">>> read excel error", e);
         } finally {

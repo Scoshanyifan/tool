@@ -1,8 +1,8 @@
-package com.kunbu.common.util.biz.rabbitmq;
+package com.kunbu.common.util.biz.rabbitmq.mq;
 
 import cn.hutool.json.JSONUtil;
+import com.kunbu.common.util.biz.rabbitmq.service.RabbitmqEventService;
 import com.kunbu.common.util.biz.rabbitmq.bean.RabbitmqDto;
-import com.kunbu.common.util.biz.rabbitmq.config.RabbitmqConstant;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;

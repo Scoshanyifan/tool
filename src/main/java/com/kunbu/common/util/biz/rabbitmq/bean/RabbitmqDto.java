@@ -20,7 +20,7 @@ public class RabbitmqDto implements Serializable {
     private String plateColor;
 
     /**
-     * spring 默认是用jackson解析json，使用localDateTime需要用到，不能使用时间戳，因为内部是数组结构
+     * spring 默认是用jackson解析json，localDateTime需要用到注解进行转换，不能用时间戳作为参数，因为内部是数组结构
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

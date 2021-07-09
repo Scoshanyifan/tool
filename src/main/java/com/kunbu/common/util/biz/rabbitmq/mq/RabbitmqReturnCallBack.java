@@ -1,6 +1,6 @@
-package com.kunbu.common.util.biz.rabbitmq.callback;
+package com.kunbu.common.util.biz.rabbitmq.mq;
 
-import com.kunbu.common.util.biz.rabbitmq.RabbitmqEventService;
+import com.kunbu.common.util.biz.rabbitmq.service.RabbitmqEventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.connection.PublisherCallbackChannel;
