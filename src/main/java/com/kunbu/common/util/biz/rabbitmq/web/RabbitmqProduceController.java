@@ -57,7 +57,7 @@ public class RabbitmqProduceController {
 
         rabbitmqEventService.saveEvent(JSONUtil.toJsonStr(rabbitmqDto), rabbitmqDto.getCorrelationId());
         rabbitTemplate.convertAndSend(
-                RabbitmqConstant.EXCHANGE,
+                RabbitmqConstant.EXCHANGE_VEHICLE,
                 RabbitmqConstant.ROUTING_KEY_VEHICLE,
                 JSONUtil.toJsonStr(rabbitmqDto),
                 message -> message,
@@ -82,7 +82,7 @@ public class RabbitmqProduceController {
 
         rabbitmqEventService.saveEvent(JSONUtil.toJsonStr(rabbitmqDto), rabbitmqDto.getCorrelationId());
         rabbitTemplate.convertAndSend(
-                RabbitmqConstant.EXCHANGE,
+                RabbitmqConstant.EXCHANGE_VEHICLE,
                 RabbitmqConstant.ROUTING_KEY_CAR,
                 JSONUtil.toJsonStr(rabbitmqDto),
                 message -> message,
@@ -92,6 +92,8 @@ public class RabbitmqProduceController {
     }
 
     /**
+     * 测试错误回调
+     *
      * http://localhost:9998/rabbitmq/test?data=qwer&exchange=none-exchange&routingKey=none-topic
      * http://localhost:9998/rabbitmq/test?data=qwer&exchange=exchange-test&routingKey=none-topic
      *

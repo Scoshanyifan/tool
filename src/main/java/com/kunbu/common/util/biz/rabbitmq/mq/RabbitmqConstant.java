@@ -5,8 +5,9 @@ public interface RabbitmqConstant {
     String QUEUE_VEHICLE = "queue.vehicle";
     String QUEUE_CAR = "queue.car";
     String QUEUE_ALL = "queue.all";
+    String QUEUE_TEST = "queue.test";
 
-    String EXCHANGE = "exchange";
+    String EXCHANGE_VEHICLE = "exchange-vehicle";
     String EXCHANGE_TEST = "exchange-test";
 
     String ROUTING_KEY_VEHICLE = "key.vehicle";
@@ -16,5 +17,6 @@ public interface RabbitmqConstant {
     // # 匹配一个或多个
 //    String ROUTING_KEY_ALL = "key.#";
 
+    String ROUTING_KEY_TEST = "key.test";
 
 }

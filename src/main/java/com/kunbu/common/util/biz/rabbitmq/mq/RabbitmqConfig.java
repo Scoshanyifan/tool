@@ -39,6 +39,7 @@ public class RabbitmqConfig {
         rabbitTemplate.setReturnCallback(rabbitmqReturnCallBack);
     }
 
+    /** =========================== 定义队列 =================================*/
     @Bean
     public Queue queueVehicle() {
         return new Queue(RabbitmqConstant.QUEUE_VEHICLE, true);
@@ -55,8 +56,14 @@ public class RabbitmqConfig {
     }
 
     @Bean
-    public TopicExchange exchangeBiz() {
-        return new TopicExchange(RabbitmqConstant.EXCHANGE, true, false);
+    public Queue queueTest() {
+        return new Queue(RabbitmqConstant.QUEUE_TEST, true);
+    }
+
+    /** =========================== 定义交换机 =================================*/
+    @Bean
+    public TopicExchange exchangeVehicle() {
+        return new TopicExchange(RabbitmqConstant.EXCHANGE_VEHICLE, true, false);
     }
 
     @Bean
@@ -64,23 +71,28 @@ public class RabbitmqConfig {
         return new TopicExchange(RabbitmqConstant.EXCHANGE_TEST, true, false);
     }
 
+    /** =========================== 定义绑定关系 =================================*/
     @Bean
     public Binding bindingVehicle() {
-        return BindingBuilder.bind(queueVehicle()).to(exchangeBiz()).with(RabbitmqConstant.ROUTING_KEY_VEHICLE);
+        return BindingBuilder.bind(queueVehicle()).to(exchangeVehicle()).with(RabbitmqConstant.ROUTING_KEY_VEHICLE);
     }
 
     @Bean
     public Binding bindingCar() {
-        return BindingBuilder.bind(queueCar()).to(exchangeBiz()).with(RabbitmqConstant.ROUTING_KEY_CAR);
+        return BindingBuilder.bind(queueCar()).to(exchangeVehicle()).with(RabbitmqConstant.ROUTING_KEY_CAR);
     }
 
     /**
-     * 该队列用于接收全部消息，所以要根据routing_key来监听所有匹配的队列
+     * 该队列能够接收 key.* 所有消息
      * @return
      */
     @Bean
     public Binding bindingAll() {
-        return BindingBuilder.bind(queueAll()).to(exchangeBiz()).with(RabbitmqConstant.ROUTING_KEY_ALL);
+        return BindingBuilder.bind(queueAll()).to(exchangeVehicle()).with(RabbitmqConstant.ROUTING_KEY_ALL);
     }
 
+    @Bean
+    public Binding bindingTest() {
+        return BindingBuilder.bind(queueTest()).to(exchangeTest()).with(RabbitmqConstant.ROUTING_KEY_TEST);
+    }
 }
